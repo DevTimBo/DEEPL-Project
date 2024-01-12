@@ -1,4 +1,5 @@
 import os
+
 os.environ["KERAS_BACKEND"] = "tensorflow"
 import numpy as np
 import tensorflow as tf
@@ -7,8 +8,7 @@ from IPython.display import Image, display
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
-
-# Für dem Testdurchlauf 
+# Für dem Testdurchlauf
 model_builder = keras.applications.xception.Xception
 img_size = (299, 299)
 preprocess_input = keras.applications.xception.preprocess_input
@@ -17,21 +17,24 @@ decode_predictions = keras.applications.xception.decode_predictions
 last_conv_layer_name = "block14_sepconv2_act"
 
 model = model_builder(weights="imagenet")
-model.layers[-1].activation = None # OPTIONAL
+model.layers[-1].activation = None  # OPTIONAL
 
 img_path = keras.utils.get_file(
-    "hund.jpg", "https://einfachtierisch.de/media/cache/article_main_image_tablet/cms/2013/05/Hundewelpe-Retriever-Halsband.jpg?522506"
+    "hund.jpg",
+    "https://einfachtierisch.de/media/cache/article_main_image_tablet/cms/2013/05/Hundewelpe-Retriever-Halsband.jpg?522506"
 )
+
 
 def make_grad_cam(model, img_path, img_size, preprocess, decode_predictions, last_conv_layer_name):
     preprocess_input = preprocess
     img_array = preprocess_input(get_img_array(img_path, size=img_size))
-    #print(img_array)
-    model.layers[-1].activation = None # OPTIONAL
+    # print(img_array)
+    model.layers[-1].activation = None  # OPTIONAL
     preds = model.predict(img_array)
     print("Predicted:", decode_predictions(preds, top=1)[0])
     heatmap = make_gradcam_heatmap(img_array, model, last_conv_layer_name)
     save_and_display_gradcam(img_path, preds, heatmap, cam_path="DEEPL-Project\CAM\Images\cam.jpg", alpha=0.4)
+
 
 def get_img_array(img_path, size):
     img = keras.utils.load_img(img_path, target_size=size)
@@ -39,8 +42,8 @@ def get_img_array(img_path, size):
     array = np.expand_dims(array, axis=0)
     return array
 
-def make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=None):
 
+def make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=None):
     grad_model = keras.models.Model(
         model.inputs, [model.get_layer(last_conv_layer_name).output, model.output]
     )
@@ -62,8 +65,8 @@ def make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=None
     heatmap = tf.maximum(heatmap, 0) / tf.math.reduce_max(heatmap)
     return heatmap.numpy()
 
-def save_and_display_gradcam(img_path, preds, heatmap, cam_path, alpha=0.4):
 
+def save_and_display_gradcam(img_path, preds, heatmap, cam_path, alpha=0.4):
     img = keras.utils.load_img(img_path)
     img = keras.utils.img_to_array(img)
 
@@ -84,9 +87,9 @@ def save_and_display_gradcam(img_path, preds, heatmap, cam_path, alpha=0.4):
     superimposed_img.save(cam_path)
 
     # display(Image(cam_path)) --> Original
-    #plt.imshow(superimposed_img)
-    #plt.colorbar()
-    #plt.title(decode_predictions(preds, top=1)[0])
+    # plt.imshow(superimposed_img)
+    # plt.colorbar()
+    # plt.title(decode_predictions(preds, top=1)[0])
 
 
 make_grad_cam(model, img_path, img_size, preprocess_input, decode_predictions, last_conv_layer_name)

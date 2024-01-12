@@ -27,6 +27,8 @@ def get_img_array(img_path, size):
     return array
 
 def make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=None):
+    import tensorflow as tf
+    tf.compat.v1.enable_eager_execution()
 
     grad_model = keras.models.Model(
         model.inputs, [model.get_layer(last_conv_layer_name).output, model.output]

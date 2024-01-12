@@ -14,7 +14,7 @@ model = vgg16.VGG16(weights="imagenet")
 preprocess = vgg16.preprocess_input
 decode_predictions = vgg16.decode_predictions
 
-
+model.summary()
 def predictions_model(image, model):
     x = preprocess(image[None])
     predictions = model.predict(x)
