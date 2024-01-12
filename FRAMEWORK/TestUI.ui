@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1249</width>
+    <width>680</width>
     <height>655</height>
    </rect>
   </property>
@@ -33,19 +33,99 @@
     <rect>
      <x>110</x>
      <y>10</y>
-     <width>47</width>
-     <height>13</height>
+     <width>51</width>
+     <height>16</height>
     </rect>
    </property>
    <property name="text">
     <string>Image List</string>
    </property>
   </widget>
+  <widget class="QCheckBox" name="checkBox">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>560</y>
+     <width>141</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Overlap all of the above</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>430</y>
+     <width>101</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Stochastic Analyzer</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_5">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>580</y>
+     <width>121</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Add Noise to Image</string>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="spinBox_3">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>600</y>
+     <width>42</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="maximum">
+    <number>255</number>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_7">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>600</y>
+     <width>101</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Noise Level (0-255)</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="comboBox_2">
+   <property name="geometry">
+    <rect>
+     <x>520</x>
+     <y>460</y>
+     <width>69</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>VGG16</string>
+    </property>
+   </item>
+  </widget>
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>19</x>
-     <y>455</y>
+     <x>0</x>
+     <y>430</y>
      <width>146</width>
      <height>16</height>
     </rect>
@@ -54,7 +134,7 @@
     <enum>Qt::LeftToRight</enum>
    </property>
    <property name="text">
-    <string>Single Image Analyze Methods</string>
+    <string> Image Analyze Methods</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
@@ -63,8 +143,8 @@
   <widget class="QCheckBox" name="checkBoxLRP">
    <property name="geometry">
     <rect>
-     <x>19</x>
-     <y>474</y>
+     <x>20</x>
+     <y>450</y>
      <width>41</width>
      <height>17</height>
     </rect>
@@ -76,8 +156,8 @@
   <widget class="QCheckBox" name="checkBox_3">
    <property name="geometry">
     <rect>
-     <x>19</x>
-     <y>525</y>
+     <x>20</x>
+     <y>490</y>
      <width>77</width>
      <height>17</height>
     </rect>
@@ -89,8 +169,8 @@
   <widget class="QCheckBox" name="checkBox_2">
    <property name="geometry">
     <rect>
-     <x>19</x>
-     <y>599</y>
+     <x>170</x>
+     <y>450</y>
      <width>123</width>
      <height>17</height>
     </rect>
@@ -102,8 +182,8 @@
   <widget class="QCheckBox" name="checkBox_4">
    <property name="geometry">
     <rect>
-     <x>19</x>
-     <y>548</y>
+     <x>20</x>
+     <y>510</y>
      <width>46</width>
      <height>17</height>
     </rect>
@@ -115,7 +195,7 @@
   <widget class="QPushButton" name="pushButtonK">
    <property name="geometry">
     <rect>
-     <x>180</x>
+     <x>600</x>
      <y>460</y>
      <width>75</width>
      <height>23</height>
@@ -151,8 +231,8 @@
   <widget class="QComboBox" name="comboBox">
    <property name="geometry">
     <rect>
-     <x>51</x>
-     <y>498</y>
+     <x>50</x>
+     <y>470</y>
      <width>88</width>
      <height>20</height>
     </rect>
@@ -177,7 +257,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>498</y>
+     <y>470</y>
      <width>25</width>
      <height>16</height>
     </rect>
@@ -193,7 +273,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>572</y>
+     <y>530</y>
      <width>39</width>
      <height>16</height>
     </rect>
@@ -208,8 +288,8 @@
   <widget class="QSpinBox" name="spinBox">
    <property name="geometry">
     <rect>
-     <x>65</x>
-     <y>573</y>
+     <x>70</x>
+     <y>530</y>
      <width>47</width>
      <height>18</height>
     </rect>
@@ -227,8 +307,8 @@
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>623</y>
+     <x>190</x>
+     <y>470</y>
      <width>43</width>
      <height>16</height>
     </rect>
@@ -243,8 +323,8 @@
   <widget class="QSpinBox" name="spinBox_2">
    <property name="geometry">
     <rect>
-     <x>69</x>
-     <y>624</y>
+     <x>240</x>
+     <y>470</y>
      <width>41</width>
      <height>18</height>
     </rect>
