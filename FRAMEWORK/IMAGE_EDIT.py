@@ -13,20 +13,22 @@ def overlap_images(image_list):
     result_image = None
     print(len(image_list))
     for img in image_list:
-        # Check the number of channels in the image
-        num_channels = img.shape[-1] if len(img.shape) == 3 else 1
-
-        if num_channels == 1:
-            # Convert grayscale to 3-channel image
-            img_rgb = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
-        elif num_channels == 3:
-            img_rgb = img
-        else:
-            print("Unsupported number of channels. Must be 1 or 3.")
 
         if result_image is None:
             # Initialize the result image with the first processed image
-            result_image = img_rgb
+            result_image = img
         else:
-            result_image = (result_image + img_rgb)/2
-    return result_image
+            result_image = result_image + img
+
+    result_image = result_image/len(image_list)
+    return result_image.astype(np.uint8)
+
+
+image = np.array([[5, 0, 0], [0, 50, 0], [0, 0, 255]])
+image2 = np.array([[10, 0, 0], [0, 100, 0], [0, 0, 255]])
+imagelist= []
+imagelist.append(image)
+imagelist.append(image2)
+
+a = overlap_images(imagelist)
+print(a)

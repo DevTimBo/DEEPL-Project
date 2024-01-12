@@ -107,7 +107,7 @@ class Ui(QtWidgets.QDialog):
         image_list = []
         title_list = []
         cmap_list = []
-        image = cv.imread(self.single_image)
+        image = cv.imread(self.single_image, cv.IMREAD_COLOR)
         if self.model.currentText() == "VGG16":
             size = (224, 224)
             resized_image = cv.resize(image, size)
@@ -115,16 +115,18 @@ class Ui(QtWidgets.QDialog):
             pass
         elif self.model.currentText() == "ResNet":
             pass
-
+        resized_image = convert_to_uint8(resized_image)
         image_list.append(resized_image)
         title_list.append("Original")
         cmap_list.append("viridis")
 
         if self.lrp_checkbox.isChecked():
-            tf.compat.v1.disable_eager_execution()
             print("LRP")
             rule = self.lrp_rule_box.currentText()
             lrp_image = LRP.analyze_image_lrp(resized_image, model, preprocess, rule)
+            lrp_image = convert_to_uint8(lrp_image)
+            zeros_array = np.zeros_like(lrp_image)
+            lrp_image = cv.merge([zeros_array, zeros_array, lrp_image])
             title_list.append(f"LRP: {rule}")
             cmap_list.append('viridis')
             image_list.append(lrp_image)
@@ -140,6 +142,7 @@ class Ui(QtWidgets.QDialog):
             # Run the TensorFlow script as a subprocess with arguments
             subprocess.run(["python", tensorflow_script_path, model_name, filepath])
             grad_cam_image = cv.imread("grad_cam.jpg")
+            grad_cam_image = convert_to_uint8(grad_cam_image)
             title_list.append(f"GRAD CAM")
             cmap_list.append('viridis')
             image_list.append(grad_cam_image)
@@ -147,6 +150,7 @@ class Ui(QtWidgets.QDialog):
         if self.lime_checkbox.isChecked():
             samples = self.lime_samples_box.value()
             lime_image = LIME.get_lime_explanation(resized_image, model, samples)
+            lime_image = convert_to_uint8(lime_image)
             title_list.append(f"LIME {samples}")
             cmap_list.append('viridis')
             image_list.append(lime_image)
@@ -154,8 +158,13 @@ class Ui(QtWidgets.QDialog):
             print("OVERLAP")
             if len(image_list) > 1:
                 overlap_images = image_list[1:]
+                for image in overlap_images:
+                    print(image.shape)
+                print(1)
                 avg_image = IMAGE_EDIT.overlap_images(overlap_images)
+                print(3)
                 title_list.append('AVG IMAGE')
+                print(4)
                 image_list.append(avg_image)
 
                 cmap_list.append('viridis')
@@ -167,6 +176,16 @@ class Ui(QtWidgets.QDialog):
 
 
 
+def convert_to_uint8(image):
+    if image.dtype == np.float32 or image.dtype == np.float64:
+        # Scale float values to the range [0, 255] and convert to uint8
+        return (image * 255).clip(0, 255).astype(np.uint8)
+    elif image.dtype == np.uint8:
+        # Image is already uint8, no need to convert
+        return image
+    else:
+        # Handle other data types or raise an error if needed
+        raise ValueError("Unsupported data type. Supported types are float32, float64, and uint8.")
 
 
 

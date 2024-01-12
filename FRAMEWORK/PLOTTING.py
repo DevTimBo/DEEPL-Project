@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
+import cv2
 def plot_n_images(images, titles, cmaps, figsize=(20, 5)):
     num_images = len(images)
     if num_images == 0 or num_images != len(titles) or num_images != len(cmaps):
@@ -13,8 +13,10 @@ def plot_n_images(images, titles, cmaps, figsize=(20, 5)):
     else:
         fig, axs = plt.subplots(1, num_images, figsize=figsize)
         for i in range(num_images):
+            rgb_image = cv2.cvtColor(images[i], cv2.COLOR_BGR2RGB)
             print(f"image {i}")
-            axs[i].imshow(images[i], cmap=cmaps[i])
+            #axs[i].imshow(images[i], cmap=cmaps[i])
+            axs[i].imshow(rgb_image)
             axs[i].set_title(titles[i])
             axs[i].axis('off')
     print("plit")
