@@ -1,11 +1,12 @@
 import innvestigate
 import numpy as np
 import PLOTTING
+import tensorflow as tf
+#rule = "lrp.alpha_1_beta_0"
 
-rule = "lrp.alpha_1_beta_0"
 
+def analyze_image_lrp(image, model, preprocess, rule):
 
-def analyze_image_lrp(image, model, preprocess):
     model = innvestigate.model_wo_softmax(model)
     analyzer = innvestigate.create_analyzer(rule, model)
     image_processed = preprocess(np.array(image)[None])
@@ -16,7 +17,7 @@ def analyze_image_lrp(image, model, preprocess):
     return lrp_image
 
 
-def lrp_simple(images):
+def lrp_simple(image):
     # Imports
     import keras.applications.vgg16 as vgg16
     import tensorflow as tf
@@ -30,9 +31,7 @@ def lrp_simple(images):
     plot_images = []
     cmaps = []
     titles = []
-    print(len(images))
-    for image in images:
-        plot_images.append(analyze_image_lrp(image, model, preprocess))
-        titles.append("LRP")
-        cmaps.append("viridis")
-    PLOTTING.plot_n_images(plot_images, titles, cmaps, figsize=(5, 3))
+    plot_images.append(analyze_image_lrp(image, model, preprocess))
+    titles.append("LRP")
+    cmaps.append("viridis")
+

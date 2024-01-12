@@ -3,10 +3,8 @@ import matplotlib.pyplot as plt
 
 def plot_n_images(images, titles, cmaps, figsize=(20, 5)):
     num_images = len(images)
-
     if num_images == 0 or num_images != len(titles) or num_images != len(cmaps):
         raise ValueError("Invalid number of images, titles, or cmaps provided.")
-
     if num_images == 1:
         fig, ax = plt.subplots(1, 1, figsize=figsize)
         ax.imshow(images[0], cmap=cmaps[0])
@@ -14,12 +12,12 @@ def plot_n_images(images, titles, cmaps, figsize=(20, 5)):
         ax.axis('off')
     else:
         fig, axs = plt.subplots(1, num_images, figsize=figsize)
-
         for i in range(num_images):
+            print(f"image {i}")
             axs[i].imshow(images[i], cmap=cmaps[i])
             axs[i].set_title(titles[i])
             axs[i].axis('off')
-
+    print("plit")
     plt.show()
 
 

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>680</width>
+    <width>1337</width>
     <height>655</height>
    </rect>
   </property>
@@ -20,10 +20,10 @@
    <string>PYTHON PRJ - Image Filter</string>
   </property>
   <property name="autoFillBackground">
-   <bool>false</bool>
+   <bool>true</bool>
   </property>
   <property name="styleSheet">
-   <string notr="true">selection-color: rgb(255, 0, 0);</string>
+   <string notr="true">selection-color: rgb(150, 150, 150);</string>
   </property>
   <property name="sizeGripEnabled">
    <bool>false</bool>
@@ -31,21 +31,21 @@
   <widget class="QLabel" name="label_5">
    <property name="geometry">
     <rect>
-     <x>110</x>
-     <y>10</y>
-     <width>51</width>
+     <x>80</x>
+     <y>30</y>
+     <width>111</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>Image List</string>
+    <string>Single Image</string>
    </property>
   </widget>
-  <widget class="QCheckBox" name="checkBox">
+  <widget class="QCheckBox" name="overlap_box">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>560</y>
+     <x>220</x>
+     <y>480</y>
      <width>141</width>
      <height>17</height>
     </rect>
@@ -54,24 +54,11 @@
     <string>Overlap all of the above</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_6">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>430</y>
-     <width>101</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Stochastic Analyzer</string>
-   </property>
-  </widget>
   <widget class="QCheckBox" name="checkBox_5">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>580</y>
+     <x>410</x>
+     <y>380</y>
      <width>121</width>
      <height>17</height>
     </rect>
@@ -83,8 +70,8 @@
   <widget class="QSpinBox" name="spinBox_3">
    <property name="geometry">
     <rect>
-     <x>120</x>
-     <y>600</y>
+     <x>510</x>
+     <y>400</y>
      <width>42</width>
      <height>22</height>
     </rect>
@@ -96,8 +83,8 @@
   <widget class="QLabel" name="label_7">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>600</y>
+     <x>410</x>
+     <y>400</y>
      <width>101</width>
      <height>16</height>
     </rect>
@@ -106,11 +93,11 @@
     <string>Noise Level (0-255)</string>
    </property>
   </widget>
-  <widget class="QComboBox" name="comboBox_2">
+  <widget class="QComboBox" name="model">
    <property name="geometry">
     <rect>
-     <x>520</x>
-     <y>460</y>
+     <x>890</x>
+     <y>490</y>
      <width>69</width>
      <height>22</height>
     </rect>
@@ -124,8 +111,8 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>430</y>
+     <x>210</x>
+     <y>350</y>
      <width>146</width>
      <height>16</height>
     </rect>
@@ -134,17 +121,17 @@
     <enum>Qt::LeftToRight</enum>
    </property>
    <property name="text">
-    <string> Image Analyze Methods</string>
+    <string>Setup</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QCheckBox" name="checkBoxLRP">
+  <widget class="QCheckBox" name="lrp_checkbox">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>450</y>
+     <x>220</x>
+     <y>370</y>
      <width>41</width>
      <height>17</height>
     </rect>
@@ -156,8 +143,8 @@
   <widget class="QCheckBox" name="checkBox_3">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>490</y>
+     <x>220</x>
+     <y>410</y>
      <width>77</width>
      <height>17</height>
     </rect>
@@ -169,8 +156,8 @@
   <widget class="QCheckBox" name="checkBox_2">
    <property name="geometry">
     <rect>
-     <x>170</x>
-     <y>450</y>
+     <x>220</x>
+     <y>500</y>
      <width>123</width>
      <height>17</height>
     </rect>
@@ -179,11 +166,11 @@
     <string>Monte Carlo Dropout</string>
    </property>
   </widget>
-  <widget class="QCheckBox" name="checkBox_4">
+  <widget class="QCheckBox" name="lime_checkbox">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>510</y>
+     <x>220</x>
+     <y>430</y>
      <width>46</width>
      <height>17</height>
     </rect>
@@ -192,11 +179,11 @@
     <string>LIME</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButtonK">
+  <widget class="QPushButton" name="button_analyze">
    <property name="geometry">
     <rect>
-     <x>600</x>
-     <y>460</y>
+     <x>1090</x>
+     <y>490</y>
      <width>75</width>
      <height>23</height>
     </rect>
@@ -205,46 +192,31 @@
     <string>Analyze</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButtonL">
+  <widget class="QPushButton" name="button_load_single_image">
    <property name="geometry">
     <rect>
-     <x>300</x>
+     <x>160</x>
      <y>30</y>
      <width>75</width>
      <height>23</height>
     </rect>
    </property>
    <property name="text">
-    <string>Bild laden</string>
+    <string>Load Image</string>
    </property>
   </widget>
-  <widget class="QListWidget" name="image_list_widget">
+  <widget class="QComboBox" name="lrp_rule_box">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>30</y>
-     <width>261</width>
-     <height>401</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QComboBox" name="comboBox">
-   <property name="geometry">
-    <rect>
-     <x>50</x>
-     <y>470</y>
-     <width>88</width>
+     <x>260</x>
+     <y>390</y>
+     <width>121</width>
      <height>20</height>
     </rect>
    </property>
    <item>
     <property name="text">
-     <string>beta0 alpha1</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>presetA</string>
+     <string>lrp.alpha_1_beta_0</string>
     </property>
    </item>
    <item>
@@ -256,14 +228,14 @@
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>470</y>
+     <x>230</x>
+     <y>390</y>
      <width>25</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>Rule:</string>
+    <string>Rule</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -272,8 +244,8 @@
   <widget class="QLabel" name="label_4">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>530</y>
+     <x>230</x>
+     <y>450</y>
      <width>39</width>
      <height>16</height>
     </rect>
@@ -285,11 +257,11 @@
     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
    </property>
   </widget>
-  <widget class="QSpinBox" name="spinBox">
+  <widget class="QSpinBox" name="lime_samples_box">
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>530</y>
+     <x>280</x>
+     <y>450</y>
      <width>47</width>
      <height>18</height>
     </rect>
@@ -307,14 +279,14 @@
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>190</x>
-     <y>470</y>
+     <x>220</x>
+     <y>520</y>
      <width>43</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>Samples:</string>
+    <string>Samples</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -323,8 +295,8 @@
   <widget class="QSpinBox" name="spinBox_2">
    <property name="geometry">
     <rect>
-     <x>240</x>
-     <y>470</y>
+     <x>270</x>
+     <y>520</y>
      <width>41</width>
      <height>18</height>
     </rect>
@@ -334,6 +306,177 @@
    </property>
    <property name="maximum">
     <number>100</number>
+   </property>
+  </widget>
+  <widget class="QLabel" name="single_image_label">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>70</y>
+     <width>224</width>
+     <height>224</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Image</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="gradcam_checkbox">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>410</y>
+     <width>77</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="mouseTracking">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>GRAD-CAM</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>460</x>
+     <y>350</y>
+     <width>47</width>
+     <height>13</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Noise</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="analyze_mode">
+   <property name="geometry">
+    <rect>
+     <x>980</x>
+     <y>490</y>
+     <width>91</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>Single Image</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Many Images</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Video</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QLabel" name="label_9">
+   <property name="geometry">
+    <rect>
+     <x>490</x>
+     <y>40</y>
+     <width>71</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Many Images</string>
+   </property>
+  </widget>
+  <widget class="QListWidget" name="image_list_widget">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>80</y>
+     <width>256</width>
+     <height>192</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_10">
+   <property name="geometry">
+    <rect>
+     <x>950</x>
+     <y>40</y>
+     <width>141</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>GRAD CAM Video Analyzer</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="button_load_many_images">
+   <property name="geometry">
+    <rect>
+     <x>570</x>
+     <y>40</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Load Image</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_7">
+   <property name="geometry">
+    <rect>
+     <x>680</x>
+     <y>150</y>
+     <width>141</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Images are time series</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="button_load_video">
+   <property name="geometry">
+    <rect>
+     <x>1090</x>
+     <y>40</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Load Video</string>
+   </property>
+  </widget>
+  <widget class="QTextBrowser" name="video_text">
+   <property name="geometry">
+    <rect>
+     <x>930</x>
+     <y>70</y>
+     <width>281</width>
+     <height>41</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox">
+   <property name="geometry">
+    <rect>
+     <x>410</x>
+     <y>440</y>
+     <width>81</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Noise Walk</string>
    </property>
   </widget>
  </widget>

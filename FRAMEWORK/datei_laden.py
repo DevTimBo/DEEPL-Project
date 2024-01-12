@@ -6,6 +6,7 @@ from numpy import ndarray
 
 def datei_to_pixmap(datei_name):
     pixmap = QPixmap(datei_name)
+    pixmap = pixmap.scaled(224, 224)
     return pixmap
 def arrayToQImage(array):
     from PyQt5.QtGui import (QImage)
@@ -66,3 +67,4 @@ def qImageToArray(qImg, grayscale=False, remove_alpha=True):
 
 def pixmap_to_array(qPix):
     return qImageToArray(qPix.toImage())
+
