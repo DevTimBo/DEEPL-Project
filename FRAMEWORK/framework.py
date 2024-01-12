@@ -3,7 +3,7 @@ import keras.applications.vgg16 as vgg16
 import cv2 as cv
 import tensorflow as tf
 
-import LRP
+import testets
 import PLOTTING
 import IMAGE_EDIT
 

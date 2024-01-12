@@ -8,21 +8,6 @@ from IPython.display import Image, display
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
-# Für dem Testdurchlauf
-model_builder = keras.applications.xception.Xception
-img_size = (299, 299)
-preprocess_input = keras.applications.xception.preprocess_input
-decode_predictions = keras.applications.xception.decode_predictions
-
-last_conv_layer_name = "block14_sepconv2_act"
-
-model = model_builder(weights="imagenet")
-model.layers[-1].activation = None  # OPTIONAL
-
-img_path = keras.utils.get_file(
-    "hund.jpg",
-    "https://einfachtierisch.de/media/cache/article_main_image_tablet/cms/2013/05/Hundewelpe-Retriever-Halsband.jpg?522506"
-)
 
 
 def make_grad_cam(model, img_path, img_size, preprocess, decode_predictions, last_conv_layer_name):
@@ -33,7 +18,7 @@ def make_grad_cam(model, img_path, img_size, preprocess, decode_predictions, las
     preds = model.predict(img_array)
     print("Predicted:", decode_predictions(preds, top=1)[0])
     heatmap = make_gradcam_heatmap(img_array, model, last_conv_layer_name)
-    save_and_display_gradcam(img_path, preds, heatmap, cam_path="cam.jpg", alpha=0.4)
+    save_and_display_gradcam(img_path, preds, heatmap, cam_path="grad_cam.jpg", alpha=0.4)
 
 
 
@@ -89,7 +74,28 @@ def save_and_display_gradcam(img_path, preds, heatmap, cam_path, alpha=0.4):
     # display(Image(cam_path)) --> Original
     # plt.imshow(superimposed_img)
     # plt.colorbar()
-    # plt.title(decode_predictions(preds, top=1)[0])
+    # plt.title(decode_predictions(preds, top=1)[0])\
 
 
-make_grad_cam(model, img_path, img_size, preprocess_input, decode_predictions, last_conv_layer_name)
+if __name__ == "__main__":
+    import sys
+    # Check if the correct number of arguments is provided
+    if len(sys.argv) != 3:
+        print("Usage: python tensorflow_script.py <model_name> <filepath>")
+        sys.exit(1)
+
+    # Extract command-line arguments
+    model_name = sys.argv[1]
+    filepath = sys.argv[2]
+
+    if model_name == "VGG16":
+        import keras.applications.vgg16 as vgg16
+        # Keras Model
+        model = vgg16.VGG16(weights="imagenet")
+        preprocess = vgg16.preprocess_input
+        decode_predictions = vgg16.decode_predictions
+        last_conv_layer = "block5_conv3"
+        img_size = (224, 224)
+    else:
+        print("SOMETHING IS WRONG!!!")
+    make_grad_cam(model, filepath, img_size, preprocess, decode_predictions, last_conv_layer)

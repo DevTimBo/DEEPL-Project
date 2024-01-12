@@ -5,11 +5,12 @@ import FRAMEWORK.LRP as LRP
 import FRAMEWORK.LIME as LIME
 import FRAMEWORK.IMAGE_EDIT as IMAGE_EDIT
 import FRAMEWORK.PLOTTING as PLOTTING
-import FRAMEWORK.GRAD_CAM as GRAD_CAM
 import datei_laden
 import numpy as np
 import tensorflow as tf
 tf.compat.v1.disable_eager_execution()
+
+
 from PyQt5.QtWidgets import (QApplication, QDialog,QTextEdit,
                              QPushButton,QVBoxLayout,QLabel,QWidget,
                              QHBoxLayout,qApp,QSpinBox, QDoubleSpinBox,
@@ -118,22 +119,31 @@ class Ui(QtWidgets.QDialog):
         image_list.append(resized_image)
         title_list.append("Original")
         cmap_list.append("viridis")
+
         if self.lrp_checkbox.isChecked():
+            tf.compat.v1.disable_eager_execution()
             print("LRP")
             rule = self.lrp_rule_box.currentText()
             lrp_image = LRP.analyze_image_lrp(resized_image, model, preprocess, rule)
             title_list.append(f"LRP: {rule}")
             cmap_list.append('viridis')
             image_list.append(lrp_image)
+
         if self.gradcam_checkbox.isChecked():
-            pass
-            # print("GRAD_CAM")
-            # gradcam_image = GRAD_CAM.make_grad_cam(model, self.single_image, size, preprocess,
-            #                                        decode_predictions, last_conv_layer)
-            # print(gradcam_image.shape)
-            # image_list.append(gradcam_image)
-            # title_list.append(f"GRAD CAM")
-            # cmap_list.append('viridis')
+            print("GRAD_CAM")
+            import subprocess
+            # Specify the path to the TensorFlow script
+            tensorflow_script_path = "grad_cam.py"
+            # Specify the model_name and filepath as arguments
+            model_name = self.model.currentText()
+            filepath = self.single_image
+            # Run the TensorFlow script as a subprocess with arguments
+            subprocess.run(["python", tensorflow_script_path, model_name, filepath])
+            grad_cam_image = cv.imread("grad_cam.jpg")
+            title_list.append(f"GRAD CAM")
+            cmap_list.append('viridis')
+            image_list.append(grad_cam_image)
+
         if self.lime_checkbox.isChecked():
             samples = self.lime_samples_box.value()
             lime_image = LIME.get_lime_explanation(resized_image, model, samples)
