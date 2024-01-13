@@ -23,6 +23,39 @@ def plot_n_images(images, titles, cmaps, figsize=(20, 5)):
     plt.show()
 
 
+import matplotlib.pyplot as plt
+import numpy as np
+
+def plot_images_grid(images, x, y):
+    n = len(images)
+
+    # Check if the number of images matches the grid size
+    if n != x * y:
+        raise ValueError("Number of images should match the grid size.")
+
+    # Create a subplot grid
+    fig, axes = plt.subplots(x, y, figsize=(y * 3, x * 3))
+
+    # Flatten the axes array if x or y is 1
+    if x == 1:
+        axes = axes.reshape(1, -1)
+    elif y == 1:
+        axes = axes.reshape(-1, 1)
+
+    # Plot each image
+    for i in range(x):
+        for j in range(y):
+            ax = axes[i, j]
+            ax.imshow(images[i * y + j])
+            ax.axis("off")
+
+    plt.show()
+
+# Example usage:
+# Assuming you have a list of n images (numpy arrays or image paths), and you want to create a 2x3 grid:
+# images = [...]  # List of n images
+# plot_images(images, 2, 3)
+
 
 def time_plot_with_avg(cmap, figsize, *images):
     num_images = len(images)

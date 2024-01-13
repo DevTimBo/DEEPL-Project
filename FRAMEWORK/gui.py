@@ -120,6 +120,14 @@ class Ui(QtWidgets.QDialog):
         title_list.append("Original")
         cmap_list.append("viridis")
 
+        if self.noise_checkbox.isChecked():
+            noise_level = self.noiselevel_box.value()
+            resized_image = IMAGE_EDIT.add_noise(resized_image, noise_level)
+            image_list.append(resized_image)
+            title_list.append("Noise")
+            cmap_list.append("viridis")
+            cv.imwrite("noise_image.png", resized_image)
+
         if self.lrp_checkbox.isChecked():
             print("LRP")
             rule = self.lrp_rule_box.currentText()
@@ -138,7 +146,10 @@ class Ui(QtWidgets.QDialog):
             tensorflow_script_path = "grad_cam.py"
             # Specify the model_name and filepath as arguments
             model_name = self.model.currentText()
-            filepath = self.single_image
+            if self.noise_checkbox.isChecked():
+                filepath = 'noise_image.png'
+            else:
+                filepath = self.single_image
             # Run the TensorFlow script as a subprocess with arguments
             subprocess.run(["python", tensorflow_script_path, model_name, filepath])
             grad_cam_image = cv.imread("grad_cam.jpg")
@@ -154,22 +165,21 @@ class Ui(QtWidgets.QDialog):
             title_list.append(f"LIME {samples}")
             cmap_list.append('viridis')
             image_list.append(lime_image)
+
         if self.overlap_box.isChecked():
             print("OVERLAP")
             if len(image_list) > 1:
                 overlap_images = image_list[1:]
                 for image in overlap_images:
                     print(image.shape)
-                print(1)
                 avg_image = IMAGE_EDIT.overlap_images(overlap_images)
-                print(3)
                 title_list.append('AVG IMAGE')
-                print(4)
                 image_list.append(avg_image)
 
                 cmap_list.append('viridis')
 
         PLOTTING.plot_n_images(image_list, title_list, cmap_list, figsize=(20, 5))
+
     def closeEvent(self, event):
         self.hide()
         qApp.quit()

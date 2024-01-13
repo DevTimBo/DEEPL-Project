@@ -24,11 +24,3 @@ def overlap_images(image_list):
     return result_image.astype(np.uint8)
 
 
-image = np.array([[5, 0, 0], [0, 50, 0], [0, 0, 255]])
-image2 = np.array([[10, 0, 0], [0, 100, 0], [0, 0, 255]])
-imagelist= []
-imagelist.append(image)
-imagelist.append(image2)
-
-a = overlap_images(imagelist)
-print(a)
