@@ -185,9 +185,9 @@ class Ui(QtWidgets.QDialog):
         grad_cam_image = convert_to_uint8(grad_cam_image)
         return grad_cam_image
 
-    def lime_analyzer(self, image, samples):
+    def lime_analyzer(self, image, samples, features):
         print("LIME_ANALYZER")
-        lime_image = LIME.get_lime_explanation(image, self.keras_model, samples)
+        lime_image = LIME.get_lime_explanation(image, self.keras_model, samples, features)
         lime_image = convert_to_uint8(lime_image)
         return lime_image
 
