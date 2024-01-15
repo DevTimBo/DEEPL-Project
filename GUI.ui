@@ -57,8 +57,8 @@
   <widget class="QCheckBox" name="noise_checkbox">
    <property name="geometry">
     <rect>
-     <x>220</x>
-     <y>380</y>
+     <x>270</x>
+     <y>350</y>
      <width>121</width>
      <height>17</height>
     </rect>
@@ -70,8 +70,8 @@
   <widget class="QSpinBox" name="noiselevel_box">
    <property name="geometry">
     <rect>
-     <x>320</x>
-     <y>400</y>
+     <x>380</x>
+     <y>370</y>
      <width>42</width>
      <height>22</height>
     </rect>
@@ -83,9 +83,9 @@
   <widget class="QLabel" name="label_7">
    <property name="geometry">
     <rect>
-     <x>220</x>
-     <y>400</y>
-     <width>101</width>
+     <x>270</x>
+     <y>370</y>
+     <width>111</width>
      <height>16</height>
     </rect>
    </property>
@@ -111,8 +111,8 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>350</y>
+     <x>18</x>
+     <y>319</y>
      <width>146</width>
      <height>16</height>
     </rect>
@@ -130,8 +130,8 @@
   <widget class="QCheckBox" name="lrp_checkbox">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>370</y>
+     <x>28</x>
+     <y>339</y>
      <width>51</width>
      <height>17</height>
     </rect>
@@ -143,8 +143,8 @@
   <widget class="QCheckBox" name="checkBox_3">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>410</y>
+     <x>28</x>
+     <y>379</y>
      <width>77</width>
      <height>17</height>
     </rect>
@@ -169,8 +169,8 @@
   <widget class="QCheckBox" name="lime_checkbox">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>430</y>
+     <x>28</x>
+     <y>399</y>
      <width>51</width>
      <height>17</height>
     </rect>
@@ -196,9 +196,9 @@
    <property name="geometry">
     <rect>
      <x>160</x>
-     <y>30</y>
-     <width>75</width>
-     <height>23</height>
+     <y>22</y>
+     <width>81</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="text">
@@ -208,10 +208,10 @@
   <widget class="QComboBox" name="lrp_rule_box">
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>390</y>
-     <width>121</width>
-     <height>20</height>
+     <x>68</x>
+     <y>358</y>
+     <width>131</width>
+     <height>21</height>
     </rect>
    </property>
    <item>
@@ -228,8 +228,8 @@
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>390</y>
+     <x>38</x>
+     <y>359</y>
      <width>25</width>
      <height>16</height>
     </rect>
@@ -244,14 +244,14 @@
   <widget class="QLabel" name="label_4">
    <property name="geometry">
     <rect>
-     <x>28</x>
-     <y>450</y>
-     <width>51</width>
+     <x>16</x>
+     <y>419</y>
+     <width>61</width>
      <height>20</height>
     </rect>
    </property>
    <property name="text">
-    <string>Samples</string>
+    <string>Samples:</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -260,10 +260,10 @@
   <widget class="QSpinBox" name="lime_samples_box">
    <property name="geometry">
     <rect>
-     <x>90</x>
-     <y>450</y>
+     <x>80</x>
+     <y>420</y>
      <width>47</width>
-     <height>18</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="minimum">
@@ -279,10 +279,10 @@
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>30</x>
+     <x>22</x>
      <y>520</y>
-     <width>43</width>
-     <height>16</height>
+     <width>51</width>
+     <height>20</height>
     </rect>
    </property>
    <property name="text">
@@ -327,8 +327,8 @@
   <widget class="QCheckBox" name="gradcam_checkbox">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>410</y>
+     <x>28</x>
+     <y>379</y>
      <width>91</width>
      <height>17</height>
     </rect>
@@ -346,8 +346,8 @@
   <widget class="QLabel" name="label_6">
    <property name="geometry">
     <rect>
-     <x>270</x>
-     <y>350</y>
+     <x>320</x>
+     <y>320</y>
      <width>47</width>
      <height>13</height>
     </rect>
@@ -421,9 +421,9 @@
    <property name="geometry">
     <rect>
      <x>570</x>
-     <y>40</y>
-     <width>75</width>
-     <height>23</height>
+     <y>32</y>
+     <width>81</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="text">
@@ -469,8 +469,8 @@
   <widget class="QCheckBox" name="noise_walk_checkbox">
    <property name="geometry">
     <rect>
-     <x>210</x>
-     <y>480</y>
+     <x>270</x>
+     <y>400</y>
      <width>171</width>
      <height>17</height>
     </rect>
@@ -482,8 +482,8 @@
   <widget class="QSpinBox" name="noise_walk_steps">
    <property name="geometry">
     <rect>
-     <x>320</x>
-     <y>520</y>
+     <x>380</x>
+     <y>440</y>
      <width>42</width>
      <height>22</height>
     </rect>
@@ -498,8 +498,8 @@
   <widget class="QSpinBox" name="noise_walk_max">
    <property name="geometry">
     <rect>
-     <x>270</x>
-     <y>520</y>
+     <x>330</x>
+     <y>440</y>
      <width>42</width>
      <height>22</height>
     </rect>
@@ -511,8 +511,8 @@
   <widget class="QLabel" name="label_11">
    <property name="geometry">
     <rect>
-     <x>280</x>
-     <y>500</y>
+     <x>340</x>
+     <y>420</y>
      <width>47</width>
      <height>13</height>
     </rect>
@@ -524,8 +524,8 @@
   <widget class="QLabel" name="label_12">
    <property name="geometry">
     <rect>
-     <x>330</x>
-     <y>500</y>
+     <x>390</x>
+     <y>420</y>
      <width>47</width>
      <height>13</height>
     </rect>
@@ -537,14 +537,14 @@
   <widget class="QLabel" name="label_8">
    <property name="geometry">
     <rect>
-     <x>170</x>
-     <y>450</y>
+     <x>138</x>
+     <y>419</y>
      <width>61</width>
      <height>20</height>
     </rect>
    </property>
    <property name="text">
-    <string>Features</string>
+    <string>Features:</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -553,10 +553,10 @@
   <widget class="QSpinBox" name="lime_features_box">
    <property name="geometry">
     <rect>
-     <x>242</x>
-     <y>451</y>
+     <x>200</x>
+     <y>420</y>
      <width>47</width>
-     <height>20</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="minimum">
@@ -567,6 +567,32 @@
    </property>
    <property name="singleStep">
     <number>50</number>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="heatmap_box_cam">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>380</y>
+     <width>141</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Heatmap: CAM</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="heatmap_box_lime">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>400</y>
+     <width>141</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Heatmap: LIME</string>
    </property>
   </widget>
  </widget>

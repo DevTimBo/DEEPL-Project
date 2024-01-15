@@ -240,16 +240,26 @@ class Ui(QtWidgets.QDialog):
                     image_list.append(lrp_image)
 
                 if self.gradcam_checkbox.isChecked():
-                    grad_cam_image = self.grad_cam_analyze()
+                    if self.heatmap_box_cam.isChecked():
+                        #grad_cam_image = Heatmapfunktion
+                        pass 
+                    else:
+                        grad_cam_image = self.grad_cam_analyze()
 
                     title_list.append(f"GRAD CAM")
                     cmap_list.append('viridis')
                     image_list.append(grad_cam_image)
 
                 if self.lime_checkbox.isChecked():
-                    samples = self.lime_samples_box.value()
-                    features = self.lime_features_box.value()
-                    lime_image = self.lime_analyzer(resized_image, samples, features)
+                    # Samples must be ~50+
+                    if self.heatmap_box_lime.isChecked():
+                        samples = self.lime_samples_box.value()
+                        features = "All"
+                        lime_image = self.lime_heatmap(resized_image, samples)
+                    else:
+                        samples = self.lime_samples_box.value()
+                        features = self.lime_features_box.value()
+                        lime_image = self.lime_analyzer(resized_image, samples, features)
 
                     title_list.append(f"LIME - Samples: {samples}, Features: {features}")
                     cmap_list.append('viridis')
@@ -314,7 +324,6 @@ class Ui(QtWidgets.QDialog):
         lime_image = convert_to_uint8(lime_image)
         return lime_image
     
-    # TODO heatmap (?) 
     def lime_heatmap(self, image, samples):
         print("LIME_HEATMAP")
         heatmap = LIME.get_lime_heat_map(image, self.keras_model, samples)
@@ -350,5 +359,8 @@ def convert_to_uint8(image):
 
 
 app = QtWidgets.QApplication(sys.argv)
+with open('ui.qss', 'r') as styles_file:
+    qss = styles_file.read()
+app.setStyleSheet(qss)
 window = Ui()
 app.exec_()
