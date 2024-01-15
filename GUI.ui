@@ -132,7 +132,7 @@
     <rect>
      <x>30</x>
      <y>370</y>
-     <width>41</width>
+     <width>51</width>
      <height>17</height>
     </rect>
    </property>
@@ -171,7 +171,7 @@
     <rect>
      <x>30</x>
      <y>430</y>
-     <width>46</width>
+     <width>51</width>
      <height>17</height>
     </rect>
    </property>
@@ -244,10 +244,10 @@
   <widget class="QLabel" name="label_4">
    <property name="geometry">
     <rect>
-     <x>40</x>
+     <x>28</x>
      <y>450</y>
-     <width>39</width>
-     <height>16</height>
+     <width>51</width>
+     <height>20</height>
     </rect>
    </property>
    <property name="text">
@@ -270,7 +270,7 @@
     <number>1</number>
    </property>
    <property name="maximum">
-    <number>2000</number>
+    <number>5000</number>
    </property>
    <property name="singleStep">
     <number>50</number>
@@ -329,7 +329,7 @@
     <rect>
      <x>30</x>
      <y>410</y>
-     <width>77</width>
+     <width>91</width>
      <height>17</height>
     </rect>
    </property>
@@ -435,7 +435,7 @@
     <rect>
      <x>680</x>
      <y>150</y>
-     <width>141</width>
+     <width>161</width>
      <height>17</height>
     </rect>
    </property>
@@ -523,6 +523,41 @@
    </property>
    <property name="text">
     <string>Steps</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_8">
+   <property name="geometry">
+    <rect>
+     <x>170</x>
+     <y>450</y>
+     <width>61</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Features</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="lime_features_box">
+   <property name="geometry">
+    <rect>
+     <x>242</x>
+     <y>451</y>
+     <width>47</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="minimum">
+    <number>1</number>
+   </property>
+   <property name="maximum">
+    <number>100</number>
+   </property>
+   <property name="singleStep">
+    <number>50</number>
    </property>
   </widget>
  </widget>

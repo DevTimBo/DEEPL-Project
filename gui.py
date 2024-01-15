@@ -142,9 +142,10 @@ class Ui(QtWidgets.QDialog):
 
         if self.lime_checkbox.isChecked():
             samples = self.lime_samples_box.value()
-            lime_image = self.lime_analyzer(image, samples)
+            features = self.lime_features_box.value()
+            lime_image = self.lime_analyzer(image, samples, features)
 
-            title_list.append(f"LIME {samples}")
+            title_list.append(f"LIME {samples}, Top Features: {features}")
             cmap_list.append('viridis')
             image_list.append(lime_image)
 
