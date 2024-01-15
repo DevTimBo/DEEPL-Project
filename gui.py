@@ -95,7 +95,8 @@ class Ui(QtWidgets.QDialog):
             if self.single_image != "":
                 self.single_image_analyzer()
         elif self.analyze_mode.currentText() == "Many Images":
-            pass
+            if self.many_images != []:
+                self.many_images_analyzer()
         elif self.analyze_mode.currentText() == "Video":
             pass
 
@@ -159,6 +160,102 @@ class Ui(QtWidgets.QDialog):
 
         print("Plotting")
         PLOTTING.plot_n_images(image_list, title_list, cmap_list, figsize=(20, 5))
+        
+    def many_images_analyzer(self):
+        images_info = []
+
+        for i in range(len(self.many_images)):
+            print(f"Processing image {i + 1}/{len(self.many_images)}")
+
+            image = cv.imread(self.many_images[i], cv.IMREAD_COLOR)
+
+            if self.model.currentText() == "VGG16":
+                size = (224, 224)
+                resized_image = cv.resize(image, size)
+            elif self.model.currentText() == "VGG19":
+                pass
+            elif self.model.currentText() == "ResNet":
+                pass
+
+            resized_image = convert_to_uint8(resized_image)
+
+            # Original image information
+            info_original = {
+                'image': resized_image,
+                'title': f"Original" + i,
+                'cmap': "viridis"
+            }
+            images_info.append(info_original)
+
+            # Add noise if the checkbox is checked
+            if self.noise_checkbox.isChecked():
+                noise_level = self.noiselevel_box.value()
+                resized_image = IMAGE_EDIT.add_noise(resized_image, noise_level)
+
+                # Noisy image information
+                info_noisy = {
+                    'image': resized_image,
+                    'title': "Noise" + i,
+                    'cmap': "viridis"
+                }
+                images_info.append(info_noisy)
+                cv.imwrite("data/noise_image{i}.png", resized_image)
+
+            if self.lrp_checkbox.isChecked():
+                rule = self.lrp_rule_box.currentText()
+                lrp_image = self.lrp_analyze(resized_image, rule)
+
+                # lrp image information
+                info_lrp = {
+                    'image': lrp_image,
+                    'title': "LRP: " + rule + i,
+                    'cmap': "viridis"
+                }
+                images_info.append(info_lrp)
+                cv.imwrite("data/lrp_image{i}.png", lrp_image)
+
+            if self.gradcam_checkbox.isChecked():
+                grad_cam_image = self.grad_cam_analyze()
+
+                # gradcam image information
+                info_grad = {
+                    'image': grad_cam_image,
+                    'title': "GRADCAM" + i,
+                    'cmap': "viridis"
+                }
+                images_info.append(info_grad)
+                cv.imwrite("data/gc_image{i}.png", grad_cam_image)
+
+            if self.lime_checkbox.isChecked():
+                samples = self.lime_samples_box.value()
+                features = self.lime_features_box.value()
+                lime_image = self.lime_analyzer(image, samples, features)
+                #lime_image = self.lime_heatmap(image, samples)
+
+                # lime image information
+                info_lime = {
+                    'image': lime_image,
+                    'title': "LIME: " + samples + features + i,
+                    'cmap': "viridis"
+                }
+                images_info.append(info_lime)
+                cv.imwrite("data/lime_image{i}.png", lime_image)
+
+            if self.overlap_box.isChecked():
+                overlap_image = self.overlap_images(images_info['image'])
+                print("Overlapped Image" + i)
+                overlap_image = convert_to_uint8(overlap_image)
+                # overlap image information
+                info_overlap = {
+                    'image': overlap_image,
+                    'title': "Overlap: " + i,
+                    'cmap': "viridis"
+                }
+                images_info.append(info_overlap)
+                cv.imwrite("data/overlap_image{i}.png", overlap_image)
+
+        print("Plotting")
+        PLOTTING.plot_images_info(images_info, figsize=(20, 5))
 
     def lrp_analyze(self, image, rule):
         print("LRP")
@@ -192,6 +289,12 @@ class Ui(QtWidgets.QDialog):
         lime_image = LIME.get_lime_explanation(image, self.keras_model, samples, features)
         lime_image = convert_to_uint8(lime_image)
         return lime_image
+    # TODO heatmap (?) 
+    def lime_heatmap(self, image, samples):
+        print("LIME_HEATMAP")
+        heatmap = LIME.get_lime_heat_map(image, self.keras_model, samples)
+        heatmap = convert_to_uint8(heatmap)
+        return heatmap
 
     def overlap_images(self, image_list):
         print("OVERLAP")

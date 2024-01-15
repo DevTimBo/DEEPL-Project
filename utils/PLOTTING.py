@@ -22,6 +22,36 @@ def plot_n_images(images, titles, cmaps, figsize=(20, 5)):
             axs[i].axis('off')
     print("plit")
     plt.show()
+    
+def plot_images_info(images_info, figsize=(20, 5)):
+    num_images = len(images_info)
+    
+    # Check the number of images
+    print(f"Number of images: {num_images}")
+    
+    # Check if the length is valid
+    if num_images == 0 or any(len(info) != 3 for info in images_info):
+        raise ValueError("Invalid number of images, titles, or cmaps provided.")
+    
+    # Create subplots
+    fig, axs = plt.subplots(1, num_images, figsize=figsize)
+
+    for i, info in enumerate(images_info):
+        # Extract image, title, and cmap from the dictionary
+        image = info['image']
+        title = info['title']
+        cmap = info['cmap']
+
+        # Convert image to RGB for display
+        rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+        # Display the image with title
+        axs[i].imshow(rgb_image, cmap=cmap)
+        axs[i].set_title(title)
+        axs[i].axis('off')
+
+    # Show the plot
+    plt.show()
 
 
 import matplotlib.pyplot as plt
