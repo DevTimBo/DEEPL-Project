@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import cv2
+
 def plot_n_images(images, titles, cmaps, figsize=(20, 5)):
     num_images = len(images)
     if num_images == 0 or num_images != len(titles) or num_images != len(cmaps):
