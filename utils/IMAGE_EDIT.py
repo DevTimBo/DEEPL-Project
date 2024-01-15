@@ -3,6 +3,8 @@ import cv2
 
 def add_noise(image, noise_level):
     np.random.seed(50)
+    if noise_level > 255:
+        noise_level = 255
     noise = np.random.normal(0, noise_level, image.shape)
     noise_image = image + noise
     noise_image = np.clip(noise_image, 0, 255).astype(np.uint8)

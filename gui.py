@@ -6,6 +6,7 @@ import LIME.LIME as LIME
 from utils import datei_laden, IMAGE_EDIT, PLOTTING
 import numpy as np
 import tensorflow as tf
+import threading
 
 tf.compat.v1.disable_eager_execution()
 
@@ -77,8 +78,14 @@ class Ui(QtWidgets.QDialog):
             filename = dialog.selectedFiles()
             self.load_video(filename[0])
 
+    # Starting New Thread so Application can still be used
+    # Doesnt work because Matplot cant Plot in 2nd Thread
+    def analyze_thread_start(self):
+        my_thread = threading.Thread(target=self.analyze)
+        my_thread.start()
+
     def analyze(self):
-        # TODO New THread
+
         if self.model.currentText() == "VGG16":
             import keras.applications.vgg16 as vgg16
             # Keras Model
@@ -111,54 +118,72 @@ class Ui(QtWidgets.QDialog):
             pass
         elif self.model.currentText() == "ResNet":
             pass
-        resized_image = convert_to_uint8(resized_image)
-        image_list.append(resized_image)
-        title_list.append(f"Original")
-        cmap_list.append("viridis")
+        noise_walk_value = 0
+        if self.noise_walk_checkbox.isChecked():
 
-        if self.noise_checkbox.isChecked():
-            noise_level = self.noiselevel_box.value()
-            resized_image = IMAGE_EDIT.add_noise(resized_image, noise_level)
-
-            image_list.append(resized_image)
-            title_list.append("Noise")
+            max_value = self.noise_walk_max.value()
+            steps = self.noise_walk_steps.value()
+            stepsize = int(max_value / steps)
+        else:
+            steps = 1
+            stepsize = 0
+            image_list.append(image)
+            title_list.append(f"Original")
             cmap_list.append("viridis")
-            cv.imwrite("data/noise_image.png", resized_image)
+            if self.noise_checkbox.isChecked():
+                noise_level = self.noiselevel_box.value()
+                resized_image = IMAGE_EDIT.add_noise(resized_image, noise_level)
 
-        if self.lrp_checkbox.isChecked():
-            rule = self.lrp_rule_box.currentText()
-            lrp_image = self.lrp_analyze(resized_image, rule)
+                image_list.append(resized_image)
+                title_list.append("Noise")
+                cmap_list.append("viridis")
+                cv.imwrite("data/noise_image.png", resized_image)
 
-            title_list.append(f"LRP: {rule}")
-            cmap_list.append('viridis')
-            image_list.append(lrp_image)
+        for i in range(steps):
+            if self.noise_walk_checkbox.isChecked():
+                resized_image = IMAGE_EDIT.add_noise(resized_image, noise_walk_value)
+                image_list.append(resized_image)
+                title_list.append(f"Noise Level: {noise_walk_value}")
+                cmap_list.append("viridis")
+                cv.imwrite("data/noise_image.png", resized_image)
 
-        if self.gradcam_checkbox.isChecked():
-            grad_cam_image = self.grad_cam_analyze()
+            if self.lrp_checkbox.isChecked():
+                rule = self.lrp_rule_box.currentText()
+                lrp_image = self.lrp_analyze(resized_image, rule)
 
-            title_list.append(f"GRAD CAM")
-            cmap_list.append('viridis')
-            image_list.append(grad_cam_image)
+                title_list.append(f"LRP: {rule}")
+                cmap_list.append('viridis')
+                image_list.append(lrp_image)
 
-        if self.lime_checkbox.isChecked():
-            samples = self.lime_samples_box.value()
-            features = self.lime_features_box.value()
-            lime_image = self.lime_analyzer(image, samples, features)
+            if self.gradcam_checkbox.isChecked():
+                grad_cam_image = self.grad_cam_analyze()
 
-            title_list.append(f"LIME {samples}, Top Features: {features}")
-            cmap_list.append('viridis')
-            image_list.append(lime_image)
+                title_list.append(f"GRAD CAM")
+                cmap_list.append('viridis')
+                image_list.append(grad_cam_image)
 
-        if self.overlap_box.isChecked():
-            overlap_image = self.overlap_images(image_list)
-            print("Overlap Image")
-            overlap_image = convert_to_uint8(overlap_image)
-            title_list.append('Overlap IMAGE')
-            image_list.append(overlap_image)
-            cmap_list.append('viridis')
+            if self.lime_checkbox.isChecked():
+                samples = self.lime_samples_box.value()
+                features = self.lime_features_box.value()
+                lime_image = self.lime_analyzer(image, samples, features)
+
+                title_list.append(f"LIME {samples}, Top Features: {features}")
+                cmap_list.append('viridis')
+                image_list.append(lime_image)
+
+            if self.overlap_box.isChecked():
+                overlap_image = self.overlap_images(image_list)
+                print("Overlap Image")
+                overlap_image = convert_to_uint8(overlap_image)
+                title_list.append('Overlap IMAGE')
+                image_list.append(overlap_image)
+                cmap_list.append('viridis')
+            noise_walk_value = noise_walk_value + stepsize
 
         print("Plotting")
-        PLOTTING.plot_n_images(image_list, title_list, cmap_list, figsize=(20, 5))
+        PLOTTING.plot_n_images(image_list, title_list, cmap_list,
+                               max_images_per_row=self.find_len_per_row(),
+                               figsize=(20, 5))
 
     def lrp_analyze(self, image, rule):
         print("LRP")
@@ -169,6 +194,18 @@ class Ui(QtWidgets.QDialog):
         lrp_image = cv.merge([zeros_array, zeros_array, lrp_image])  # LRP nur im roten Kanal
         return lrp_image
 
+    def find_len_per_row(self):
+        len_per_row = 1
+        if self.lrp_checkbox.isChecked():
+            len_per_row += 1
+        if self.gradcam_checkbox.isChecked():
+            len_per_row += 1
+        if self.lime_checkbox.isChecked():
+            len_per_row += 1
+        if self.overlap_box.isChecked():
+            len_per_row += 1
+        return len_per_row
+
     def grad_cam_analyze(self):
         # TODO Pickle Model Übergeben, Last Conv Layer
         print("GRAD_CAM")
@@ -177,7 +214,7 @@ class Ui(QtWidgets.QDialog):
         tensorflow_script_path = "CAM/framework_grad_cam.py"
         # Specify the model_name and filepath as arguments
         model_name = self.model.currentText()
-        if self.noise_checkbox.isChecked():
+        if self.noise_checkbox.isChecked() or self.noise_walk_checkbox.isChecked():
             filepath = 'data/noise_image.png'
         else:
             filepath = self.single_image
@@ -196,13 +233,13 @@ class Ui(QtWidgets.QDialog):
     def overlap_images(self, image_list):
         print("OVERLAP")
         if len(image_list) > 1:
-            overlap_images = image_list[1:]
+            length = self.find_len_per_row()
+            overlap_images = image_list[-length:]
             for image in overlap_images:
                 print(image.shape)
             overlap_image = IMAGE_EDIT.overlap_images(overlap_images)
 
         return overlap_image
-
 
     def closeEvent(self, event):
         self.hide()
