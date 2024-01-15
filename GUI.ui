@@ -153,12 +153,12 @@
     <string>GRAD-CAM</string>
    </property>
   </widget>
-  <widget class="QCheckBox" name="checkBox_2">
+  <widget class="QCheckBox" name="monte_carlo_checkbox">
    <property name="geometry">
     <rect>
      <x>30</x>
      <y>500</y>
-     <width>123</width>
+     <width>151</width>
      <height>17</height>
     </rect>
    </property>
@@ -384,8 +384,8 @@
   <widget class="QLabel" name="label_9">
    <property name="geometry">
     <rect>
-     <x>490</x>
-     <y>40</y>
+     <x>390</x>
+     <y>38</y>
      <width>71</width>
      <height>16</height>
     </rect>
@@ -397,9 +397,9 @@
   <widget class="QListWidget" name="image_list_widget">
    <property name="geometry">
     <rect>
-     <x>400</x>
+     <x>330</x>
      <y>80</y>
-     <width>256</width>
+     <width>131</width>
      <height>192</height>
     </rect>
    </property>
@@ -420,8 +420,8 @@
   <widget class="QPushButton" name="button_load_many_images">
    <property name="geometry">
     <rect>
-     <x>570</x>
-     <y>32</y>
+     <x>470</x>
+     <y>30</y>
      <width>81</width>
      <height>31</height>
     </rect>
@@ -430,11 +430,11 @@
     <string>Load Image</string>
    </property>
   </widget>
-  <widget class="QCheckBox" name="checkBox_7">
+  <widget class="QCheckBox" name="time_series_checkbox">
    <property name="geometry">
     <rect>
-     <x>680</x>
-     <y>150</y>
+     <x>570</x>
+     <y>40</y>
      <width>161</width>
      <height>17</height>
     </rect>
@@ -593,6 +593,22 @@
    </property>
    <property name="text">
     <string>Heatmap: LIME</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="many_images_label">
+   <property name="geometry">
+    <rect>
+     <x>480</x>
+     <y>80</y>
+     <width>251</width>
+     <height>191</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Image</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
  </widget>

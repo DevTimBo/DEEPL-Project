@@ -23,7 +23,3 @@ def get_lime_heat_map(image, model, samples):
     heatmap = np.vectorize(dict_heatmap.get)(explanation.segments)
     
     return heatmap 
-
-    #Plot. The visualization makes more sense if a symmetrical colorbar is used.
-    #plt.imshow(heatmap, cmap = 'RdBu', vmin  = -heatmap.max(), vmax = heatmap.max())
-

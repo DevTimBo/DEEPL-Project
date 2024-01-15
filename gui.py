@@ -35,12 +35,21 @@ class Ui(QtWidgets.QDialog):
         self.button_load_many_images.clicked.connect(self.file_dialog_many)
         self.button_load_video.clicked.connect(self.file_dialog_video)
         self.button_analyze.clicked.connect(self.analyze)
+        
+        # Connect the QListWidget
+        self.image_list_widget.itemClicked.connect(self.show_selected_image)
 
         self.show()
 
     def load_picture(self, filepath):
         self.single_image = filepath
         self.single_image_label.setPixmap(datei_laden.datei_to_pixmap(filepath))
+    
+    def show_selected_image(self, item):
+        # Display the selected image in the QLabel
+        filepath = item.text()
+        pixmap = datei_laden.datei_to_pixmap(filepath)
+        self.many_images_label.setPixmap(pixmap)
 
     def file_dialog_single(self):
         dialog = QFileDialog(self)
