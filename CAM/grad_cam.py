@@ -25,7 +25,7 @@ img_path = keras.utils.get_file(
 )
 
 
-def make_grad_cam(model, img_path, img_size, preprocess, decode_predictions, last_conv_layer_name):
+def make_gradcam(model, img_path, img_size, preprocess, decode_predictions, last_conv_layer_name):
     preprocess_input = preprocess
     img_array = preprocess_input(get_img_array(img_path, size=img_size))
     # print(img_array)
@@ -92,4 +92,4 @@ def save_and_display_gradcam(img_path, preds, heatmap, cam_path, alpha=0.4):
     # plt.title(decode_predictions(preds, top=1)[0])
 
 
-make_grad_cam(model, img_path, img_size, preprocess_input, decode_predictions, last_conv_layer_name)
+make_gradcam(model, img_path, img_size, preprocess_input, decode_predictions, last_conv_layer_name)

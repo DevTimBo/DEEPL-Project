@@ -2,7 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import cv2
 
-def plot_n_images(images, titles, cmaps, figsize=(20, 5)):
+
+def plot_n_images(images, titles, cmaps, max_images_per_row, figsize=(20, 5)):
     num_images = len(images)
     if num_images == 0 or num_images != len(titles) or num_images != len(cmaps):
         raise ValueError("Invalid number of images, titles, or cmaps provided.")
@@ -12,14 +13,35 @@ def plot_n_images(images, titles, cmaps, figsize=(20, 5)):
         ax.set_title(titles[0])
         ax.axis('off')
     else:
-        fig, axs = plt.subplots(1, num_images, figsize=figsize)
-        for i in range(num_images):
-            rgb_image = cv2.cvtColor(images[i], cv2.COLOR_BGR2RGB)
-            print(f"image {i}")
-            #axs[i].imshow(images[i], cmap=cmaps[i])
-            axs[i].imshow(rgb_image)
-            axs[i].set_title(titles[i])
-            axs[i].axis('off')
+        num_rows = 1
+        if num_images > max_images_per_row:
+            num_rows = (num_images - 1) // max_images_per_row + 1
+        fig, axs = plt.subplots(num_rows, max_images_per_row,figsize=figsize)
+        print(f"num rows {num_rows}")
+        print(f"max_images_per_row {max_images_per_row}")
+        if max_images_per_row == 1 or num_rows == 1:
+            for i in range(num_images):
+                rgb_image = cv2.cvtColor(images[i], cv2.COLOR_BGR2RGB)
+                print("imshow")
+                axs[i].imshow(rgb_image)
+                print("titles")
+                axs[i].set_title(titles[i])
+                print("off")
+                axs[i].axis('off')
+        else:
+            for i in range(num_images):
+                print(i)
+                row_index = i // max_images_per_row
+                col_index = i % max_images_per_row
+                print(row_index, col_index)
+                print("RGB")
+                rgb_image = cv2.cvtColor(images[i], cv2.COLOR_BGR2RGB)
+                print("imshow")
+                axs[row_index, col_index].imshow(rgb_image)
+                print("titles")
+                axs[row_index, col_index].set_title(titles[i])
+                print("off")
+                axs[row_index, col_index].axis('off')
     print("plit")
     plt.show()
     
@@ -54,8 +76,38 @@ def plot_images_info(images_info, figsize=(20, 5)):
     plt.show()
 
 
+def plot_5_per_rows_n_images(images, titles, cmaps, max_images_per_row=5, figsize=(20, 5)):
+    num_images = len(images)
+    print(f"num_images {num_images}")
+    if num_images == 0 or num_images != len(titles) or num_images != len(cmaps):
+        raise ValueError("Invalid number of images, titles, or cmaps provided.")
+
+    num_rows = 1
+    num_cols = min(num_images, max_images_per_row)
+    print(f"num_cols {num_cols}")
+    if num_images > max_images_per_row:
+        num_rows = (num_images - 1) // max_images_per_row + 1
+    print(f"num_rows {num_rows}")
+    fig, axs = plt.subplots(num_rows, max_images_per_row)
+    for i in range(num_images):
+        print(f"1 {i}")
+        row_index = i // max_images_per_row
+        col_index = i % max_images_per_row
+        print(f"2 {i}")
+        if num_images > max_images_per_row:
+            axs[row_index, col_index].imshow(cv2.cvtColor(images[i], cv2.COLOR_BGR2RGB))
+        else:
+            axs[col_index].imshow(cv2.cvtColor(images[i], cv2.COLOR_BGR2RGB))
+        print(f"3 {i}")
+        axs[row_index, col_index].set_title(titles[i])
+        axs[row_index, col_index].axis('off')
+
+    plt.show()
+
+
 import matplotlib.pyplot as plt
 import numpy as np
+
 
 def plot_images_grid(images, x, y):
     n = len(images)
@@ -81,6 +133,7 @@ def plot_images_grid(images, x, y):
             ax.axis("off")
 
     plt.show()
+
 
 # Example usage:
 # Assuming you have a list of n images (numpy arrays or image paths), and you want to create a 2x3 grid:
