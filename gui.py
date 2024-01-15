@@ -78,7 +78,7 @@ class Ui(QtWidgets.QDialog):
             self.load_video(filename[0])
 
     def analyze(self):
-
+        # TODO New THread
         if self.model.currentText() == "VGG16":
             import keras.applications.vgg16 as vgg16
             # Keras Model
@@ -113,7 +113,7 @@ class Ui(QtWidgets.QDialog):
             pass
         resized_image = convert_to_uint8(resized_image)
         image_list.append(resized_image)
-        title_list.append("Original")
+        title_list.append(f"Original")
         cmap_list.append("viridis")
 
         if self.noise_checkbox.isChecked():
@@ -170,6 +170,7 @@ class Ui(QtWidgets.QDialog):
         return lrp_image
 
     def grad_cam_analyze(self):
+        # TODO Pickle Model Übergeben, Last Conv Layer
         print("GRAD_CAM")
         import subprocess
         # Specify the path to the TensorFlow script
