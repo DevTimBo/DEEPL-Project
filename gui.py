@@ -209,7 +209,7 @@ class Ui(QtWidgets.QDialog):
             # Original image information
             info_original = {
                 'image': resized_image,
-                'title': f"Original" + i,
+                'title': "Original {i}",
                 'cmap': "viridis"
             }
             images_info.append(info_original)
@@ -222,7 +222,7 @@ class Ui(QtWidgets.QDialog):
                 # Noisy image information
                 info_noisy = {
                     'image': resized_image,
-                    'title': "Noise" + i,
+                    'title': "Noise {i}",
                     'cmap': "viridis"
                 }
                 images_info.append(info_noisy)
@@ -235,7 +235,7 @@ class Ui(QtWidgets.QDialog):
                 # lrp image information
                 info_lrp = {
                     'image': lrp_image,
-                    'title': "LRP: " + rule + i,
+                    'title': "LRP {i}: " + rule,
                     'cmap': "viridis"
                 }
                 images_info.append(info_lrp)
@@ -247,7 +247,7 @@ class Ui(QtWidgets.QDialog):
                 # gradcam image information
                 info_grad = {
                     'image': grad_cam_image,
-                    'title': "GRADCAM" + i,
+                    'title': "GRADCAM {i}",
                     'cmap': "viridis"
                 }
                 images_info.append(info_grad)
@@ -262,7 +262,7 @@ class Ui(QtWidgets.QDialog):
                 # lime image information
                 info_lime = {
                     'image': lime_image,
-                    'title': "LIME: " + samples + features + i,
+                    'title': "LIME {i}: {samples};{features}",
                     'cmap': "viridis"
                 }
                 images_info.append(info_lime)
@@ -270,12 +270,11 @@ class Ui(QtWidgets.QDialog):
 
             if self.overlap_box.isChecked():
                 overlap_image = self.overlap_images(images_info['image'])
-                print("Overlapped Image" + i)
                 overlap_image = convert_to_uint8(overlap_image)
                 # overlap image information
                 info_overlap = {
                     'image': overlap_image,
-                    'title': "Overlap: " + i,
+                    'title': "Overlap{i}",
                     'cmap': "viridis"
                 }
                 images_info.append(info_overlap)
