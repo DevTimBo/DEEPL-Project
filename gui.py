@@ -134,7 +134,6 @@ class Ui(QtWidgets.QDialog):
             image_list.append(lrp_image)
 
         if self.gradcam_checkbox.isChecked():
-
             grad_cam_image = self.grad_cam_analyze()
 
             title_list.append(f"GRAD CAM")
@@ -151,11 +150,13 @@ class Ui(QtWidgets.QDialog):
 
         if self.overlap_box.isChecked():
             overlap_image = self.overlap_images(image_list)
-
-            title_list.append('AVG IMAGE')
+            print("Overlap Image")
+            overlap_image = convert_to_uint8(overlap_image)
+            title_list.append('Overlap IMAGE')
             image_list.append(overlap_image)
             cmap_list.append('viridis')
 
+        print("Plotting")
         PLOTTING.plot_n_images(image_list, title_list, cmap_list, figsize=(20, 5))
 
     def lrp_analyze(self, image, rule):
@@ -185,10 +186,10 @@ class Ui(QtWidgets.QDialog):
         return grad_cam_image
 
     def lime_analyzer(self, image, samples):
+        print("LIME_ANALYZER")
         lime_image = LIME.get_lime_explanation(image, self.keras_model, samples)
         lime_image = convert_to_uint8(lime_image)
         return lime_image
-
 
     def overlap_images(self, image_list):
         print("OVERLAP")
@@ -198,10 +199,9 @@ class Ui(QtWidgets.QDialog):
                 print(image.shape)
             overlap_image = IMAGE_EDIT.overlap_images(overlap_images)
 
-        if overlap_image != None:
-            return overlap_image
-        else:
-            return -1
+        return overlap_image
+
+
     def closeEvent(self, event):
         self.hide()
         qApp.quit()

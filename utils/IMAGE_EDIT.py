@@ -21,6 +21,7 @@ def overlap_images(image_list):
             result_image = result_image + img
 
     result_image = result_image/len(image_list)
-    return result_image.astype(np.uint8)
+    print("Result image shape: ", result_image.shape)
+    return result_image
 
 
