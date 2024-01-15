@@ -130,7 +130,7 @@ class Ui(QtWidgets.QDialog):
         else:
             steps = 1
             stepsize = 0
-            image_list.append(image)
+            image_list.append(resized_image)
             title_list.append(f"Original")
             cmap_list.append("viridis")
             if self.noise_checkbox.isChecked():
@@ -168,9 +168,9 @@ class Ui(QtWidgets.QDialog):
             if self.lime_checkbox.isChecked():
                 samples = self.lime_samples_box.value()
                 features = self.lime_features_box.value()
-                lime_image = self.lime_analyzer(image, samples, features)
+                lime_image = self.lime_analyzer(resized_image, samples, features)
 
-                title_list.append(f"LIME {samples}, Top Features: {features}")
+                title_list.append(f"LIME - Samples: {samples}, Features: {features}")
                 cmap_list.append('viridis')
                 image_list.append(lime_image)
 
@@ -189,13 +189,12 @@ class Ui(QtWidgets.QDialog):
                                figsize=(20, 5))
         
     def many_images_analyzer(self):
-        images_info = []
+        image_list = []
+        title_list = []
+        cmap_list = []
 
         for i in range(len(self.many_images)):
-            print(f"Processing image {i + 1}/{len(self.many_images)}")
-
             image = cv.imread(self.many_images[i], cv.IMREAD_COLOR)
-
             if self.model.currentText() == "VGG16":
                 size = (224, 224)
                 resized_image = cv.resize(image, size)
@@ -203,85 +202,72 @@ class Ui(QtWidgets.QDialog):
                 pass
             elif self.model.currentText() == "ResNet":
                 pass
+            noise_walk_value = 0
+            if self.noise_walk_checkbox.isChecked():
 
-            resized_image = convert_to_uint8(resized_image)
+                max_value = self.noise_walk_max.value()
+                steps = self.noise_walk_steps.value()
+                stepsize = int(max_value / steps)
+            else:
+                steps = 1
+                stepsize = 0
+                image_list.append(resized_image)
+                title_list.append(f"Original")
+                cmap_list.append("viridis")
+                if self.noise_checkbox.isChecked():
+                    noise_level = self.noiselevel_box.value()
+                    resized_image = IMAGE_EDIT.add_noise(resized_image, noise_level)
 
-            # Original image information
-            info_original = {
-                'image': resized_image,
-                'title': "Original {i}",
-                'cmap': "viridis"
-            }
-            images_info.append(info_original)
+                    image_list.append(resized_image)
+                    title_list.append("Noise")
+                    cmap_list.append("viridis")
+                    cv.imwrite("data/noise_image.png", resized_image)
 
-            # Add noise if the checkbox is checked
-            if self.noise_checkbox.isChecked():
-                noise_level = self.noiselevel_box.value()
-                resized_image = IMAGE_EDIT.add_noise(resized_image, noise_level)
+            for i in range(steps):
+                if self.noise_walk_checkbox.isChecked():
+                    resized_image = IMAGE_EDIT.add_noise(resized_image, noise_walk_value)
+                    image_list.append(resized_image)
+                    title_list.append(f"Noise Level: {noise_walk_value}")
+                    cmap_list.append("viridis")
+                    cv.imwrite("data/noise_image.png", resized_image)
 
-                # Noisy image information
-                info_noisy = {
-                    'image': resized_image,
-                    'title': "Noise {i}",
-                    'cmap': "viridis"
-                }
-                images_info.append(info_noisy)
-                cv.imwrite("data/noise_image{i}.png", resized_image)
+                if self.lrp_checkbox.isChecked():
+                    rule = self.lrp_rule_box.currentText()
+                    lrp_image = self.lrp_analyze(resized_image, rule)
 
-            if self.lrp_checkbox.isChecked():
-                rule = self.lrp_rule_box.currentText()
-                lrp_image = self.lrp_analyze(resized_image, rule)
+                    title_list.append(f"LRP: {rule}")
+                    cmap_list.append('viridis')
+                    image_list.append(lrp_image)
 
-                # lrp image information
-                info_lrp = {
-                    'image': lrp_image,
-                    'title': "LRP {i}: " + rule,
-                    'cmap': "viridis"
-                }
-                images_info.append(info_lrp)
-                cv.imwrite("data/lrp_image{i}.png", lrp_image)
+                if self.gradcam_checkbox.isChecked():
+                    grad_cam_image = self.grad_cam_analyze()
 
-            if self.gradcam_checkbox.isChecked():
-                grad_cam_image = self.grad_cam_analyze()
+                    title_list.append(f"GRAD CAM")
+                    cmap_list.append('viridis')
+                    image_list.append(grad_cam_image)
 
-                # gradcam image information
-                info_grad = {
-                    'image': grad_cam_image,
-                    'title': "GRADCAM {i}",
-                    'cmap': "viridis"
-                }
-                images_info.append(info_grad)
-                cv.imwrite("data/gc_image{i}.png", grad_cam_image)
+                if self.lime_checkbox.isChecked():
+                    samples = self.lime_samples_box.value()
+                    features = self.lime_features_box.value()
+                    lime_image = self.lime_analyzer(resized_image, samples, features)
 
-            if self.lime_checkbox.isChecked():
-                samples = self.lime_samples_box.value()
-                features = self.lime_features_box.value()
-                lime_image = self.lime_analyzer(image, samples, features)
-                #lime_image = self.lime_heatmap(image, samples)
+                    title_list.append(f"LIME - Samples: {samples}, Features: {features}")
+                    cmap_list.append('viridis')
+                    image_list.append(lime_image)
 
-                # lime image information
-                info_lime = {
-                    'image': lime_image,
-                    'title': "LIME {i}: {samples};{features}",
-                    'cmap': "viridis"
-                }
-                images_info.append(info_lime)
-                cv.imwrite("data/lime_image{i}.png", lime_image)
-
-            if self.overlap_box.isChecked():
-                overlap_image = self.overlap_images(images_info['image'])
-                overlap_image = convert_to_uint8(overlap_image)
-                # overlap image information
-                info_overlap = {
-                    'image': overlap_image,
-                    'title': "Overlap{i}",
-                    'cmap': "viridis"
-                }
-                images_info.append(info_overlap)
-                cv.imwrite("data/overlap_image{i}.png", overlap_image)
+                if self.overlap_box.isChecked():
+                    overlap_image = self.overlap_images(image_list)
+                    print("Overlap Image")
+                    overlap_image = convert_to_uint8(overlap_image)
+                    title_list.append('Overlap IMAGE')
+                    image_list.append(overlap_image)
+                    cmap_list.append('viridis')
+                noise_walk_value = noise_walk_value + stepsize
 
         print("Plotting")
-        PLOTTING.plot_images_info(images_info, figsize=(20, 5))
+        PLOTTING.plot_n_images(image_list, title_list, cmap_list,
+                               max_images_per_row=self.find_len_per_row(),
+                               figsize=(20, 5))
 
     def lrp_analyze(self, image, rule):
         print("LRP")
@@ -327,6 +313,7 @@ class Ui(QtWidgets.QDialog):
         lime_image = LIME.get_lime_explanation(image, self.keras_model, samples, features)
         lime_image = convert_to_uint8(lime_image)
         return lime_image
+    
     # TODO heatmap (?) 
     def lime_heatmap(self, image, samples):
         print("LIME_HEATMAP")

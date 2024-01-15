@@ -28,6 +28,7 @@ MANIFEST
 
 # Additional entries for .gitignore
 LIME/images/
+unused_functions.py
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
