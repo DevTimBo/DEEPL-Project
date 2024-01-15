@@ -18,7 +18,7 @@ def make_grad_cam(model, img_path, img_size, preprocess, decode_predictions, las
     preds = model.predict(img_array)
     print("Predicted:", decode_predictions(preds, top=1)[0])
     heatmap = make_gradcam_heatmap(img_array, model, last_conv_layer_name)
-    save_and_display_gradcam(img_path, preds, heatmap, cam_path="grad_cam.jpg", alpha=0.4)
+    save_and_display_gradcam(img_path, preds, heatmap, cam_path="data/grad_cam.jpg", alpha=0.4)
 
 
 

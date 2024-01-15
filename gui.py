@@ -1,36 +1,22 @@
 from PyQt5 import QtWidgets, uic
 import sys
 import cv2 as cv
-import FRAMEWORK.LRP as LRP
-import FRAMEWORK.LIME as LIME
-import FRAMEWORK.IMAGE_EDIT as IMAGE_EDIT
-import FRAMEWORK.PLOTTING as PLOTTING
-import datei_laden
+import LRP.LRP as LRP
+import LIME.LIME as LIME
+from utils import datei_laden, IMAGE_EDIT, PLOTTING
 import numpy as np
 import tensorflow as tf
 tf.compat.v1.disable_eager_execution()
 
 
-from PyQt5.QtWidgets import (QApplication, QDialog,QTextEdit,
-                             QPushButton,QVBoxLayout,QLabel,QWidget,
-                             QHBoxLayout,qApp,QSpinBox, QDoubleSpinBox,
-                             QGridLayout, QFormLayout,QLineEdit,
-                             QDateEdit, QComboBox,
-                             QMainWindow,
-    QWidget,
-    QFileDialog,
-    QGridLayout,
-    QPushButton,
-    QLabel,
-    QAction,QListWidgetItem,
-
-    QListWidget)
+from PyQt5.QtWidgets import (qApp, QFileDialog,
+                             QListWidgetItem)
 
 
 class Ui(QtWidgets.QDialog):
     def __init__(self):
         super(Ui, self).__init__()
-        uic.loadUi('TestUI.ui', self)
+        uic.loadUi('GUI.ui', self)
 
         self.single_image = ""
         self.many_images = []
@@ -126,7 +112,7 @@ class Ui(QtWidgets.QDialog):
             image_list.append(resized_image)
             title_list.append("Noise")
             cmap_list.append("viridis")
-            cv.imwrite("noise_image.png", resized_image)
+            cv.imwrite("data/noise_image.png", resized_image)
 
         if self.lrp_checkbox.isChecked():
             print("LRP")
@@ -143,16 +129,16 @@ class Ui(QtWidgets.QDialog):
             print("GRAD_CAM")
             import subprocess
             # Specify the path to the TensorFlow script
-            tensorflow_script_path = "grad_cam.py"
+            tensorflow_script_path = "CAM/framework_grad_cam.py"
             # Specify the model_name and filepath as arguments
             model_name = self.model.currentText()
             if self.noise_checkbox.isChecked():
-                filepath = 'noise_image.png'
+                filepath = 'data/noise_image.png'
             else:
                 filepath = self.single_image
             # Run the TensorFlow script as a subprocess with arguments
             subprocess.run(["python", tensorflow_script_path, model_name, filepath])
-            grad_cam_image = cv.imread("grad_cam.jpg")
+            grad_cam_image = cv.imread("data/grad_cam.jpg")
             grad_cam_image = convert_to_uint8(grad_cam_image)
             title_list.append(f"GRAD CAM")
             cmap_list.append('viridis')

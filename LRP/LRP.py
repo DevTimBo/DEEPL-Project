@@ -2,9 +2,7 @@
 
 import innvestigate
 import numpy as np
-import PLOTTING
-import tensorflow as tf
-import matplotlib.pyplot as plt
+
 
 #tf.compat.v1.disable_eager_execution()
 #rule = "lrp.alpha_1_beta_0"
