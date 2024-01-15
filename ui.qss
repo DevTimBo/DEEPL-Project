@@ -20,7 +20,7 @@ QWidget {
   QLineEdit {
     border-radius: 8px;
     border: 1px solid #e0e4e7;
-    padding: 5px 15px;
+    padding: 1px 15px;
   }
   
   QLineEdit:focus {
@@ -36,7 +36,7 @@ QWidget {
     font-weight: 600;
     border-radius: 8px;
     border: 1px solid #0d6efd;
-    padding: 5px 15px;
+    padding: 1px 1px;
     margin-top: 10px;
     outline: 0px;
   }
