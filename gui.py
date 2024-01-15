@@ -55,6 +55,7 @@ class Ui(QtWidgets.QDialog):
         for filename in filenames:
             item = QListWidgetItem(filename)
             self.image_list_widget.addItem(item)
+            self.many_images.append(filename)
 
     def file_dialog_many(self):
         dialog = QFileDialog(self)
@@ -85,6 +86,7 @@ class Ui(QtWidgets.QDialog):
         my_thread.start()
 
     def analyze(self):
+        print(self.many_images)
 
         if self.model.currentText() == "VGG16":
             import keras.applications.vgg16 as vgg16
