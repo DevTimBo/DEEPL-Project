@@ -16,6 +16,7 @@ decode_predictions = keras.applications.xception.decode_predictions
 
 OUTPUT_FOLDER = 'DEEPL-Project\CAM\Images\gradcam_output'
 heatmap_name = 'cam1_1.jpg'
+result_name = 'cam1_2.jpg'
 last_conv_layer_name = "block14_sepconv2_act"
 
 model = model_builder(weights="imagenet")
