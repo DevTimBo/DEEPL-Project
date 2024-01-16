@@ -304,6 +304,9 @@ class Ui(QtWidgets.QDialog):
 
     def find_len_per_row(self):
         len_per_row = 1
+        if not self.noise_walk_checkbox.isChecked():
+            if self.noise_checkbox.isChecked():
+                len_per_row += 1
         if self.lrp_checkbox.isChecked():
             len_per_row += 1
         if self.gradcam_checkbox.isChecked():
