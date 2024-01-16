@@ -14,6 +14,8 @@ img_size = (299, 299)
 preprocess_input = keras.applications.xception.preprocess_input
 decode_predictions = keras.applications.xception.decode_predictions
 
+OUTPUT_FOLDER = 'DEEPL-Project\CAM\Images\gradcam_output'
+heatmap_name = 'cam1_1.jpg'
 last_conv_layer_name = "block14_sepconv2_act"
 
 model = model_builder(weights="imagenet")
@@ -33,6 +35,8 @@ def make_gradcam(model, img_path, img_size, preprocess, decode_predictions, last
     preds = model.predict(img_array)
     print("Predicted:", decode_predictions(preds, top=1)[0])
     heatmap = make_gradcam_heatmap(img_array, model, last_conv_layer_name)
+    plt.imshow(heatmap)
+    plt.savefig(os.path.join(OUTPUT_FOLDER, heatmap_name))
     save_and_display_gradcam(img_path, preds, heatmap, cam_path="cam.jpg", alpha=0.4)
 
 
