@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1337</width>
-    <height>655</height>
+    <width>1417</width>
+    <height>687</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -17,7 +17,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>PYTHON PRJ - Image Filter</string>
+   <string>Keras Model - Uncertainty Analyzer</string>
   </property>
   <property name="autoFillBackground">
    <bool>true</bool>
@@ -57,7 +57,7 @@
   <widget class="QCheckBox" name="noise_checkbox">
    <property name="geometry">
     <rect>
-     <x>270</x>
+     <x>410</x>
      <y>350</y>
      <width>121</width>
      <height>17</height>
@@ -70,7 +70,7 @@
   <widget class="QSpinBox" name="noiselevel_box">
    <property name="geometry">
     <rect>
-     <x>390</x>
+     <x>530</x>
      <y>370</y>
      <width>42</width>
      <height>22</height>
@@ -83,7 +83,7 @@
   <widget class="QLabel" name="label_7">
    <property name="geometry">
     <rect>
-     <x>270</x>
+     <x>410</x>
      <y>370</y>
      <width>111</width>
      <height>16</height>
@@ -105,6 +105,11 @@
    <item>
     <property name="text">
      <string>VGG16</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Custom</string>
     </property>
    </item>
   </widget>
@@ -170,7 +175,7 @@
    <property name="geometry">
     <rect>
      <x>28</x>
-     <y>399</y>
+     <y>429</y>
      <width>51</width>
      <height>17</height>
     </rect>
@@ -245,7 +250,7 @@
    <property name="geometry">
     <rect>
      <x>16</x>
-     <y>419</y>
+     <y>449</y>
      <width>61</width>
      <height>20</height>
     </rect>
@@ -261,13 +266,13 @@
    <property name="geometry">
     <rect>
      <x>80</x>
-     <y>420</y>
+     <y>450</y>
      <width>47</width>
      <height>21</height>
     </rect>
    </property>
    <property name="minimum">
-    <number>1</number>
+    <number>50</number>
    </property>
    <property name="maximum">
     <number>5000</number>
@@ -317,8 +322,11 @@
      <height>224</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: white</string>
+   </property>
    <property name="text">
-    <string>Image</string>
+    <string/>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
@@ -346,7 +354,7 @@
   <widget class="QLabel" name="label_6">
    <property name="geometry">
     <rect>
-     <x>320</x>
+     <x>460</x>
      <y>320</y>
      <width>47</width>
      <height>13</height>
@@ -399,7 +407,7 @@
     <rect>
      <x>330</x>
      <y>80</y>
-     <width>131</width>
+     <width>201</width>
      <height>192</height>
     </rect>
    </property>
@@ -469,7 +477,7 @@
   <widget class="QCheckBox" name="noise_walk_checkbox">
    <property name="geometry">
     <rect>
-     <x>270</x>
+     <x>410</x>
      <y>400</y>
      <width>211</width>
      <height>17</height>
@@ -482,7 +490,7 @@
   <widget class="QSpinBox" name="noise_walk_steps">
    <property name="geometry">
     <rect>
-     <x>380</x>
+     <x>520</x>
      <y>440</y>
      <width>42</width>
      <height>22</height>
@@ -498,7 +506,7 @@
   <widget class="QSpinBox" name="noise_walk_max">
    <property name="geometry">
     <rect>
-     <x>330</x>
+     <x>470</x>
      <y>440</y>
      <width>42</width>
      <height>22</height>
@@ -511,7 +519,7 @@
   <widget class="QLabel" name="label_11">
    <property name="geometry">
     <rect>
-     <x>340</x>
+     <x>480</x>
      <y>420</y>
      <width>47</width>
      <height>13</height>
@@ -524,7 +532,7 @@
   <widget class="QLabel" name="label_12">
    <property name="geometry">
     <rect>
-     <x>390</x>
+     <x>530</x>
      <y>420</y>
      <width>47</width>
      <height>13</height>
@@ -538,7 +546,7 @@
    <property name="geometry">
     <rect>
      <x>138</x>
-     <y>419</y>
+     <y>449</y>
      <width>61</width>
      <height>20</height>
     </rect>
@@ -554,7 +562,7 @@
    <property name="geometry">
     <rect>
      <x>200</x>
-     <y>420</y>
+     <y>450</y>
      <width>47</width>
      <height>21</height>
     </rect>
@@ -572,7 +580,7 @@
   <widget class="QCheckBox" name="heatmap_box_cam">
    <property name="geometry">
     <rect>
-     <x>130</x>
+     <x>110</x>
      <y>380</y>
      <width>141</width>
      <height>17</height>
@@ -585,8 +593,8 @@
   <widget class="QCheckBox" name="heatmap_box_lime">
    <property name="geometry">
     <rect>
-     <x>130</x>
-     <y>400</y>
+     <x>110</x>
+     <y>430</y>
      <width>141</width>
      <height>17</height>
     </rect>
@@ -598,17 +606,112 @@
   <widget class="QLabel" name="many_images_label">
    <property name="geometry">
     <rect>
-     <x>480</x>
+     <x>570</x>
      <y>80</y>
-     <width>251</width>
-     <height>191</height>
+     <width>224</width>
+     <height>224</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: white</string>
+   </property>
    <property name="text">
-    <string>Image</string>
+    <string/>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="grad_cam_version_combobox">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>400</y>
+     <width>111</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>GradCam</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>GradCam++</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QLabel" name="label_13">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>400</y>
+     <width>47</width>
+     <height>13</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Version</string>
+   </property>
+  </widget>
+  <widget class="QTextBrowser" name="textBrowser">
+   <property name="geometry">
+    <rect>
+     <x>860</x>
+     <y>430</y>
+     <width>231</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QTextBrowser" name="textBrowser_2">
+   <property name="geometry">
+    <rect>
+     <x>1100</x>
+     <y>430</y>
+     <width>221</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_14">
+   <property name="geometry">
+    <rect>
+     <x>1050</x>
+     <y>370</y>
+     <width>91</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Custom Model</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>920</x>
+     <y>400</y>
+     <width>91</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Load Model</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_2">
+   <property name="geometry">
+    <rect>
+     <x>1160</x>
+     <y>400</y>
+     <width>91</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Load Weights</string>
    </property>
   </widget>
  </widget>

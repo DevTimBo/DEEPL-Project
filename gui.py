@@ -7,9 +7,8 @@ from utils import datei_laden, IMAGE_EDIT, PLOTTING
 import numpy as np
 import tensorflow as tf
 import threading
-
 tf.compat.v1.disable_eager_execution()
-
+from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import (qApp, QFileDialog,
                              QListWidgetItem)
 
@@ -19,6 +18,12 @@ class Ui(QtWidgets.QDialog):
         super(Ui, self).__init__()
         uic.loadUi('GUI.ui', self)
 
+        # open qss file
+        File = open("ui.qss", 'r')
+
+        with File:
+            qss = File.read()
+            app.setStyleSheet(qss)
         # Current Keras Model
         self.keras_model = -1
         self.keras_preprocess = -1
