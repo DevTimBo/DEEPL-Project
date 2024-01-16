@@ -7,9 +7,8 @@ from utils import datei_laden, IMAGE_EDIT, PLOTTING
 import numpy as np
 import tensorflow as tf
 import threading
-
 tf.compat.v1.disable_eager_execution()
-
+from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import (qApp, QFileDialog,
                              QListWidgetItem)
 
@@ -19,6 +18,12 @@ class Ui(QtWidgets.QDialog):
         super(Ui, self).__init__()
         uic.loadUi('GUI.ui', self)
 
+        # open qss file
+        File = open("ui.qss", 'r')
+
+        with File:
+            qss = File.read()
+            app.setStyleSheet(qss)
         # Current Keras Model
         self.keras_model = -1
         self.keras_preprocess = -1
@@ -35,12 +40,21 @@ class Ui(QtWidgets.QDialog):
         self.button_load_many_images.clicked.connect(self.file_dialog_many)
         self.button_load_video.clicked.connect(self.file_dialog_video)
         self.button_analyze.clicked.connect(self.analyze)
+        
+        # Connect the QListWidget
+        self.image_list_widget.itemClicked.connect(self.show_selected_image)
 
         self.show()
 
     def load_picture(self, filepath):
         self.single_image = filepath
         self.single_image_label.setPixmap(datei_laden.datei_to_pixmap(filepath))
+    
+    def show_selected_image(self, item):
+        # Display the selected image in the QLabel
+        filepath = item.text()
+        pixmap = datei_laden.datei_to_pixmap(filepath)
+        self.many_images_label.setPixmap(pixmap)
 
     def file_dialog_single(self):
         dialog = QFileDialog(self)
@@ -55,6 +69,7 @@ class Ui(QtWidgets.QDialog):
         for filename in filenames:
             item = QListWidgetItem(filename)
             self.image_list_widget.addItem(item)
+            self.many_images.append(filename)
 
     def file_dialog_many(self):
         dialog = QFileDialog(self)
@@ -85,6 +100,7 @@ class Ui(QtWidgets.QDialog):
         my_thread.start()
 
     def analyze(self):
+        print(self.many_images)
 
         if self.model.currentText() == "VGG16":
             import keras.applications.vgg16 as vgg16
@@ -102,7 +118,8 @@ class Ui(QtWidgets.QDialog):
             if self.single_image != "":
                 self.single_image_analyzer()
         elif self.analyze_mode.currentText() == "Many Images":
-            pass
+            if self.many_images != []:
+                self.many_images_analyzer()
         elif self.analyze_mode.currentText() == "Video":
             pass
 
@@ -127,7 +144,7 @@ class Ui(QtWidgets.QDialog):
         else:
             steps = 1
             stepsize = 0
-            image_list.append(image)
+            image_list.append(resized_image)
             title_list.append(f"Original")
             cmap_list.append("viridis")
             if self.noise_checkbox.isChecked():
@@ -165,9 +182,9 @@ class Ui(QtWidgets.QDialog):
             if self.lime_checkbox.isChecked():
                 samples = self.lime_samples_box.value()
                 features = self.lime_features_box.value()
-                lime_image = self.lime_analyzer(image, samples, features)
+                lime_image = self.lime_analyzer(resized_image, samples, features)
 
-                title_list.append(f"LIME {samples}, Top Features: {features}")
+                title_list.append(f"LIME - Samples: {samples}, Features: {features}")
                 cmap_list.append('viridis')
                 image_list.append(lime_image)
 
@@ -179,6 +196,97 @@ class Ui(QtWidgets.QDialog):
                 image_list.append(overlap_image)
                 cmap_list.append('viridis')
             noise_walk_value = noise_walk_value + stepsize
+
+        print("Plotting")
+        PLOTTING.plot_n_images(image_list, title_list, cmap_list,
+                               max_images_per_row=self.find_len_per_row(),
+                               figsize=(20, 5))
+        
+    def many_images_analyzer(self):
+        image_list = []
+        title_list = []
+        cmap_list = []
+
+        for i in range(len(self.many_images)):
+            image = cv.imread(self.many_images[i], cv.IMREAD_COLOR)
+            if self.model.currentText() == "VGG16":
+                size = (224, 224)
+                resized_image = cv.resize(image, size)
+            elif self.model.currentText() == "VGG19":
+                pass
+            elif self.model.currentText() == "ResNet":
+                pass
+            noise_walk_value = 0
+            if self.noise_walk_checkbox.isChecked():
+
+                max_value = self.noise_walk_max.value()
+                steps = self.noise_walk_steps.value()
+                stepsize = int(max_value / steps)
+            else:
+                steps = 1
+                stepsize = 0
+                image_list.append(resized_image)
+                title_list.append(f"Original")
+                cmap_list.append("viridis")
+                if self.noise_checkbox.isChecked():
+                    noise_level = self.noiselevel_box.value()
+                    resized_image = IMAGE_EDIT.add_noise(resized_image, noise_level)
+
+                    image_list.append(resized_image)
+                    title_list.append("Noise")
+                    cmap_list.append("viridis")
+                    cv.imwrite("data/noise_image.png", resized_image)
+
+            for i in range(steps):
+                if self.noise_walk_checkbox.isChecked():
+                    resized_image = IMAGE_EDIT.add_noise(resized_image, noise_walk_value)
+                    image_list.append(resized_image)
+                    title_list.append(f"Noise Level: {noise_walk_value}")
+                    cmap_list.append("viridis")
+                    cv.imwrite("data/noise_image.png", resized_image)
+
+                if self.lrp_checkbox.isChecked():
+                    rule = self.lrp_rule_box.currentText()
+                    lrp_image = self.lrp_analyze(resized_image, rule)
+
+                    title_list.append(f"LRP: {rule}")
+                    cmap_list.append('viridis')
+                    image_list.append(lrp_image)
+
+                if self.gradcam_checkbox.isChecked():
+                    if self.heatmap_box_cam.isChecked():
+                        #grad_cam_image = Heatmapfunktion
+                        pass 
+                    else:
+                        grad_cam_image = self.grad_cam_analyze()
+
+                    title_list.append(f"GRAD CAM")
+                    cmap_list.append('viridis')
+                    image_list.append(grad_cam_image)
+
+                if self.lime_checkbox.isChecked():
+                    # Samples must be ~50+
+                    if self.heatmap_box_lime.isChecked():
+                        samples = self.lime_samples_box.value()
+                        features = "All"
+                        lime_image = self.lime_heatmap(resized_image, samples)
+                    else:
+                        samples = self.lime_samples_box.value()
+                        features = self.lime_features_box.value()
+                        lime_image = self.lime_analyzer(resized_image, samples, features)
+
+                    title_list.append(f"LIME - Samples: {samples}, Features: {features}")
+                    cmap_list.append('viridis')
+                    image_list.append(lime_image)
+
+                if self.overlap_box.isChecked():
+                    overlap_image = self.overlap_images(image_list)
+                    print("Overlap Image")
+                    overlap_image = convert_to_uint8(overlap_image)
+                    title_list.append('Overlap IMAGE')
+                    image_list.append(overlap_image)
+                    cmap_list.append('viridis')
+                noise_walk_value = noise_walk_value + stepsize
 
         print("Plotting")
         PLOTTING.plot_n_images(image_list, title_list, cmap_list,
@@ -229,6 +337,12 @@ class Ui(QtWidgets.QDialog):
         lime_image = LIME.get_lime_explanation(image, self.keras_model, samples, features)
         lime_image = convert_to_uint8(lime_image)
         return lime_image
+    
+    def lime_heatmap(self, image, samples):
+        print("LIME_HEATMAP")
+        heatmap = LIME.get_lime_heat_map(image, self.keras_model, samples)
+        heatmap = convert_to_uint8(heatmap)
+        return heatmap
 
     def overlap_images(self, image_list):
         print("OVERLAP")
@@ -259,5 +373,8 @@ def convert_to_uint8(image):
 
 
 app = QtWidgets.QApplication(sys.argv)
+with open('ui.qss', 'r') as styles_file:
+    qss = styles_file.read()
+app.setStyleSheet(qss)
 window = Ui()
 app.exec_()

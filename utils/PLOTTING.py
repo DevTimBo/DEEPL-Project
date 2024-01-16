@@ -42,9 +42,8 @@ def plot_n_images(images, titles, cmaps, max_images_per_row, figsize=(20, 5)):
                 axs[row_index, col_index].set_title(titles[i])
                 print("off")
                 axs[row_index, col_index].axis('off')
-    print("plit")
+    print("Plot")
     plt.show()
-
 
 def plot_5_per_rows_n_images(images, titles, cmaps, max_images_per_row=5, figsize=(20, 5)):
     num_images = len(images)
