@@ -30,10 +30,11 @@ img_path = keras.utils.get_file(
 )
 '''
 
-def make_gradcam(model, img_path, img_size, preprocess, decode_predictions, last_conv_layer_name):
-    OUTPUT_FOLDER = 'DEEPL-Project\CAM\Images\gradcam_output'
-    heatmap_name = 'cam1_1.jpg'
-    result_name = 'cam1_2.jpg'
+def make_gradcam(model, img_path, img_size, preprocess, decode_predictions, last_conv_layer_name, frameNr = ''):
+    OUTPUT_FOLDER_SH = r'DEEPL-Project\CAM\Images\gradcam_output\Small_Heatmap'
+    OUTPUT_FOLDER_LH = r'DEEPL-Project\CAM\Images\gradcam_output\Large_Heatmap'
+    heatmap_name = f'cam1_1{frameNr}.jpg'
+    result_name = f'cam1_2{frameNr}.jpg'
     preprocess_input = preprocess
     img_array = preprocess_input(get_img_array(img_path, size=img_size))
     # print(img_array)
@@ -42,8 +43,8 @@ def make_gradcam(model, img_path, img_size, preprocess, decode_predictions, last
     print("Predicted:", decode_predictions(preds, top=1)[0])
     heatmap = make_gradcam_heatmap(img_array, model, last_conv_layer_name)
     plt.imshow(heatmap)
-    plt.savefig(os.path.join(OUTPUT_FOLDER, heatmap_name))
-    result_path = os.path.join(OUTPUT_FOLDER, result_name)
+    plt.savefig(os.path.join(OUTPUT_FOLDER_SH, heatmap_name))
+    result_path = os.path.join(OUTPUT_FOLDER_LH, result_name)
     save_and_display_gradcam(img_path, preds, heatmap, result_path, alpha=0.4)
 
 

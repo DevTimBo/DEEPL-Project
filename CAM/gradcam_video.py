@@ -5,6 +5,7 @@ import os
 import keras
 
 #TODO Die CAM_Videos wieder verbinden
+#TODO Beide Outputs voneinander trennen um sie zu einem Video zusammenzuschließen 
 
 video_path = 'DEEPL-Project\CAM\data\cat.mp4'
 capture = cv2.VideoCapture(video_path)
@@ -25,6 +26,9 @@ model.layers[-1].activation = None  # OPTIONAL
 
 video_cut.cut_video(capture)
 
+i = 0
 for image in os.listdir(FRAME_FOLDER):
     img_path = os.path.join(FRAME_FOLDER, image)
-    grad_cam.make_gradcam(model, img_path, img_size, preprocess_input, decode_predictions, last_conv_layer_name)
+    grad_cam.make_gradcam(model, img_path, img_size, 
+                          preprocess_input, decode_predictions, last_conv_layer_name, i)
+    i += 1
