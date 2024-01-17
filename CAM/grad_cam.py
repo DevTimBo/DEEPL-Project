@@ -38,7 +38,8 @@ def make_gradcam(model, img_path, img_size, preprocess, decode_predictions, last
     heatmap = make_gradcam_heatmap(img_array, model, last_conv_layer_name)
     plt.imshow(heatmap)
     plt.savefig(os.path.join(OUTPUT_FOLDER, heatmap_name))
-    save_and_display_gradcam(img_path, preds, heatmap, cam_path="cam.jpg", alpha=0.4)
+    result_path = os.path.join(OUTPUT_FOLDER, result_name)
+    save_and_display_gradcam(img_path, preds, heatmap, result_path, alpha=0.4)
 
 
 
