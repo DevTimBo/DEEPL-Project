@@ -1,8 +1,9 @@
 import cv2
 import os
 
-video_path = 'DEEPL-Project\CAM\data\cat.mp4'
-capture = cv2.VideoCapture(video_path)
+#Für einen Testdurchlauf 
+#video_path = 'DEEPL-Project\CAM\data\cat.mp4'
+#capture = cv2.VideoCapture(video_path)
 
 def cut_video(capture):
 
@@ -25,5 +26,3 @@ def cut_video(capture):
             break
     
     capture.release()
-
-cut_video(capture)

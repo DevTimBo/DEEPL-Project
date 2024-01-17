@@ -4,9 +4,11 @@ import cv2
 import os 
 import keras
 
+#TODO Die CAM_Videos wieder verbinden
+
 video_path = 'DEEPL-Project\CAM\data\cat.mp4'
 capture = cv2.VideoCapture(video_path)
-FRAME_FOLDER = 'DEEPL-Project\CAM\video_Frames'
+FRAME_FOLDER = r'DEEPL-Project\CAM\video_Frames'
 FRAME_CAM_FOLDER = ''
 
 model_builder = keras.applications.xception.Xception
@@ -24,5 +26,5 @@ model.layers[-1].activation = None  # OPTIONAL
 video_cut.cut_video(capture)
 
 for image in os.listdir(FRAME_FOLDER):
-    image_path = os.path.join(FRAME_FOLDER, image)
-    grad_cam.make_gradcam(model, image_path, img_size, preprocess_input, decode_predictions, last_conv_layer_name)
+    img_path = os.path.join(FRAME_FOLDER, image)
+    grad_cam.make_gradcam(model, img_path, img_size, preprocess_input, decode_predictions, last_conv_layer_name)

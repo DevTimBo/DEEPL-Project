@@ -8,6 +8,7 @@ from IPython.display import Image, display
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
+'''
 # Für dem Testdurchlauf
 model_builder = keras.applications.xception.Xception
 img_size = (299, 299)
@@ -22,13 +23,17 @@ last_conv_layer_name = "block14_sepconv2_act"
 model = model_builder(weights="imagenet")
 model.layers[-1].activation = None  # OPTIONAL
 
+
 img_path = keras.utils.get_file(
     "hund.jpg",
-    "https://einfachtierisch.de/media/cache/article_main_image_tablet/cms/2013/05/Hundewelpe-Retriever-Halsband.jpg?522506"
+   "https://einfachtierisch.de/media/cache/article_main_image_tablet/cms/2013/05/Hundewelpe-Retriever-Halsband.jpg?522506"
 )
-
+'''
 
 def make_gradcam(model, img_path, img_size, preprocess, decode_predictions, last_conv_layer_name):
+    OUTPUT_FOLDER = 'DEEPL-Project\CAM\Images\gradcam_output'
+    heatmap_name = 'cam1_1.jpg'
+    result_name = 'cam1_2.jpg'
     preprocess_input = preprocess
     img_array = preprocess_input(get_img_array(img_path, size=img_size))
     # print(img_array)
@@ -98,4 +103,4 @@ def save_and_display_gradcam(img_path, preds, heatmap, cam_path, alpha=0.4):
     # plt.title(decode_predictions(preds, top=1)[0])
 
 
-make_gradcam(model, img_path, img_size, preprocess_input, decode_predictions, last_conv_layer_name)
+#make_gradcam(model, img_path, img_size, preprocess_input, decode_predictions, last_conv_layer_name)
