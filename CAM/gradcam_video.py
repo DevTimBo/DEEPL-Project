@@ -1,12 +1,13 @@
-import video_cut
+import video
 import grad_cam
 import cv2
 import os 
 import keras
 
 #TODO Die CAM_Videos wieder verbinden
-#TODO Beide Outputs voneinander trennen um sie zu einem Video zusammenzuschließen 
+#TODO Autmatische Bildgröße ermitteln 
 
+'''
 video_path = 'DEEPL-Project\CAM\data\cat.mp4'
 capture = cv2.VideoCapture(video_path)
 FRAME_FOLDER = r'DEEPL-Project\CAM\video_Frames'
@@ -32,3 +33,13 @@ for image in os.listdir(FRAME_FOLDER):
     grad_cam.make_gradcam(model, img_path, img_size, 
                           preprocess_input, decode_predictions, last_conv_layer_name, i)
     i += 1
+
+'''
+
+
+# Bildgröße automatisch ermitteln 
+frame_size = video.get_frame_size(r'DEEPL-Project\CAM\Images\gradcam_output\Large_Heatmap\cam1_20.jpg')
+print(frame_size)
+
+# Frames per second
+fps = 30

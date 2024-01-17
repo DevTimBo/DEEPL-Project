@@ -26,3 +26,9 @@ def cut_video(capture):
             break
     
     capture.release()
+
+def get_frame_size(sample_path):
+    sample_frame = cv2.imread(sample_path)
+    h, w, _ = sample_frame.shape
+    return (w,h)
+    
