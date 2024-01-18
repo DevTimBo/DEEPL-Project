@@ -125,8 +125,6 @@ class Ui(QtWidgets.QDialog):
         elif self.analyze_mode.currentText() == "Video":
             pass
 
-
-
     def image_analyzer(self, image, image_path):
         image_list = []
         title_list = []
@@ -294,6 +292,8 @@ class Ui(QtWidgets.QDialog):
         print("LIME_HEATMAP")
         heatmap = LIME.get_lime_heat_map(image, self.keras_model, samples)
         heatmap = convert_to_uint8(heatmap)
+        zeros_array = np.zeros_like(heatmap)
+        heatmap = cv.merge([heatmap, zeros_array, zeros_array])  # LIME Heatmap nur blau
         return heatmap
 
     def overlap_images(self, image_list):

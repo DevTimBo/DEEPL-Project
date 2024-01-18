@@ -22,7 +22,7 @@ def overlap_images(image_list):
         else:
             result_image = result_image + img
 
-    result_image = result_image/len(image_list)
+    result_image = result_image//len(image_list)
     print("Result image shape: ", result_image.shape)
     return result_image
 
