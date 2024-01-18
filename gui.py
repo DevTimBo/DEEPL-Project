@@ -180,13 +180,19 @@ class Ui(QtWidgets.QDialog):
                 image_list.append(grad_cam_image)
 
             if self.lime_checkbox.isChecked():
-                samples = self.lime_samples_box.value()
-                features = self.lime_features_box.value()
-                lime_image = self.lime_analyzer(resized_image, samples, features)
+                    # Samples must be ~50+
+                    if self.heatmap_box_lime.isChecked():
+                        samples = self.lime_samples_box.value()
+                        features = "All"
+                        lime_image = self.lime_heatmap(resized_image, samples)
+                    else:
+                        samples = self.lime_samples_box.value()
+                        features = self.lime_features_box.value()
+                        lime_image = self.lime_analyzer(resized_image, samples, features)
 
-                title_list.append(f"LIME - Samples: {samples}, Features: {features}")
-                cmap_list.append('viridis')
-                image_list.append(lime_image)
+                    title_list.append(f"LIME - Samples: {samples}, Features: {features}")
+                    cmap_list.append('viridis')
+                    image_list.append(lime_image)
 
             if self.overlap_box.isChecked():
                 overlap_image = self.overlap_images(image_list)
