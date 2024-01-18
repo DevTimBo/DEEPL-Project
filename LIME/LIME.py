@@ -2,6 +2,7 @@ from lime import lime_image
 from skimage.segmentation import mark_boundaries
 import numpy as np
 
+
 def get_lime_explanation(image, model, samples, features):
     explainer = lime_image.LimeImageExplainer()
     explanation = explainer.explain_instance(image.astype('double'), model.predict, top_labels=5, hide_color=0,
@@ -11,15 +12,24 @@ def get_lime_explanation(image, model, samples, features):
     image = mark_boundaries(temp / 2 + 0.5, mask)
     return image
 
+
 def get_lime_heat_map(image, model, samples):
     explainer = lime_image.LimeImageExplainer()
     explanation = explainer.explain_instance(image.astype('double'), model.predict, top_labels=5, hide_color=0,
                                              num_samples=samples)
     # Select the same class explained on the figures above.
-    ind =  explanation.top_labels[0]
+    ind = explanation.top_labels[0]
 
-    #Map each explanation weight to the corresponding superpixel
+    # Map each explanation weight to the corresponding superpixel
     dict_heatmap = dict(explanation.local_exp[ind])
     heatmap = np.vectorize(dict_heatmap.get)(explanation.segments)
-    
-    return heatmap 
+    heatmap = (heatmap + heatmap.max()).astype(np.float32)
+    heatmap = normalize_array_np(heatmap)
+    print(f"LIME {heatmap.max()}")
+    return heatmap
+
+def normalize_array_np(arr):
+    min_val = arr.min()
+    max_val = arr.max()
+    normalized_arr = (arr - min_val) / (max_val - min_val)
+    return normalized_arr
