@@ -5,14 +5,12 @@ import os
 import keras
 
 #TODO Die CAM_Videos wieder verbinden
-#TODO Autmatische Bildgröße ermitteln 
 
-'''
-video_path = 'DEEPL-Project\CAM\data\cat.mp4'
+""" video_path = 'DEEPL-Project\CAM\data\cat.mp4'
 capture = cv2.VideoCapture(video_path)
 FRAME_FOLDER = r'DEEPL-Project\CAM\video_Frames'
 FRAME_CAM_FOLDER = ''
-
+'''
 model_builder = keras.applications.xception.Xception
 img_size = (299, 299)
 preprocess_input = keras.applications.xception.preprocess_input
@@ -25,7 +23,7 @@ last_conv_layer_name = "block14_sepconv2_act"
 model = model_builder(weights="imagenet")
 model.layers[-1].activation = None  # OPTIONAL
 
-video_cut.cut_video(capture)
+video.cut_video(capture)
 
 i = 0
 for image in os.listdir(FRAME_FOLDER):
@@ -34,7 +32,6 @@ for image in os.listdir(FRAME_FOLDER):
                           preprocess_input, decode_predictions, last_conv_layer_name, i)
     i += 1
 
-'''
 
 
 # Bildgröße automatisch ermitteln 
@@ -42,4 +39,9 @@ frame_size = video.get_frame_size(r'DEEPL-Project\CAM\Images\gradcam_output\Larg
 print(frame_size)
 
 # Frames per second
-fps = 30
+fps = 30 """
+
+LH_frames = r'CAM\Images\gradcam_output\Large_Heatmap'
+video_path = r'CAM\Images\gradcam_output\videos\LH_video.avi'
+
+video.convert_images_to_video(LH_frames, video_path)

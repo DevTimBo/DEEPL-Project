@@ -31,4 +31,15 @@ def get_frame_size(sample_path):
     sample_frame = cv2.imread(sample_path)
     h, w, _ = sample_frame.shape
     return (w,h)
+
+def convert_images_to_video(Image_folder, video_path):
+    images = [img for img in os.listdir(Image_folder) if img.endswith(".jpg")]
+    frame = cv2.imread(os.path.join(Image_folder, images[0]))
+    height, width, layers = frame.shape
     
+    video = cv2.VideoWriter(video_path, 0, 1, (width,height))
+    for image in images:
+        video.write(cv2.imread(os.path.join(Image_folder, video_path)))
+        
+    cv2.destroyAllWindows()
+    video.release()
