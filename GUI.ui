@@ -197,9 +197,12 @@
        </widget>
       </item>
       <item>
-       <widget class="QSpinBox" name="noise_walk_max">
+       <widget class="QSpinBox" name="noise_walk_steps">
+        <property name="minimum">
+         <number>1</number>
+        </property>
         <property name="maximum">
-         <number>255</number>
+         <number>3</number>
         </property>
        </widget>
       </item>
@@ -215,12 +218,9 @@
        </widget>
       </item>
       <item>
-       <widget class="QSpinBox" name="noise_walk_steps">
-        <property name="minimum">
-         <number>1</number>
-        </property>
+       <widget class="QSpinBox" name="noise_walk_max">
         <property name="maximum">
-         <number>3</number>
+         <number>255</number>
         </property>
        </widget>
       </item>
