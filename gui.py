@@ -7,6 +7,8 @@ from utils import datei_laden, IMAGE_EDIT, PLOTTING
 import numpy as np
 import tensorflow as tf
 import threading
+from VideoPlayer import VideoPlayer
+from PyQt5.QtWidgets import QVBoxLayout
 
 tf.compat.v1.disable_eager_execution()
 from PyQt5 import QtWidgets
@@ -36,6 +38,10 @@ class Ui(QtWidgets.QDialog):
         self.many_images_paths = []
         self.video_path = ""
 
+        # Initialize the video player
+        self.video_player = VideoPlayer()
+        self.video_layout.addWidget(self.video_player)
+        
         # Buttons
         self.button_load_single_image.clicked.connect(self.file_dialog_single)
         self.button_load_many_images.clicked.connect(self.file_dialog_many)
@@ -84,6 +90,7 @@ class Ui(QtWidgets.QDialog):
     def load_video(self, filepath):
         self.video_path = filepath
         self.video_text.setText(filepath)
+        self.video_player.load_video(filepath)
 
     def file_dialog_video(self):
         dialog = QFileDialog(self)

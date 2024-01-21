@@ -60,10 +60,10 @@
   <widget class="QTextBrowser" name="video_text">
    <property name="geometry">
     <rect>
-     <x>900</x>
-     <y>70</y>
-     <width>311</width>
-     <height>211</height>
+     <x>870</x>
+     <y>60</y>
+     <width>331</width>
+     <height>31</height>
     </rect>
    </property>
   </widget>
@@ -234,7 +234,7 @@
      <x>380</x>
      <y>10</y>
      <width>344</width>
-     <height>80</height>
+     <height>51</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -266,8 +266,8 @@
     <rect>
      <x>30</x>
      <y>10</y>
-     <width>177</width>
-     <height>80</height>
+     <width>181</width>
+     <height>51</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -290,10 +290,10 @@
   <widget class="QWidget" name="horizontalLayoutWidget_3">
    <property name="geometry">
     <rect>
-     <x>930</x>
+     <x>870</x>
      <y>10</y>
-     <width>253</width>
-     <height>80</height>
+     <width>331</width>
+     <height>51</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -571,6 +571,34 @@
    <property name="text">
     <string>?</string>
    </property>
+  </widget>
+  <widget class="QWidget" name="verticalLayoutWidget_3">
+   <property name="geometry">
+    <rect>
+     <x>870</x>
+     <y>100</y>
+     <width>331</width>
+     <height>221</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="video_layout">
+    <item>
+     <widget class="QWidget" name="videoContainer" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>40</width>
+        <height>40</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources/>
