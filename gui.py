@@ -183,9 +183,13 @@ class Ui(QtWidgets.QDialog):
                 image_list.append(lrp_image)
 
             if self.gradcam_checkbox.isChecked():
-                grad_cam_image = self.grad_cam_analyze(image_path)
+                if self.grad_cam_version_combobox.currentText() == "GradCAM":
+                    grad_cam_image = self.grad_cam_analyze(image_path)
+                    title_list.append(f"GRAD CAM")
+                elif self.grad_cam_version_combobox.currentText() == "GradCAM++":
+                    grad_cam_image = self.grad_cam_plus_analyze(image_path)
+                    title_list.append(f"GRAD CAM++")
 
-                title_list.append(f"GRAD CAM")
                 cmap_list.append('viridis')
                 image_list.append(grad_cam_image)
 
@@ -286,6 +290,24 @@ class Ui(QtWidgets.QDialog):
         # Run the TensorFlow script as a subprocess with arguments
         subprocess.run(["python", tensorflow_script_path, model_name, filepath])
         grad_cam_image = cv.imread("data/grad_cam.jpg")
+        grad_cam_image = convert_to_uint8(grad_cam_image)
+        return grad_cam_image
+    
+    def grad_cam_plus_analyze(self, image_path):
+        # TODO Pickle Model Übergeben, Last Conv Layer
+        print("GRAD_CAM_++")
+        import subprocess
+        # Specify the path to the TensorFlow script
+        tensorflow_script_path = "CAM/framework_gcam_plus.py"
+        # Specify the model_name and filepath as arguments
+        model_name = self.model.currentText()
+        if self.noise_checkbox.isChecked() or self.noise_walk_checkbox.isChecked():
+            filepath = 'data/noise_image.png'
+        else:
+            filepath = image_path
+        # Run the TensorFlow script as a subprocess with arguments
+        subprocess.run(["python", tensorflow_script_path, model_name, filepath])
+        grad_cam_image = cv.imread("data/grad_cam_plusplus.jpg")
         grad_cam_image = convert_to_uint8(grad_cam_image)
         return grad_cam_image
 
