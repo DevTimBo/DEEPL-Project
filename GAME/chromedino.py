@@ -15,38 +15,38 @@ SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 pygame.display.set_caption("Chrome Dino Runner")
 
-Ico = pygame.image.load("assets/DinoWallpaper.png")
+Ico = pygame.image.load("GAME/assets/DinoWallpaper.png")
 pygame.display.set_icon(Ico)
 
 RUNNING = [
-    pygame.image.load(os.path.join("assets/Dino", "DinoRun1.png")),
-    pygame.image.load(os.path.join("assets/Dino", "DinoRun2.png")),
+    pygame.image.load(os.path.join("GAME/assets/Dino", "DinoRun1.png")),
+    pygame.image.load(os.path.join("GAME/assets/Dino", "DinoRun2.png")),
 ]
-JUMPING = pygame.image.load(os.path.join("assets/Dino", "DinoJump.png"))
+JUMPING = pygame.image.load(os.path.join("GAME/assets/Dino", "DinoJump.png"))
 DUCKING = [
-    pygame.image.load(os.path.join("assets/Dino", "DinoDuck1.png")),
-    pygame.image.load(os.path.join("assets/Dino", "DinoDuck2.png")),
+    pygame.image.load(os.path.join("GAME/assets/Dino", "DinoDuck1.png")),
+    pygame.image.load(os.path.join("GAME/assets/Dino", "DinoDuck2.png")),
 ]
 
 SMALL_CACTUS = [
-    pygame.image.load(os.path.join("assets/Cactus", "SmallCactus1.png")),
-    pygame.image.load(os.path.join("assets/Cactus", "SmallCactus2.png")),
-    pygame.image.load(os.path.join("assets/Cactus", "SmallCactus3.png")),
+    pygame.image.load(os.path.join("GAME/assets/Cactus", "SmallCactus1.png")),
+    pygame.image.load(os.path.join("GAME/assets/Cactus", "SmallCactus2.png")),
+    pygame.image.load(os.path.join("GAME/assets/Cactus", "SmallCactus3.png")),
 ]
 LARGE_CACTUS = [
-    pygame.image.load(os.path.join("assets/Cactus", "LargeCactus1.png")),
-    pygame.image.load(os.path.join("assets/Cactus", "LargeCactus2.png")),
-    pygame.image.load(os.path.join("assets/Cactus", "LargeCactus3.png")),
+    pygame.image.load(os.path.join("GAME/assets/Cactus", "LargeCactus1.png")),
+    pygame.image.load(os.path.join("GAME/assets/Cactus", "LargeCactus2.png")),
+    pygame.image.load(os.path.join("GAME/assets/Cactus", "LargeCactus3.png")),
 ]
 
 BIRD = [
-    pygame.image.load(os.path.join("assets/Bird", "Bird1.png")),
-    pygame.image.load(os.path.join("assets/Bird", "Bird2.png")),
+    pygame.image.load(os.path.join("GAME/assets/Bird", "Bird1.png")),
+    pygame.image.load(os.path.join("GAME/assets/Bird", "Bird2.png")),
 ]
 
-CLOUD = pygame.image.load(os.path.join("assets/Other", "Cloud.png"))
+CLOUD = pygame.image.load(os.path.join("GAME/assets/Other", "Cloud.png"))
 
-BG = pygame.image.load(os.path.join("assets/Other", "Track.png"))
+BG = pygame.image.load(os.path.join("GAME/assets/Other", "Track.png"))
 
 FONT_COLOR=(0,0,0)
 
@@ -208,7 +208,7 @@ def main():
         if points % 100 == 0:
             game_speed += 1
         current_time = datetime.datetime.now().hour
-        with open("score.txt", "r") as f:
+        with open("GAME/score.txt", "r") as f:
             score_ints = [int(x) for x in f.read().split()]
             if len(score_ints) == 0:
                 score_ints = [0]
