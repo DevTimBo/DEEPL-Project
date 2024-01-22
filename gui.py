@@ -3,6 +3,7 @@ import sys
 import cv2 as cv
 import LRP.LRP as LRP
 import LIME.LIME as LIME
+from MonteCarloDropout import mcd
 from utils import datei_laden, IMAGE_EDIT, PLOTTING
 import numpy as np
 import tensorflow as tf
@@ -209,6 +210,17 @@ class Ui(QtWidgets.QDialog):
                 cmap_list.append('viridis')
                 image_list.append(lime_image)
 
+            if self.monte_carlo_checkbox.isChecked():
+                mcd_samples = self.mcd_samples_box.value()
+                mcd_apply_skip = self.MCD_ApplyOrSkip_comboBox.value()
+                mcd_layers = self.mcd_Layer_comboBox.Value()
+                mcd_dropoutrate = self.mcd_percent_spinBox.Value()
+                
+                mcd_prediction = self.mcDroupout(self, image, mcd_samples, mcd_dropoutrate, mcd_apply_skip, mcd_layers)
+                
+                #not there jet
+                #outputmcdList.append(mcd_prediction)
+
             if self.overlap_box.isChecked():
                 overlap_image = self.overlap_images(image_list)
                 print("Overlap Image")
@@ -325,6 +337,11 @@ class Ui(QtWidgets.QDialog):
         zeros_array = np.zeros_like(heatmap)
         heatmap = cv.merge([heatmap, zeros_array, zeros_array])  # LIME Heatmap nur blau
         return heatmap
+    
+    def mcDropout(self, image, mcd_samples, mcd_dropoutrate, mcd_apply_skip, mcd_layers):
+        print("MCD_PREDICTION")
+        mcd_prediction = mcd.get_mcd_uncertainty(image, self.keras_model, self.keras_preprocess, self.keras_decode, mcd_samples, mcd_dropoutrate, mcd_apply_skip, mcd_layers)
+        return mcd_prediction
 
     def overlap_images(self, image_list):
         print("OVERLAP")

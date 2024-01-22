@@ -148,7 +148,7 @@
   <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>350</x>
+     <x>450</x>
      <y>310</y>
      <width>211</width>
      <height>301</height>
@@ -370,8 +370,8 @@
     <rect>
      <x>30</x>
      <y>310</y>
-     <width>291</width>
-     <height>361</height>
+     <width>411</width>
+     <height>372</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -546,13 +546,109 @@
        </widget>
       </item>
       <item>
-       <widget class="QSpinBox" name="spinBox_2">
+       <widget class="QSpinBox" name="mcd_samples_box">
         <property name="minimum">
          <number>1</number>
         </property>
         <property name="maximum">
          <number>100</number>
         </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="mcd_dropout_label">
+        <property name="text">
+         <string>Dropout(%)</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="mcd_percent_spinBox"/>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_17">
+      <item>
+       <widget class="QLabel" name="MCD_ApplyOrSkip_label">
+        <property name="text">
+         <string>Apply/Skip</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="MCD_ApplyOrSkip_comboBox">
+        <item>
+         <property name="text">
+          <string>Apply to Layer</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Skip these layers</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="MCD_layers_label">
+        <property name="text">
+         <string>Layers:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="MCD_Layer_comboBox">
+        <item>
+         <property name="text">
+          <string>Aktivation</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Base</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Batch Normatisation</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Convolution</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Dense</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Group Normalisation</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Layer Normalisation</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Pooling</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Preprocessing</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Unit Normalisation</string>
+         </property>
+        </item>
        </widget>
       </item>
      </layout>
