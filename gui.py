@@ -183,10 +183,11 @@ class Ui(QtWidgets.QDialog):
                 image_list.append(lrp_image)
 
             if self.gradcam_checkbox.isChecked():
-                if self.grad_cam_version_combobox.currentText() == "GradCAM":
+                print(self.grad_cam_version_combobox.currentText())
+                if self.grad_cam_version_combobox.currentText() == "GradCam":
                     grad_cam_image = self.grad_cam_analyze(image_path)
                     title_list.append(f"GRAD CAM")
-                elif self.grad_cam_version_combobox.currentText() == "GradCAM++":
+                elif self.grad_cam_version_combobox.currentText() == "GradCam++":
                     grad_cam_image = self.grad_cam_plus_analyze(image_path)
                     title_list.append(f"GRAD CAM++")
 

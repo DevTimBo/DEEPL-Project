@@ -67,7 +67,7 @@ def preprocess_image(img_path, target_size=(224, 224)):
 
     return img
 
-def show_imgwithheat(img_path, heatmap, alpha=0.4, return_array=False):
+def show_imgwithheat(img_path, heatmap, alpha=0.4):
     img = cv2.imread(img_path)
     heatmap = cv2.resize(heatmap, (img.shape[1], img.shape[0]))
     heatmap = (heatmap*255).astype("uint8")
@@ -76,26 +76,15 @@ def show_imgwithheat(img_path, heatmap, alpha=0.4, return_array=False):
     superimposed_img = np.clip(superimposed_img, 0, 255).astype("uint8")
     superimposed_img = cv2.cvtColor(superimposed_img, cv2.COLOR_BGR2RGB)
 
-    imgwithheat = Image.fromarray(superimposed_img)
-    try:
-        #display(imgwithheat)
-        plt.imshow(imgwithheat)
-        plt.title("Grad-CAM++")
-        plt.savefig(os.path.join(OUTPUT_FOLDER, result_name))
-    except NameError:
-        imgwithheat.show()
-
-    if return_array:
-        return superimposed_img
+    return Image.fromarray(superimposed_img)
 
 def make_gradcam_plusplus(model, img_path, last_conv_layer_name, target_size):
     # heatmap unskaliert 
     img = preprocess_image(img_path, target_size)
     heatmap_plus = grad_cam_plus(model, img, last_conv_layer_name)
-    plt.imshow(heatmap_plus)
-    plt.savefig(os.path.join(OUTPUT_FOLDER, result_name))
-    # heatmap hochskaliert + überlagert 
-    show_imgwithheat(img_path, heatmap_plus)
+    # heatmap hochskaliert + überlagert
+    show_imgwithheat(img_path, heatmap_plus).save(os.path.join(OUTPUT_FOLDER, result_name))
+
 
 if __name__ == "__main__":
     import sys
