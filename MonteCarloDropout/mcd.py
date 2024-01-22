@@ -4,14 +4,11 @@ from tensorflow import keras
 import numpy as np
 import random
 
-convList = ["Conv1D", "Conv2D", "Conv3D", "SeparableConv1D", "SeparableConv2D", "DepthwiseConv2D", "Conv1DTranspose", "Conv2DTranspose", "Conv3DTranspose"]
-denseList = ["Dense"]
-
 #main methode all others functions are called from there
-def get_mcd_uncertainty(image, model, preprocess, decode, samples = 10, dropoutRate = 20, applyOrSkip = "apply", skipTheseLayers = convList, applyToLayers = denseList):
+def get_mcd_uncertainty(image, model, preprocess, decode, samples, dropoutRate, applyOrSkip, apply_skip_list):
     #load picture
-    picture_input = np.expand_dims(image, axis=0)
-    picture_input_preprocessed = preprocess(picture_input[None])  
+    #picture_input = np.expand_dims(image, axis=0)
+    picture_input_preprocessed = preprocess(image[None])  
     
     #models
     modelNoMC = model
@@ -21,25 +18,25 @@ def get_mcd_uncertainty(image, model, preprocess, decode, samples = 10, dropoutR
     predictions_readable = []
 
     #creating List once so not done in every iteration
-    if (applyOrSkip.lower() == "skip"):
-        skipList = skipLayers(applyToLayers, modelMC)
+    if (applyOrSkip == "Skip these layers"):
+        skipList = skipLayers(apply_skip_list, modelMC)
     else:
-        applytoList = applyTo(applyToLayers, modelMC)
+        applytoList = applyTo(apply_skip_list, modelMC)
 
     #apply MonteCarlo and write predictions
-    for q in samples:    
+    for r in range(samples):    
         #skip or apply to these layers
-        if (applyOrSkip.lower() == "skip"):
+        if (applyOrSkip == "Skip these layers"):
         #applyTo or not apply to
-            modelMC = applyMonteCarloApplyTo(applytoList, modelMC, modelNoMC, dropoutRate)
-        else:
             modelMC = applyMonteCarloSkip(skipList, modelMC, modelNoMC, dropoutRate)
+        else:
+            modelMC = applyMonteCarloApplyTo(applytoList, modelMC, modelNoMC, dropoutRate)
             
-        predictions = modelMC.predict(image)
+        predictions = modelMC.predict(picture_input_preprocessed)
         predictions_readable.append(decode(predictions))
     
     #mean of predictions    
-    uncertainty = processPredictions(predictions_readable, modelNoMC, image, decode)
+    uncertainty = processPredictions(predictions_readable, modelNoMC, picture_input_preprocessed, decode)
 
     return uncertainty
 
@@ -66,7 +63,7 @@ def skipLayers(skipTheseLayers, modelMC):
     return layerToSkip
     
 
-def applyMonteCarloApplyTo(applytoList, modelMC, modelNoMC, dropoutRate, loopyloops):
+def applyMonteCarloApplyTo(applytoList, modelMC, modelNoMC, dropoutRate):
     for i in range(len(modelMC.layers)):
         if((i) in applytoList):
             b = []
@@ -164,9 +161,9 @@ def applyMonteCarloSkip(skipList, modelMC, modelNoMC, dropoutRate = 20, loopyloo
                 modelMC.layers[i].set_weights(b)
     return modelMC
 
-def processPredictions(predictions_readable, modelNoMC, image, decode):
+def processPredictions(predictions_readable, modelNoMC, picture_input_preprocessed, decode):
     counter = 0
-    predictionNormalModel = decode(modelNoMC.predict(image))
+    predictionNormalModel = decode(modelNoMC.predict(picture_input_preprocessed))
     for k in range(len(predictions_readable)):
         #print(predictions_readable[k])
         if (predictions_readable[k][0][0][1] == predictionNormalModel[0][0][1]):

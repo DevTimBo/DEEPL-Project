@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1417</width>
-    <height>687</height>
+    <height>740</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -370,7 +370,7 @@
     <rect>
      <x>30</x>
      <y>310</y>
-     <width>411</width>
+     <width>401</width>
      <height>372</height>
     </rect>
    </property>
@@ -577,10 +577,10 @@
        </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="MCD_ApplyOrSkip_comboBox">
+       <widget class="QComboBox" name="mcd_apply_skip_comboBox">
         <item>
          <property name="text">
-          <string>Apply to Layer</string>
+          <string>Apply to layer</string>
          </property>
         </item>
         <item>
@@ -598,57 +598,102 @@
        </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="MCD_Layer_comboBox">
-        <item>
-         <property name="text">
-          <string>Aktivation</string>
+       <widget class="QScrollArea" name="scrollArea">
+        <property name="maximumSize">
+         <size>
+          <width>200</width>
+          <height>100</height>
+         </size>
+        </property>
+        <property name="verticalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOn</enum>
+        </property>
+        <property name="sizeAdjustPolicy">
+         <enum>QAbstractScrollArea::AdjustIgnored</enum>
+        </property>
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="scrollAreaWidgetContents">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>139</width>
+           <height>244</height>
+          </rect>
          </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Base</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Batch Normatisation</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Convolution</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Dense</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Group Normalisation</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Layer Normalisation</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Pooling</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Preprocessing</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Unit Normalisation</string>
-         </property>
-        </item>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <widget class="QRadioButton" name="mcd_activation_radio">
+            <property name="text">
+             <string>Activation</string>
+            </property>
+            <property name="autoExclusive">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="mcd_batch_norm_radio">
+            <property name="text">
+             <string>Batch Norm.</string>
+            </property>
+            <property name="autoExclusive">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="mcd_convolutional_radio">
+            <property name="text">
+             <string>Convolution</string>
+            </property>
+            <property name="autoExclusive">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="mcd_dense_radio">
+            <property name="text">
+             <string>Dense</string>
+            </property>
+            <property name="autoExclusive">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="mcd_group_norm_radio">
+            <property name="text">
+             <string>Group Norm.</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="mcd_layer_norm_radio">
+            <property name="text">
+             <string>Layer Norm.</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="mcd_pooling_radio">
+            <property name="text">
+             <string>Pooling</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="mcd_unit_norm_radio">
+            <property name="text">
+             <string>Unit Norm.</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
        </widget>
       </item>
      </layout>

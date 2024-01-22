@@ -212,12 +212,14 @@ class Ui(QtWidgets.QDialog):
 
             if self.monte_carlo_checkbox.isChecked():
                 mcd_samples = self.mcd_samples_box.value()
-                mcd_apply_skip = self.MCD_ApplyOrSkip_comboBox.value()
-                mcd_layers = self.mcd_Layer_comboBox.Value()
-                mcd_dropoutrate = self.mcd_percent_spinBox.Value()
+                mcd_apply_skip = self.mcd_apply_skip_comboBox.currentText()
+                mcd_dropoutrate = self.mcd_percent_spinBox.value()
+                mcd_LayerList = self.mcd_create_layer_list()
+
+                mcd_prediction = self.mcDropout(image, mcd_samples, mcd_dropoutrate, mcd_apply_skip, mcd_LayerList)
                 
-                mcd_prediction = self.mcDroupout(self, image, mcd_samples, mcd_dropoutrate, mcd_apply_skip, mcd_layers)
-                
+                print(mcd_prediction)
+
                 #not there jet
                 #outputmcdList.append(mcd_prediction)
 
@@ -342,6 +344,28 @@ class Ui(QtWidgets.QDialog):
         print("MCD_PREDICTION")
         mcd_prediction = mcd.get_mcd_uncertainty(image, self.keras_model, self.keras_preprocess, self.keras_decode, mcd_samples, mcd_dropoutrate, mcd_apply_skip, mcd_layers)
         return mcd_prediction
+    
+    def mcd_create_layer_list(self):
+        mcd_layers = []
+        if(self.mcd_activation_radio.isChecked):
+            mcd_layers.append("ReLU")
+            mcd_layers.append("Softmax")
+            mcd_layers.append("LeakyReLU")
+            mcd_layers.append("PReLU")
+            mcd_layers.append("ELU")
+        if(self.mcd_batch_norm_radio.isChecked):
+            mcd_layers.append("BatchNormalization")
+        if(self.mcd_convolutional_radio.isChecked):
+            mcd_layers.append("conv")
+        if(self.mcd_dense_radio.isChecked):
+            mcd_layers.append("Dense")
+        if(self.mcd_group_norm_radio.isChecked):
+            mcd_layers.append("GroupNormalization")
+        if(self.mcd_layer_norm_radio.isChecked):
+            mcd_layers.append("LayerNormalization")
+        if(self.mcd_unit_norm_radio.isChecked):
+            mcd_layers.append("UnitNormalization")
+        return mcd_layers
 
     def overlap_images(self, image_list):
         print("OVERLAP")
