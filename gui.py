@@ -17,6 +17,8 @@ from PyQt5.QtWidgets import (qApp, QFileDialog,
                              QListWidgetItem)
 
 
+MonteCarloPrediction = []
+
 class Ui(QtWidgets.QDialog):
     def __init__(self):
         super(Ui, self).__init__()
@@ -219,9 +221,9 @@ class Ui(QtWidgets.QDialog):
                 mcd_prediction = self.mcDropout(image, mcd_samples, mcd_dropoutrate, mcd_apply_skip, mcd_LayerList)
                 
                 print(mcd_prediction)
-
-                #not there jet
-                #outputmcdList.append(mcd_prediction)
+                MonteCarloPrediction.append(str(mcd_samples) + " sample(s)")
+                MonteCarloPrediction.append("Dropout: " + str(mcd_dropoutrate) + "%")
+                MonteCarloPrediction.append("MCD Pred. = " + str(float(mcd_prediction)*100) + "%")
 
             if self.overlap_box.isChecked():
                 overlap_image = self.overlap_images(image_list)
@@ -241,7 +243,7 @@ class Ui(QtWidgets.QDialog):
         print("Plotting")
         length = self.find_len_per_row()
         rows = len(image_list) / length
-        PLOTTING.plot_n_images(image_list, title_list, cmap_list,
+        PLOTTING.plot_n_images(image_list, title_list, cmap_list, MonteCarloPrediction,
                                max_images_per_row=self.find_len_per_row(),
                                figsize=(length * 5, rows * 5))
 
@@ -262,7 +264,7 @@ class Ui(QtWidgets.QDialog):
 
         length = self.find_len_per_row()
         rows = len(image_list) / length
-        PLOTTING.plot_n_images(image_list, title_list, cmap_list,
+        PLOTTING.plot_n_images(image_list, title_list, cmap_list, MonteCarloPrediction,
                                max_images_per_row=self.find_len_per_row(),
                                figsize=(length * 5, rows * 5))
 
