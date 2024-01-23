@@ -3,33 +3,24 @@ import matplotlib.pyplot as plt
 import cv2
 
 
-def plot_n_images(images, titles, cmaps, MonteCarloPrediction, max_images_per_row, figsize=(20, 5)):
+def plot_n_images(images, titles, cmaps, max_images_per_row, figsize=(20, 5)):
     num_images = len(images)
     if num_images == 0 or num_images != len(titles) or num_images != len(cmaps):
         raise ValueError("Invalid number of images, titles, or cmaps provided.")
     if num_images == 1:
         num_row = 1
-        if(MonteCarloPrediction):
-            num_row = num_row+1
+
         fig, ax = plt.subplots(num_row, 1, figsize=figsize)
         ax[0].imshow(images[0], cmap=cmaps[0])
         ax[0].set_title(titles[0])
         ax[0].axis('off')
-        #plotting MonteCarlo in plt as Text
-        if(MonteCarloPrediction):
-            ax[1].text(0.5, 0.8, MonteCarloPrediction[0], rotation=0, ha="center", va="top")
-            ax[1].text(0.5, 0.5, MonteCarloPrediction[1], rotation=0, ha="center", va="center")
-            ax[1].text(0.5, 0.2, MonteCarloPrediction[2], rotation=0, ha="center", va="bottom")
-            ax[1].set_title("Monte Carlo Dropout Prediction")
-            ax[1].axis('off')
+
     else:
         num_rows = 1
         if num_images > max_images_per_row:
             num_rows = (num_images - 1) // max_images_per_row + 1
-        #one extra plot for MonteCarlo
-        if(MonteCarloPrediction):
-            num_rows = num_rows+1
-        fig, axs = plt.subplots(num_rows, max_images_per_row,figsize=figsize)
+
+        fig, axs = plt.subplots(num_rows, max_images_per_row, figsize=figsize)
         print(f"num rows {num_rows}")
         print(f"max_images_per_row {max_images_per_row}")
         if max_images_per_row == 1 or num_rows == 1:
@@ -41,14 +32,7 @@ def plot_n_images(images, titles, cmaps, MonteCarloPrediction, max_images_per_ro
                 axs[i].set_title(titles[i])
                 print("off")
                 axs[i].axis('off')
-            #plotting MonteCarlo in plt as Text
-            if(MonteCarloPrediction):
-                for j in range(int(len(MonteCarloPrediction)/3)):
-                    axs[i+j].text(0.5, 0.8, MonteCarloPrediction[0], size=30, rotation=0, ha="center", va="top")
-                    axs[i+j].text(0.5, 0.5, MonteCarloPrediction[1], size=30, rotation=0, ha="center", va="center")
-                    axs[i+j].text(0.5, 0.2, MonteCarloPrediction[2], size=30, rotation=0, ha="center", va="bottom")
-                    axs[i+j].set_title("Monte Carlo Dropout Prediction")
-                    axs[i+j].axis('off')
+
         else:
             for i in range(num_images):
                 print(i)

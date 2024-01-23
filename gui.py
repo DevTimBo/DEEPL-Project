@@ -17,7 +17,7 @@ from PyQt5.QtWidgets import (qApp, QFileDialog,
                              QListWidgetItem)
 
 
-MonteCarloPrediction = []
+
 
 class Ui(QtWidgets.QDialog):
     def __init__(self):
@@ -219,11 +219,19 @@ class Ui(QtWidgets.QDialog):
                 mcd_LayerList = self.mcd_create_layer_list()
 
                 mcd_prediction = self.mcDropout(image, mcd_samples, mcd_dropoutrate, mcd_apply_skip, mcd_LayerList)
-                
                 print(mcd_prediction)
-                MonteCarloPrediction.append(str(mcd_samples) + " sample(s)")
-                MonteCarloPrediction.append("Dropout: " + str(mcd_dropoutrate) + "%")
-                MonteCarloPrediction.append("MCD Pred. = " + str(float(mcd_prediction)*100) + "%")
+                string_samples = str(mcd_samples) + " sample(s)"
+                print(string_samples)
+                string_dropout = "Dropout: " + str(mcd_dropoutrate) + "%"
+                print(string_dropout)
+                string_prediction = "MCD Pred. = " + str(float(mcd_prediction)*100) + "%"
+                print(string_prediction)
+                mcd_image = create_mcd_image(size,string_samples, string_dropout, string_prediction)
+                print(string_samples + string_dropout + string_prediction)
+                image_list.append(mcd_image)
+                cmap_list.append('viridis')
+                title_list.append("Monte Carlo")
+
 
             if self.overlap_box.isChecked():
                 overlap_image = self.overlap_images(image_list)
@@ -243,7 +251,7 @@ class Ui(QtWidgets.QDialog):
         print("Plotting")
         length = self.find_len_per_row()
         rows = len(image_list) / length
-        PLOTTING.plot_n_images(image_list, title_list, cmap_list, MonteCarloPrediction,
+        PLOTTING.plot_n_images(image_list, title_list, cmap_list,
                                max_images_per_row=self.find_len_per_row(),
                                figsize=(length * 5, rows * 5))
 
@@ -264,7 +272,7 @@ class Ui(QtWidgets.QDialog):
 
         length = self.find_len_per_row()
         rows = len(image_list) / length
-        PLOTTING.plot_n_images(image_list, title_list, cmap_list, MonteCarloPrediction,
+        PLOTTING.plot_n_images(image_list, title_list, cmap_list,
                                max_images_per_row=self.find_len_per_row(),
                                figsize=(length * 5, rows * 5))
 
@@ -283,6 +291,8 @@ class Ui(QtWidgets.QDialog):
             if self.noise_checkbox.isChecked():
                 len_per_row += 1
         if self.lrp_checkbox.isChecked():
+            len_per_row += 1
+        if self.monte_carlo_checkbox.isChecked():
             len_per_row += 1
         if self.gradcam_checkbox.isChecked():
             len_per_row += 1
@@ -346,7 +356,10 @@ class Ui(QtWidgets.QDialog):
         print("MCD_PREDICTION")
         mcd_prediction = mcd.get_mcd_uncertainty(image, self.keras_model, self.keras_preprocess, self.keras_decode, mcd_samples, mcd_dropoutrate, mcd_apply_skip, mcd_layers)
         return mcd_prediction
-    
+
+
+
+
     def mcd_create_layer_list(self):
         mcd_layers = []
         if(self.mcd_activation_radio.isChecked):
@@ -395,7 +408,36 @@ def convert_to_uint8(image):
     else:
         # Handle other data types or raise an error if needed
         raise ValueError("Unsupported data type. Supported types are float32, float64, and uint8.")
+def create_mcd_image( size, text1, text2, text3):
 
+    from PIL import Image, ImageDraw, ImageFont
+    # Set image dimensions
+    width, height = size
+
+    # Create a white background image
+    image = Image.new("RGB", (width, height), "white")
+
+    # Create a drawing object
+    draw = ImageDraw.Draw(image)
+
+    # Set font properties
+    font_size = 20
+    font = ImageFont.truetype("arial.ttf", font_size)  # Use a suitable font file path
+
+    # Set text positions
+    x1, y1 = int(width * 0.4), int(height * 0.2)
+    x2, y2 = int(width * 0.4), int(height * 0.4)
+    x3, y3 = int(width * 0.4), int(height * 0.6)
+
+    # Draw black text on the image
+    draw.text((x1, y1), text1, font=font, fill="black")
+    draw.text((x2, y2), text2, font=font, fill="black")
+    draw.text((x3, y3), text3, font=font, fill="black")
+
+    # Convert the PIL Image to a NumPy array
+    image_array = np.array(image)
+    image_array = convert_to_uint8(image_array)
+    return image_array
 
 app = QtWidgets.QApplication(sys.argv)
 with open('ui.qss', 'r') as styles_file:
