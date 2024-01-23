@@ -276,6 +276,7 @@ class Ui(QtWidgets.QDialog):
                                max_images_per_row=self.find_len_per_row(),
                                figsize=(length * 5, rows * 5))
 
+
     def lrp_analyze(self, image, rule):
         print("LRP")
 
@@ -421,7 +422,7 @@ def create_mcd_image( size, text1, text2, text3):
     draw = ImageDraw.Draw(image)
 
     # Set font properties
-    font_size = 20
+    font_size = 10
     font = ImageFont.truetype("arial.ttf", font_size)  # Use a suitable font file path
 
     # Set text positions
