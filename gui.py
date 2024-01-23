@@ -122,9 +122,11 @@ class Ui(QtWidgets.QDialog):
             self.keras_decode = vgg16.decode_predictions
             self.last_conv_layer = "block5_conv3"
         elif self.model.currentText() == "VGG19":
-            pass
-        elif self.model.currentText() == "Custom":
-            pass
+            print("not implemented")
+        elif self.model.currentText() == "ResNet50":
+            print("not implemented")
+        else:
+            print("not implemented")
 
         if self.analyze_mode.currentText() == "Single Image":
             if self.single_image_path != "":
@@ -143,9 +145,13 @@ class Ui(QtWidgets.QDialog):
             size = (224, 224)
             resized_image = cv.resize(image, size)
         elif self.model.currentText() == "VGG19":
-            pass
-        elif self.model.currentText() == "ResNet":
-            pass
+            size = (224, 224)
+            resized_image = cv.resize(image, size)
+        elif self.model.currentText() == "ResNet50":
+            size = (224, 224)
+            resized_image = cv.resize(image, size)
+        else:
+            print("not implemented")
         noise_walk_value = 0
         if self.noise_walk_checkbox.isChecked():
 
