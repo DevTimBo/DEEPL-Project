@@ -10,6 +10,8 @@ def get_lime_explanation(image, model, samples, features):
     temp, mask = explanation.get_image_and_mask(explanation.top_labels[0], positive_only=False, num_features=features,
                                                 hide_rest=False)
     image = mark_boundaries(temp / 2 + 0.5, mask)
+    image = (image + image.max()).astype(np.float32)
+    image = normalize_array_np(image)
     return image
 
 

@@ -332,6 +332,16 @@
       </item>
       <item>
        <property name="text">
+        <string>VGG19</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>ResNet50</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
         <string>Custom</string>
        </property>
       </item>
@@ -378,7 +388,7 @@
     <item>
      <widget class="QCheckBox" name="lrp_checkbox">
       <property name="text">
-       <string>LRP</string>
+       <string>Layer-wise Relevance Propagation (LRP)</string>
       </property>
      </widget>
     </item>
@@ -400,7 +410,72 @@
         </item>
         <item>
          <property name="text">
-          <string/>
+          <string>lrp.sequential_preset_a</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>deep_taylor</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>lrp.alpha_2_beta_1</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>lrp.alpha_2_beta_1_IB</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>lrp.alpha_1_beta_0_IB</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>lrp.z</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>lrp.z_plus</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>lrp.epsilon</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>lrp.w_square</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>lrp.flat</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>lrp.sequential_preset_b</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>lrp.sequential_preset_a_flat</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>lrp.sequential_preset_b_flat</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>lrp.sequential_preset_b_flat_until_idx</string>
          </property>
         </item>
        </widget>
@@ -516,7 +591,7 @@
          <number>100</number>
         </property>
         <property name="singleStep">
-         <number>50</number>
+         <number>2</number>
         </property>
        </widget>
       </item>
@@ -618,7 +693,7 @@
          <property name="geometry">
           <rect>
            <x>0</x>
-           <y>0</y>
+           <y>-60</y>
            <width>139</width>
            <height>244</height>
           </rect>
