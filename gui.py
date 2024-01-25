@@ -253,10 +253,18 @@ class Ui(QtWidgets.QDialog):
                 print(string_samples)
                 string_dropout = "Dropout: " + str(mcd_dropoutrate) + "%"
                 print(string_dropout)
-                string_prediction = "MCD Pred. = " + str(float(mcd_prediction)*100) + "%"
-                print(string_prediction)
-                mcd_image = create_mcd_image(size,string_samples, string_dropout, string_prediction)
-                print(string_samples + string_dropout + string_prediction)
+                string_prediction1 = "MCD Pred.TOP1 = " + str(float(mcd_prediction[0])*100) + "% " + str(mcd_prediction[1])
+                print(string_prediction1)
+                string_prediction2 = "MCD Pred.TOP2 = " + str(float(mcd_prediction[2])*100) + "% " + str(mcd_prediction[3])
+                print(string_prediction2)
+                string_prediction3 = "MCD Pred.TOP3 = " + str(float(mcd_prediction[4])*100) + "% " + str(mcd_prediction[5])
+                print(string_prediction3)
+                string_prediction4 = "MCD Pred.TOP4 = " + str(float(mcd_prediction[6])*100) + "% " + str(mcd_prediction[7])
+                print(string_prediction4)
+                string_prediction5 = "MCD Pred.TOP5 = " + str(float(mcd_prediction[8])*100) + "% " + str(mcd_prediction[9])
+                print(string_prediction5)
+                mcd_image = create_mcd_image(size,string_samples, string_dropout, string_prediction1, string_prediction2, string_prediction3, string_prediction4, string_prediction5)
+                print(string_samples + string_dropout + string_prediction1)
                 image_list.append(mcd_image)
                 cmap_list.append('viridis')
                 title_list.append("Monte Carlo")
@@ -440,7 +448,7 @@ def convert_to_uint8(image):
         # Handle other data types or raise an error if needed
         raise ValueError("Unsupported data type. Supported types are float32, float64, and uint8.")
     
-def create_mcd_image( size, text1, text2, text3):
+def create_mcd_image( size, text1, text2, pred1, pred2, pred3, pred4, pred5):
 
     from PIL import Image, ImageDraw, ImageFont
     # Set image dimensions
@@ -458,14 +466,23 @@ def create_mcd_image( size, text1, text2, text3):
     font = ImageFont.load_default()
 
     # Set text positions
-    x1, y1 = int(width * 0.4), int(height * 0.2)
-    x2, y2 = int(width * 0.4), int(height * 0.4)
-    x3, y3 = int(width * 0.4), int(height * 0.6)
+    x1, y1 = int(width * 0), int(height * 0.2)
+    x2, y2 = int(width * 0), int(height * 0.3)
+    x3, y3 = int(width * 0), int(height * 0.5)
+    x4, y4 = int(width * 0), int(height * 0.6)
+    x5, y5 = int(width * 0), int(height * 0.7)
+    x6, y6 = int(width * 0), int(height * 0.8)
+    x7, y7 = int(width * 0), int(height * 0.9)
+
 
     # Draw black text on the image
     draw.text((x1, y1), text1, font=font, fill="black")
     draw.text((x2, y2), text2, font=font, fill="black")
-    draw.text((x3, y3), text3, font=font, fill="black")
+    draw.text((x3, y3), pred1, font=font, fill="black")
+    draw.text((x4, y4), pred2, font=font, fill="black")
+    draw.text((x5, y5), pred3, font=font, fill="black")
+    draw.text((x6, y6), pred4, font=font, fill="black")
+    draw.text((x7, y7), pred5, font=font, fill="black")
 
     # Convert the PIL Image to a NumPy array
     image_array = np.array(image)

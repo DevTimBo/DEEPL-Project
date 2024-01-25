@@ -147,13 +147,38 @@ def applyMonteCarloApplyTo(applytoList, modelMC, modelNoMC, dropoutRate):
     return modelMC
 
 def processPredictions(predictions_readable, modelNoMC, picture_input_preprocessed, decode):
-    counter = 0
+    counterTopOne = 0
+    counterTopTwo = 0
+    counterTopThree = 0
+    counterTopFour = 0
+    counterTopFive = 0
     predictionNormalModel = decode(modelNoMC.predict(picture_input_preprocessed))
+    
+    countTopFiveAccourence = []
+
     for k in range(len(predictions_readable)):
         # print(predictions_readable[k])
         if (predictions_readable[k][0][0][1] == predictionNormalModel[0][0][1]):
-            counter = counter + 1
-
+            counterTopOne = counterTopOne + 1
+        if (predictions_readable[k][0][1][1] == predictionNormalModel[0][1][1]):
+            counterTopTwo = counterTopTwo + 1
+        if (predictions_readable[k][0][2][1] == predictionNormalModel[0][2][1]):
+            counterTopThree = counterTopThree + 1
+        if (predictions_readable[k][0][3][1] == predictionNormalModel[0][3][1]):
+            counterTopFour = counterTopFour + 1
+        if (predictions_readable[k][0][4][1] == predictionNormalModel[0][4][1]):
+            counterTopFive = counterTopFive + 1
     # print (predictionNormalModel)
-    hits = str(counter/len(predictions_readable))
-    return hits
+    #hits = str(counter/len(predictions_readable))
+            
+    countTopFiveAccourence.append(counterTopOne/len(predictions_readable))
+    countTopFiveAccourence.append(predictionNormalModel[0][0][1])
+    countTopFiveAccourence.append(counterTopTwo/len(predictions_readable))
+    countTopFiveAccourence.append(predictionNormalModel[0][1][1])
+    countTopFiveAccourence.append(counterTopThree/len(predictions_readable))
+    countTopFiveAccourence.append(predictionNormalModel[0][2][1])
+    countTopFiveAccourence.append(counterTopFour/len(predictions_readable))
+    countTopFiveAccourence.append(predictionNormalModel[0][3][1])
+    countTopFiveAccourence.append(counterTopFive/len(predictions_readable))
+    countTopFiveAccourence.append(predictionNormalModel[0][4][1])
+    return countTopFiveAccourence
