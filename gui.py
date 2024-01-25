@@ -148,11 +148,10 @@ class Ui(QtWidgets.QDialog):
 
         if self.analyze_mode.currentText() == "Single Image":
             if self.single_image_path != "":
-                thread = threading.main_thread(self.single_image_analyzer())
-                thread.start
+                self.single_image_analyzer()
         elif self.analyze_mode.currentText() == "Many Images":
             if self.many_images_paths != []:
-                thread = threading.main_thread(self.many_images_analyzer())
+                self.many_images_analyzer()
         elif self.analyze_mode.currentText() == "Video":
             pass
 
