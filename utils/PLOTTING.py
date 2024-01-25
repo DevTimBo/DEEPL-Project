@@ -8,15 +8,19 @@ def plot_n_images(images, titles, cmaps, max_images_per_row, figsize=(20, 5)):
     if num_images == 0 or num_images != len(titles) or num_images != len(cmaps):
         raise ValueError("Invalid number of images, titles, or cmaps provided.")
     if num_images == 1:
-        fig, ax = plt.subplots(1, 1, figsize=figsize)
-        ax.imshow(images[0], cmap=cmaps[0])
-        ax.set_title(titles[0])
-        ax.axis('off')
+        num_row = 1
+
+        fig, ax = plt.subplots(num_row, 1, figsize=figsize)
+        ax[0].imshow(images[0], cmap=cmaps[0])
+        ax[0].set_title(titles[0])
+        ax[0].axis('off')
+
     else:
         num_rows = 1
         if num_images > max_images_per_row:
             num_rows = (num_images - 1) // max_images_per_row + 1
-        fig, axs = plt.subplots(num_rows, max_images_per_row,figsize=figsize)
+
+        fig, axs = plt.subplots(num_rows, max_images_per_row, figsize=figsize)
         print(f"num rows {num_rows}")
         print(f"max_images_per_row {max_images_per_row}")
         if max_images_per_row == 1 or num_rows == 1:
@@ -28,6 +32,7 @@ def plot_n_images(images, titles, cmaps, max_images_per_row, figsize=(20, 5)):
                 axs[i].set_title(titles[i])
                 print("off")
                 axs[i].axis('off')
+
         else:
             for i in range(num_images):
                 print(i)
