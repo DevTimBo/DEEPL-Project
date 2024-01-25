@@ -8,6 +8,8 @@ from IPython.display import Image, display
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
+prediction = None
+
 '''
 # Für dem Testdurchlauf
 model_builder = keras.applications.xception.Xception
@@ -31,8 +33,9 @@ img_path = keras.utils.get_file(
 '''
 
 def make_gradcam(model, img_path, img_size, preprocess, decode_predictions, last_conv_layer_name, frameNr = ''):
-    OUTPUT_FOLDER_SH = r'DEEPL-Project\CAM\Images\gradcam_output\Small_Heatmap'
-    OUTPUT_FOLDER_LH = r'DEEPL-Project\CAM\Images\gradcam_output\Large_Heatmap'
+    global prediction 
+    OUTPUT_FOLDER_SH = r'CAM\Images\gradcam_output\Small_Heatmap'
+    OUTPUT_FOLDER_LH = r'CAM\Images\gradcam_output\Large_Heatmap'
     heatmap_name = f'cam1_1{frameNr}.jpg'
     result_name = f'cam1_2{frameNr}.jpg'
     preprocess_input = preprocess
@@ -40,7 +43,8 @@ def make_gradcam(model, img_path, img_size, preprocess, decode_predictions, last
     # print(img_array)
     model.layers[-1].activation = None  # OPTIONAL
     preds = model.predict(img_array)
-    print("Predicted:", decode_predictions(preds, top=1)[0])
+    prediction = decode_predictions(preds, top=1)[0]
+    print("Predicted:", prediction)
     heatmap = make_gradcam_heatmap(img_array, model, last_conv_layer_name)
     plt.imshow(heatmap)
     plt.savefig(os.path.join(OUTPUT_FOLDER_SH, heatmap_name))
@@ -103,5 +107,6 @@ def save_and_display_gradcam(img_path, preds, heatmap, cam_path, alpha=0.4):
     # plt.colorbar()
     # plt.title(decode_predictions(preds, top=1)[0])
 
-
+def get_pred():
+    return prediction
 #make_gradcam(model, img_path, img_size, preprocess_input, decode_predictions, last_conv_layer_name)
