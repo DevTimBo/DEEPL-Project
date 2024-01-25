@@ -122,8 +122,13 @@ class Ui(QtWidgets.QDialog):
     # Starting New Thread so Application can still be used
     # Doesnt work because Matplot cant Plot in 2nd Thread
     def analyze_thread_start(self):
-        my_thread = threading.Thread(target=self.analyze)
-        my_thread.start()
+        import os
+        os_name = os.name
+        if os_name == 'nt': # Windows
+            self.analyze()
+        else:
+            my_thread = threading.Thread(target=self.analyze)
+            my_thread.start()
 
     def analyze(self):
         
