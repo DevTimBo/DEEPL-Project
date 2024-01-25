@@ -45,8 +45,8 @@ for image in sorted_frames:
     preds.append(grad_cam.get_pred())
     print(preds)
     i += 1 
-"""     if i == 5:
-        break """
+    if i == 5:
+        break
 
 sorted_frames_LH = sorted(os.listdir(LH_frames), key=video.extract_number)
 sorted_frames_SH = sorted(os.listdir(SH_frames), key=video.extract_number)
@@ -57,8 +57,8 @@ for index, img in enumerate(sorted_frames_LH):
     img_path = os.path.join(LH_frames, img)
     video.draw_on_image(img_path, 20, str(preds[index]))
     i += 1 
-"""     if i == 5:
-        break """
+    if i == 5:
+        break
 
 # Fügt jedem Bild aus dem SH Ordner Text hinzu
 i = 0
@@ -66,8 +66,8 @@ for index, img in enumerate(sorted_frames_SH):
     img_path = os.path.join(SH_frames, img)
     video.draw_on_image(img_path, 20, str(preds[index]))
     i += 1 
-"""     if i == 5:
-        break """
+    if i == 5:
+        break
  
 # teste 
 #video_Frames = r'CAM\video_Frames'
