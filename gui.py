@@ -449,7 +449,8 @@ def create_mcd_image( size, text1, text2, text3):
 
     # Set font properties
     font_size = 10
-    font = ImageFont.truetype("arial.ttf", font_size)  # Use a suitable font file path
+    #font = ImageFont.truetype("arial.ttf", font_size)  # Use a suitable font file path
+    font = ImageFont.load_default()
 
     # Set text positions
     x1, y1 = int(width * 0.4), int(height * 0.2)

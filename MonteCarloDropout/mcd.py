@@ -7,30 +7,27 @@ import random
 
 # main methode all others functions are called from there
 def get_mcd_uncertainty(image, model, preprocess, decode, samples, dropoutRate, applyOrSkip, apply_skip_list):
-    #load picture
+    # load picture
     picture_input_preprocessed = preprocess(image[None])  
     
-    #models
+    # models
     modelNoMC = model
     modelMC = model
 
     # list of decoded predictions
     predictions_readable = []
-
-    skip_apply_list = []
-
-    skip_apply_list = []
-
+    # list of to apply layers
+    apply = []
     # creating List once so not done in every iteration
     if (applyOrSkip == "Skip these layers"):
-        skip_apply_list = skipLayers(apply_skip_list, modelMC)
+        apply = skipLayers(apply_skip_list, modelMC)
     else:
-        skip_apply_list = applyTo(apply_skip_list, modelMC)
+        apply = applyTo(apply_skip_list, modelMC)
 
     # apply MonteCarlo and write predictions
     for r in range(samples):    
         # skip or apply to these layers
-        modelMC = applyMonteCarloApplyTo(skip_apply_list, modelMC, modelNoMC, dropoutRate)
+        modelMC = applyMonteCarloApplyTo(apply, modelMC, modelNoMC, dropoutRate)
         predictions = modelMC.predict(picture_input_preprocessed)
         predictions_readable.append(decode(predictions))
     
@@ -54,12 +51,12 @@ def applyTo(applyToLayers, modelMC):
 
 
 def skipLayers(skipTheseLayers, modelMC):
-    # skip these layers
+    # list of layers without the skipped ones
     layerToSkip = []
 
     # these layers get skipped
     for i in range(len(modelMC.layers)):
-        if (modelMC.layers[i].__class__.__name__ in skipTheseLayers):
+        if (modelMC.layers[i].__class__.__name__ not in skipTheseLayers):
             layerToSkip.append(i)
 
     return layerToSkip
@@ -68,7 +65,7 @@ def skipLayers(skipTheseLayers, modelMC):
 def zero_weights(weights, percentage):
     modified_weights = []
     for w in weights:
-        print(w)
+        #print(w)
         num_elements = int(percentage * w.size)
         zero_indices = np.random.choice(w.size, num_elements, replace=False)
         w_flat = w.flatten()
@@ -141,7 +138,7 @@ def zero_weights(weights, percentage):
 
 def applyMonteCarloApplyTo(applytoList, modelMC, modelNoMC, dropoutRate):
     for i in range(len(modelMC.layers)):
-        print(f"Layers Len: {len(modelMC.layers)}")
+        #print(f"Layers Len: {len(modelMC.layers)}")
         if (i) in applytoList:
             b = modelNoMC.layers[i].get_weights()
             b = zero_weights(b, dropoutRate/100)
