@@ -9,15 +9,30 @@ import numpy as np
 import tensorflow as tf
 import threading
 from VideoPlayer import VideoPlayer
-from PyQt5.QtWidgets import QVBoxLayout
+from PyQt5.QtWidgets import QVBoxLayout, QWidget
 
 tf.compat.v1.disable_eager_execution()
+from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import (qApp, QFileDialog,
                              QListWidgetItem)
 
 
 
+class AnotherWindowGame(QWidget, QtCore.QThread):
+    """
+    This "window" is a QWidget. If it has no parent, it
+    will appear as a free-floating window as we want.
+    """
+    def __init__(self):
+        super().__init__()
+        layout = QVBoxLayout()
+        self.setLayout(layout)
+        my_thread2 = threading.Thread(target=self.runGame)
+        my_thread2.start()
+    def runGame(self):
+        from GAME.chromedino import menu
+        menu(0)
 
 class Ui(QtWidgets.QDialog):
     def __init__(self):
@@ -49,7 +64,7 @@ class Ui(QtWidgets.QDialog):
         self.button_load_single_image.clicked.connect(self.file_dialog_single)
         self.button_load_many_images.clicked.connect(self.file_dialog_many)
         self.button_load_video.clicked.connect(self.file_dialog_video)
-        self.button_analyze.clicked.connect(self.analyze)
+        self.button_analyze.clicked.connect(self.analyze_thread_start)
 
         # Connect the QListWidget
         self.image_list_widget.itemClicked.connect(self.show_selected_image)
@@ -111,6 +126,9 @@ class Ui(QtWidgets.QDialog):
         my_thread.start()
 
     def analyze(self):
+        
+        if (self.Game.isChecked()):
+            self.show_new_window()
 
         print(self.many_images_paths)
 
@@ -357,8 +375,9 @@ class Ui(QtWidgets.QDialog):
         mcd_prediction = mcd.get_mcd_uncertainty(image, self.keras_model, self.keras_preprocess, self.keras_decode, mcd_samples, mcd_dropoutrate, mcd_apply_skip, mcd_layers)
         return mcd_prediction
 
-
-
+        
+    def show_new_window(self):
+        AnotherWindowGame()
 
     def mcd_create_layer_list(self):
         mcd_layers = []
@@ -408,6 +427,7 @@ def convert_to_uint8(image):
     else:
         # Handle other data types or raise an error if needed
         raise ValueError("Unsupported data type. Supported types are float32, float64, and uint8.")
+    
 def create_mcd_image( size, text1, text2, text3):
 
     from PIL import Image, ImageDraw, ImageFont
