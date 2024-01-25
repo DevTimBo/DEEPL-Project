@@ -29,6 +29,7 @@ MANIFEST
 # Additional entries for .gitignore
 LIME/images/
 unused_functions.py
+Space Invaders
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
