@@ -4,6 +4,8 @@ import cv2
 import os 
 import keras
 
+#TODO Die Frame Nr. wird auch noch angezeigt, dann kann man sich dazu die anderen heatmaps anschauen 
+
 video_path_in = r'CAM\data\cat.mp4'
 capture = cv2.VideoCapture(video_path_in)
 FRAME_FOLDER = r'CAM\video_Frames'

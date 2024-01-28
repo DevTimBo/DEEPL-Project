@@ -22,9 +22,11 @@ model = model_builder(weights="imagenet")
 model.layers[-1].activation = None  # OPTIONAL
 
 
-img_path = keras.utils.get_file(
+""" img_path = keras.utils.get_file(
     "hund.jpg",
    "https://einfachtierisch.de/media/cache/article_main_image_tablet/cms/2013/05/Hundewelpe-Retriever-Halsband.jpg?522506"
-)
+) """
+
+img_path = r'CAM\Images\puppy.jpg'
 
 grad_cam.make_gradcam(model, img_path, img_size, preprocess_input, decode_predictions, last_conv_layer_name)
