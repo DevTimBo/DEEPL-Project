@@ -14,29 +14,10 @@ superimposed_img = None
 test_superim = None
 heatmap_name2 = None
 
-# Für dem Testdurchlauf
-model_builder = keras.applications.xception.Xception
-img_size = (299, 299)
-preprocess_input = keras.applications.xception.preprocess_input
-decode_predictions = keras.applications.xception.decode_predictions
-
 OUTPUT_FOLDER = 'DEEPL-Project\CAM\Images\gradcam_output'
 OUTPUT_FOLDER_SH = r'CAM\Images\gradcam_output\Small_Heatmap'
 OUTPUT_FOLDER_MH = r'CAM\Images\gradcam_output\Mid_Heatmap'
 OUTPUT_FOLDER_LH = r'CAM\Images\gradcam_output\Large_Heatmap'
-heatmap_name = 'cam1_1.jpg'
-result_name = 'cam1_2.jpg'
-last_conv_layer_name = "block14_sepconv2_act"
-
-model = model_builder(weights="imagenet")
-model.layers[-1].activation = None  # OPTIONAL
-
-
-img_path = keras.utils.get_file(
-    "hund.jpg",
-   "https://einfachtierisch.de/media/cache/article_main_image_tablet/cms/2013/05/Hundewelpe-Retriever-Halsband.jpg?522506"
-)
-
 
 def make_gradcam(model, img_path, img_size, preprocess, decode_predictions, last_conv_layer_name, frameNr = ''):
     global prediction, heatmap_name2
@@ -55,11 +36,6 @@ def make_gradcam(model, img_path, img_size, preprocess, decode_predictions, last
     plt.savefig(os.path.join(OUTPUT_FOLDER_SH, heatmap_name))
     result_path = os.path.join(OUTPUT_FOLDER_LH, result_name)
     save_and_display_gradcam(img_path, preds, heatmap, result_path, alpha=0.4)
-    #test = get_superimposed_snapshot()
-    #print(test)
-    #test.show()
-    #plt.imshow(test)
-    #plt.show
 
 
 
@@ -127,9 +103,3 @@ def save_and_display_gradcam(img_path, preds, heatmap, cam_path, alpha=0.4):
 def get_pred():
     return prediction
 
-# Man bekommt ein PIL-Objekt zuürck 
-""" def get_superimposed_snapshot():
-    print("Bin drin")
-    return snapshot """
-
-make_gradcam(model, img_path, img_size, preprocess_input, decode_predictions, last_conv_layer_name)
