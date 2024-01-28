@@ -9,6 +9,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 
 prediction = None
+superimposed_img = None
 
 '''
 # Für dem Testdurchlauf
@@ -110,3 +111,6 @@ def save_and_display_gradcam(img_path, preds, heatmap, cam_path, alpha=0.4):
 def get_pred():
     return prediction
 #make_gradcam(model, img_path, img_size, preprocess_input, decode_predictions, last_conv_layer_name)
+
+def get_superimposed_img():
+    return
