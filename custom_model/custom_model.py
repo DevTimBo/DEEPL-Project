@@ -1,4 +1,5 @@
 import cv2
+import numpy as np
 
 
 def read_mapping(csv_file_path):
@@ -17,6 +18,42 @@ def read_mapping(csv_file_path):
     return class_dict, num_classes
 
 
+csv_file_path = ''
+
+
+def set_csv_file_path(csv_file_path_temp):
+    global csv_file_path
+    csv_file_path = csv_file_path_temp
+
+
+size = (0, 0)
+
+
+def set_size(size_temp):
+    global size
+    size = size_temp
+
+
+channels = 1
+
+
+def set_channels(channels_temp):
+    global channels
+    channels = channels_temp
+
+
+def preprocess(img):
+    if channels == 1:
+        img = cv2.cvtColor(img[0], cv2.COLOR_BGR2GRAY)
+        resized_image = cv2.resize(img, size)[None]
+    else:
+        resized_image = cv2.resize(img[0], size)
+    print(resized_image.shape)
+    resized_image = np.transpose(resized_image, [2, 1, 0])
+    print(resized_image.shape)
+    return resized_image[None]
+
+
 def get_decode(csv_file_path, prediction):
     decoded_pred = "No Prediction"
     class_dict, num_classes = read_mapping(csv_file_path)
@@ -29,12 +66,21 @@ def get_decode(csv_file_path, prediction):
     return decoded_pred
 
 
+def decode_predictions(preds, top=5):
+    results = []
+    for pred in preds:
+        result = get_decode(csv_file_path, pred)
+        results.append(result)
+        results.append(result)
+    return results
+
 
 if __name__ == "__main__":
     csv_file_path = 'mapping.csv'
 
     import keras
     import numpy as np
+
     size = (28, 28)
     model = keras.models.load_model('mnist_int.keras')
     model.load_weights('mnist_weights_int.keras')
@@ -46,8 +92,3 @@ if __name__ == "__main__":
     prediction = model.predict(image_processed)
     decoded_pred = get_decode(csv_file_path, prediction)
     print(f"Prediction: {decoded_pred}")
-
-
-
-
-

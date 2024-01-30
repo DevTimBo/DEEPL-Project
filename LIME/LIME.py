@@ -3,9 +3,11 @@ from skimage.segmentation import mark_boundaries
 import numpy as np
 
 
-def get_lime_explanation(image, model, samples, features):
+def get_lime_explanation(image, model, samples, features, preprocess):
+    image = preprocess(np.array(image)[None])
+    image = image[0]
     explainer = lime_image.LimeImageExplainer()
-    explanation = explainer.explain_instance(image.astype('double'), model.predict, top_labels=5, hide_color=0,
+    explanation = explainer.explain_instance(image, model.predict, top_labels=5, hide_color=0,
                                              num_samples=samples)
     temp, mask = explanation.get_image_and_mask(explanation.top_labels[0], positive_only=False, num_features=features,
                                                 hide_rest=False)
@@ -15,9 +17,11 @@ def get_lime_explanation(image, model, samples, features):
     return image
 
 
-def get_lime_heat_map(image, model, samples):
+def get_lime_heat_map(image, model, samples, preprocess):
+    image = preprocess(np.array(image)[None])
+    image = image[0]
     explainer = lime_image.LimeImageExplainer()
-    explanation = explainer.explain_instance(image.astype('double'), model.predict, top_labels=5, hide_color=0,
+    explanation = explainer.explain_instance(image, model.predict, top_labels=5, hide_color=0,
                                              num_samples=samples)
     # Select the same class explained on the figures above.
     ind = explanation.top_labels[0]
