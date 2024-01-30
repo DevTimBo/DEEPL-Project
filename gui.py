@@ -206,7 +206,40 @@ class Ui(QtWidgets.QDialog):
             if self.many_images_paths != []:
                 self.many_images_analyzer()
         elif self.analyze_mode.currentText() == "Video":
-            pass
+            if self.video_path != "":
+                self.video_analyzer()
+    
+    def video_analyzer(self):
+        # Create a QDialog for the video player pop-up
+        videoPlayerDialog = QtWidgets.QDialog(self)
+        videoPlayerDialog.setWindowTitle('Video Player')
+        videoPlayerDialog.setGeometry(100, 100, 800, 800)
+        videoPlayerDialog.setMinimumSize(400, 400)
+
+        # Create an instance of the VideoPlayer widget
+        videoPlayer = VideoPlayer()
+        # Initialize the video player
+        video_layout = QVBoxLayout()
+        video_layout.addWidget(videoPlayer)
+        video_layout.addWidget(videoPlayer.videoWidget)
+
+        # Button to close the video player pop-up
+        closeDialogButton = QtWidgets.QPushButton('Close')
+        closeDialogButton.clicked.connect(videoPlayerDialog.close)
+
+        # Layout for the video player pop-up
+        dialogLayout = QVBoxLayout()
+        dialogLayout.addLayout(video_layout)
+        dialogLayout.addWidget(closeDialogButton)   
+
+        videoPlayerDialog.setLayout(dialogLayout)
+
+        # Load a video into the VideoPlayer
+        videoPlayer.load_video(self.video_path)
+
+        # Show the video player pop-up
+        videoPlayerDialog.exec_()
+        
 
     def image_analyzer(self, image, image_path):
         image_list = []
