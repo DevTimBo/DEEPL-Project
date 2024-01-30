@@ -294,7 +294,7 @@ class Ui(QtWidgets.QDialog):
                 mcd_dropoutrate = self.mcd_percent_spinBox.value()
                 mcd_LayerList = self.mcd_create_layer_list()
 
-                mcd_prediction = self.mcDropout(image, mcd_samples, mcd_dropoutrate, mcd_apply_skip, mcd_LayerList)
+                mcd_prediction = self.mcDropout(resized_image, mcd_samples, mcd_dropoutrate, mcd_apply_skip, mcd_LayerList)
                 print(mcd_prediction)
                 string_samples = str(mcd_samples) + " sample(s)"
                 print(string_samples)

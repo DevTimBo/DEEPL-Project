@@ -49,30 +49,35 @@ def preprocess(img):
     else:
         resized_image = cv2.resize(img[0], size)
     print(resized_image.shape)
-    resized_image = np.transpose(resized_image, [2, 1, 0])
+    resized_image = np.transpose(resized_image, [1, 2, 0])
     print(resized_image.shape)
     return resized_image[None]
 
 
-def get_decode(csv_file_path, prediction):
-    decoded_pred = "No Prediction"
+def get_decode(csv_file_path, prediction, top=5):
+    decoded_preds = []
     class_dict, num_classes = read_mapping(csv_file_path)
+
+    # Assuming prediction is a list or array of probabilities
     if len(prediction[0]) == num_classes:
-        for i, pred_bit in enumerate(prediction[0]):
-            if pred_bit >= 1:
-                decoded_pred = class_dict[i]
-    else:
-        decoded_pred = class_dict[prediction[0]]
-    return decoded_pred
+        # Enumerate through the probabilities and store (class_index, probability) tuples
+        pred_tuples = [(i, pred_prob) for i, pred_prob in enumerate(prediction[0])]
+        # Sort the tuples based on probability in descending order
+        sorted_preds = sorted(pred_tuples, key=lambda x: x[1], reverse=True)
+
+        # Take the top 'top' predictions
+        top_preds = sorted_preds[:top]
+
+        # Extract class labels and indices for the top predictions
+        for class_index, pred_prob in top_preds:
+            decoded_preds.append((class_index, class_dict[class_index],prediction[0][class_index]))
+    print(decoded_preds)
+    return decoded_preds
 
 
 def decode_predictions(preds, top=5):
-    results = []
-    for pred in preds:
-        result = get_decode(csv_file_path, pred)
-        results.append(result)
-        results.append(result)
-    return results
+    result = get_decode(csv_file_path, preds, top)
+    return [result]
 
 
 if __name__ == "__main__":
@@ -90,5 +95,5 @@ if __name__ == "__main__":
     resize_image = cv2.resize(image, size)
     image_processed = np.array(resize_image)[None]
     prediction = model.predict(image_processed)
-    decoded_pred = get_decode(csv_file_path, prediction)
+    decoded_pred = decode_predictions(prediction)
     print(f"Prediction: {decoded_pred}")
