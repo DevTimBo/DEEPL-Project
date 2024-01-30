@@ -6,25 +6,22 @@ from PIL import ImageFont
  
 
 def cut_video(capture):
-
     frameNr = 0
-
+    i = 0
     while(True): 
         success, frame = capture.read()
-
         if success:
             print("hallo1")
             cv2.imwrite(f'C:/Users/hadie/Desktop/Erk Framework/DEEPL-Project/CAM/video_Frames/{frameNr}.jpg', frame)
             print(f"Frame {frameNr} gespeichert.")
-        
         else:
             break
-
         frameNr = frameNr+1
-        
+        i += 1
         if frameNr == 150:
             break
-    
+        if i == 5:
+            break
     capture.release()
 
 def get_frame_size(sample_path):
