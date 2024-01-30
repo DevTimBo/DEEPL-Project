@@ -11,9 +11,9 @@ def plot_n_images(images, titles, cmaps, max_images_per_row, figsize=(20, 5)):
         num_row = 1
 
         fig, ax = plt.subplots(num_row, 1, figsize=figsize)
-        ax[0].imshow(images[0], cmap=cmaps[0])
-        ax[0].set_title(titles[0])
-        ax[0].axis('off')
+        ax.imshow(images[0], cmap=cmaps[0])
+        ax.set_title(titles[0])
+        ax.axis('off')
 
     else:
         num_rows = 1

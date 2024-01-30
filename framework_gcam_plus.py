@@ -1,26 +1,20 @@
-import numpy as np
 import tensorflow as tf
-from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras import Model
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-import requests
 import os
 import cv2
 import numpy as np
 from PIL import Image
-from keras.utils import get_file
 
 OUTPUT_FOLDER = "data"
 result_name = "grad_cam_plusplus.jpg"
 
-
 def grad_cam_plus(model, img,
                   layer_name="block5_conv3", label_name=None,
                   category_id=None):
-    img_tensor = np.expand_dims(img, axis=0)
 
+
+    img_tensor = np.expand_dims(img, axis=0)
     conv_layer = model.get_layer(layer_name)
     heatmap_model = Model([model.inputs], [conv_layer.output, model.output])
 
@@ -61,8 +55,15 @@ def grad_cam_plus(model, img,
     return heatmap
 
 def preprocess_image(img_path, target_size=(224, 224)):
+
     img = image.load_img(img_path, target_size=target_size)
     img = image.img_to_array(img)
+    print(f"Before Image Shape: {img.shape}")
+    img = img[None]
+    if model_name.strip() == "Custom":
+        img = custom_model.preprocess(img)
+        img = img[0]
+        print(f"Image shape: {img.shape}")
     img /= 255
 
     return img
@@ -88,23 +89,43 @@ def make_gradcam_plusplus(model, img_path, last_conv_layer_name, target_size):
 
 if __name__ == "__main__":
     import sys
-    # Check if the correct number of arguments is provided
-    if len(sys.argv) != 3:
-        print("Usage: python tensorflow_script.py <model_name> <filepath>")
-        sys.exit(1)
+
+    from custom import custom_model
 
     # Extract command-line arguments
     model_name = sys.argv[1]
     filepath = sys.argv[2]
-
+    last_conv_layer = sys.argv[3]
+    json_string = sys.argv[4]
+    import json
+    # Deserialize the JSON-formatted string to get the original tuple
+    img_size = json.loads(json_string)
+    custom_model_path = sys.argv[5]
+    custom_model_weights_path = sys.argv[6]
+    print(f"Model :{model_name}:")
     if model_name == "VGG16":
         import keras.applications.vgg16 as vgg16
         # Keras Model
         model = vgg16.VGG16(weights="imagenet")
-        preprocess = vgg16.preprocess_input
-        decode_predictions = vgg16.decode_predictions
-        last_conv_layer = "block5_conv3"
-        img_size = (224, 224)
     else:
-        print("SOMETHING IS WRONG!!!")
+
+
+        custom_model_mapping_path = sys.argv[7]
+        custom_model.set_csv_file_path(custom_model_mapping_path)
+        custom_model.set_size(img_size)
+        channel_num = sys.argv[8]
+        custom_model.set_channels(int(channel_num))
+
+        import keras
+        model = keras.models.load_model(custom_model_path)
+        model.load_weights(custom_model_weights_path)
+
+        all_layers = model.layers
+        last_conv_layer = None
+        for layer in reversed(all_layers):
+            if 'conv' in layer.name:
+                last_conv_layer = layer.name
+                break
+
+        print(last_conv_layer)
     make_gradcam_plusplus(model, filepath, last_conv_layer, img_size)

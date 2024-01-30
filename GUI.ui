@@ -86,17 +86,17 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QTextBrowser" name="textBrowser">
+  <widget class="QTextBrowser" name="model_text">
    <property name="geometry">
     <rect>
      <x>860</x>
      <y>430</y>
-     <width>231</width>
+     <width>191</width>
      <height>21</height>
     </rect>
    </property>
   </widget>
-  <widget class="QTextBrowser" name="textBrowser_2">
+  <widget class="QTextBrowser" name="model_weights_text">
    <property name="geometry">
     <rect>
      <x>1100</x>
@@ -119,10 +119,10 @@
     <string>Custom Model</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="load_model_button">
    <property name="geometry">
     <rect>
-     <x>920</x>
+     <x>910</x>
      <y>400</y>
      <width>91</width>
      <height>23</height>
@@ -132,7 +132,7 @@
     <string>Load Model</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_2">
+  <widget class="QPushButton" name="load_model_weights_button">
    <property name="geometry">
     <rect>
      <x>1160</x>
@@ -316,8 +316,8 @@
   <widget class="QWidget" name="horizontalLayoutWidget_4">
    <property name="geometry">
     <rect>
-     <x>950</x>
-     <y>460</y>
+     <x>920</x>
+     <y>620</y>
      <width>288</width>
      <height>80</height>
     </rect>
@@ -693,9 +693,9 @@
          <property name="geometry">
           <rect>
            <x>0</x>
-           <y>-60</y>
-           <width>139</width>
-           <height>244</height>
+           <y>0</y>
+           <width>167</width>
+           <height>196</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
@@ -861,6 +861,116 @@
    </property>
    <property name="autoExclusive">
     <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="mapping_button">
+   <property name="geometry">
+    <rect>
+     <x>890</x>
+     <y>480</y>
+     <width>131</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Load Mapping.csv</string>
+   </property>
+  </widget>
+  <widget class="QTextBrowser" name="model_mapping_text">
+   <property name="geometry">
+    <rect>
+     <x>860</x>
+     <y>510</y>
+     <width>191</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="custom_conv_layer">
+   <property name="geometry">
+    <rect>
+     <x>1150</x>
+     <y>510</y>
+     <width>121</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>1160</x>
+     <y>490</y>
+     <width>111</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>last conv layer name</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>930</x>
+     <y>550</y>
+     <width>47</width>
+     <height>13</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Size</string>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="custom_model_size_x">
+   <property name="geometry">
+    <rect>
+     <x>880</x>
+     <y>570</y>
+     <width>51</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="minimum">
+    <number>1</number>
+   </property>
+   <property name="maximum">
+    <number>1000</number>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="custom_model_size_y">
+   <property name="geometry">
+    <rect>
+     <x>950</x>
+     <y>570</y>
+     <width>51</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="minimum">
+    <number>1</number>
+   </property>
+   <property name="maximum">
+    <number>1000</number>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="custom_model_size_channels">
+   <property name="geometry">
+    <rect>
+     <x>1020</x>
+     <y>570</y>
+     <width>51</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="minimum">
+    <number>1</number>
+   </property>
+   <property name="maximum">
+    <number>3</number>
+   </property>
+   <property name="singleStep">
+    <number>2</number>
    </property>
   </widget>
  </widget>

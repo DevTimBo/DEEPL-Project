@@ -1,8 +1,9 @@
-from PyQt5 import QtWidgets, uic
+from PyQt5 import uic
 import sys
 import cv2 as cv
 import LRP.LRP as LRP
 import LIME.LIME as LIME
+from custom import custom_model as custom_model
 from MonteCarloDropout import mcd
 from utils import datei_laden, IMAGE_EDIT, PLOTTING
 import numpy as np
@@ -16,23 +17,26 @@ from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import (qApp, QFileDialog,
                              QListWidgetItem)
+import os
 
-
-
+import keras
 class AnotherWindowGame(QWidget, QtCore.QThread):
     """
     This "window" is a QWidget. If it has no parent, it
     will appear as a free-floating window as we want.
     """
+
     def __init__(self):
         super().__init__()
         layout = QVBoxLayout()
         self.setLayout(layout)
         my_thread2 = threading.Thread(target=self.runGame)
         my_thread2.start()
+
     def runGame(self):
         from GAME.chromedino import menu
         menu(0)
+
 
 class Ui(QtWidgets.QDialog):
     def __init__(self):
@@ -50,7 +54,11 @@ class Ui(QtWidgets.QDialog):
         self.keras_preprocess = -1
         self.keras_decode = -1
         self.last_conv_layer = -1
-
+        self.img_size = (0,0)
+        # Custom Model
+        self.custom_model_path = ''
+        self.custom_model_weights_path = ''
+        self.custom_model_mapping_path = ''
         # Loaded Files
         self.single_image_path = ""
         self.many_images_paths = []
@@ -59,17 +67,47 @@ class Ui(QtWidgets.QDialog):
         # Initialize the video player
         self.video_player = VideoPlayer()
         self.video_layout.addWidget(self.video_player)
-        
+
         # Buttons
         self.button_load_single_image.clicked.connect(self.file_dialog_single)
         self.button_load_many_images.clicked.connect(self.file_dialog_many)
         self.button_load_video.clicked.connect(self.file_dialog_video)
         self.button_analyze.clicked.connect(self.analyze_thread_start)
 
+        self.load_model_button.clicked.connect(lambda: self.file_open_dialog_model('model'))
+        self.load_model_weights_button.clicked.connect(lambda: self.file_open_dialog_model('weights'))
+        self.mapping_button.clicked.connect(lambda: self.file_open_dialog_model('mapping'))
+
         # Connect the QListWidget
         self.image_list_widget.itemClicked.connect(self.show_selected_image)
 
         self.show()
+
+    def file_open_dialog_model(self, file_type):
+        dialog = QFileDialog(self)
+        dialog.setFileMode(QFileDialog.FileMode.ExistingFiles)
+        dialog.setViewMode(QFileDialog.ViewMode.List)
+        if file_type == 'model':
+            dialog.setNameFilter("Model (*.keras *.h5)")
+        elif file_type == 'weights':
+            dialog.setNameFilter("Model (*.keras *.h5)")
+        elif file_type == 'mapping':
+            dialog.setNameFilter("Mapping (*.csv)")
+
+        if dialog.exec():
+            filename = dialog.selectedFiles()
+            if file_type == 'model':
+                dialog.setNameFilter("Model (*.keras *.h5)")
+                self.custom_model_path = filename[0]
+                self.model_text.setText(os.path.basename(self.custom_model_path))
+            elif file_type == 'weights':
+                dialog.setNameFilter("Model (*.keras *.h5)")
+                self.custom_model_weights_path = filename[0]
+                self.model_weights_text.setText(os.path.basename(self.custom_model_weights_path))
+            elif file_type == 'mapping':
+                dialog.setNameFilter("Mapping (*.csv)")
+                self.custom_model_mapping_path = filename[0]
+                self.model_mapping_text.setText(os.path.basename(self.custom_model_mapping_path))
 
     def load_picture(self, filepath):
         self.single_image_path = filepath
@@ -124,14 +162,14 @@ class Ui(QtWidgets.QDialog):
     def analyze_thread_start(self):
         import os
         os_name = os.name
-        if os_name == 'nt': # Windows
+        if os_name == 'nt':  # Windows
             self.analyze()
         else:
             my_thread = threading.Thread(target=self.analyze)
             my_thread.start()
 
     def analyze(self):
-        
+
         if (self.Game.isChecked()):
             self.show_new_window()
 
@@ -149,7 +187,17 @@ class Ui(QtWidgets.QDialog):
         elif self.model.currentText() == "ResNet50":
             print("not implemented")
         else:
-            print("not implemented")
+            custom_model.set_csv_file_path(self.custom_model_mapping_path)
+            custom_model.set_size((self.custom_model_size_x.value(), self.custom_model_size_y.value()))
+            custom_model.set_channels(self.custom_model_size_channels.value())
+            self.keras_model = keras.models.load_model(self.custom_model_path)
+            self.keras_model.load_weights(self.custom_model_weights_path)
+            self.keras_decode = custom_model.decode_predictions
+            self.keras_preprocess = custom_model.preprocess
+            self.last_conv_layer = self.custom_conv_layer.toPlainText()
+
+
+
 
         if self.analyze_mode.currentText() == "Single Image":
             if self.single_image_path != "":
@@ -165,16 +213,17 @@ class Ui(QtWidgets.QDialog):
         title_list = []
         cmap_list = []
         if self.model.currentText() == "VGG16":
-            size = (224, 224)
-            resized_image = cv.resize(image, size)
+            self.img_size = (224, 224)
+            resized_image = cv.resize(image, self.img_size)
         elif self.model.currentText() == "VGG19":
-            size = (224, 224)
-            resized_image = cv.resize(image, size)
+            self.img_size = (224, 224)
+            resized_image = cv.resize(image, self.img_size)
         elif self.model.currentText() == "ResNet50":
-            size = (224, 224)
-            resized_image = cv.resize(image, size)
+            self.img_size = (224, 224)
+            resized_image = cv.resize(image, self.img_size)
         else:
-            print("not implemented")
+            self.img_size = (self.custom_model_size_x.value(), self.custom_model_size_y.value())
+            resized_image = cv.resize(image, self.img_size)
         noise_walk_value = 0
         if self.noise_walk_checkbox.isChecked():
 
@@ -247,28 +296,34 @@ class Ui(QtWidgets.QDialog):
                 mcd_dropoutrate = self.mcd_percent_spinBox.value()
                 mcd_LayerList = self.mcd_create_layer_list()
 
-                mcd_prediction = self.mcDropout(image, mcd_samples, mcd_dropoutrate, mcd_apply_skip, mcd_LayerList)
+                mcd_prediction = self.mcDropout(resized_image, mcd_samples, mcd_dropoutrate, mcd_apply_skip, mcd_LayerList)
                 print(mcd_prediction)
                 string_samples = str(mcd_samples) + " sample(s)"
                 print(string_samples)
                 string_dropout = "Dropout: " + str(mcd_dropoutrate) + "%"
                 print(string_dropout)
-                string_prediction1 = "MCD Pred.TOP1 = " + str(float(mcd_prediction[0])*100) + "% " + str(mcd_prediction[1])
+                string_prediction1 = "MCD Pred.TOP1 = " + str(float(mcd_prediction[0]) * 100) + "% " + str(
+                    mcd_prediction[1])
                 print(string_prediction1)
-                string_prediction2 = "MCD Pred.TOP2 = " + str(float(mcd_prediction[2])*100) + "% " + str(mcd_prediction[3])
+                string_prediction2 = "MCD Pred.TOP2 = " + str(float(mcd_prediction[2]) * 100) + "% " + str(
+                    mcd_prediction[3])
                 print(string_prediction2)
-                string_prediction3 = "MCD Pred.TOP3 = " + str(float(mcd_prediction[4])*100) + "% " + str(mcd_prediction[5])
+                string_prediction3 = "MCD Pred.TOP3 = " + str(float(mcd_prediction[4]) * 100) + "% " + str(
+                    mcd_prediction[5])
                 print(string_prediction3)
-                string_prediction4 = "MCD Pred.TOP4 = " + str(float(mcd_prediction[6])*100) + "% " + str(mcd_prediction[7])
+                string_prediction4 = "MCD Pred.TOP4 = " + str(float(mcd_prediction[6]) * 100) + "% " + str(
+                    mcd_prediction[7])
                 print(string_prediction4)
-                string_prediction5 = "MCD Pred.TOP5 = " + str(float(mcd_prediction[8])*100) + "% " + str(mcd_prediction[9])
+                string_prediction5 = "MCD Pred.TOP5 = " + str(float(mcd_prediction[8]) * 100) + "% " + str(
+                    mcd_prediction[9])
                 print(string_prediction5)
-                mcd_image = create_mcd_image(size,string_samples, string_dropout, string_prediction1, string_prediction2, string_prediction3, string_prediction4, string_prediction5)
+                mcd_image = create_mcd_image(string_samples, string_dropout, string_prediction1,
+                                             string_prediction2, string_prediction3, string_prediction4,
+                                             string_prediction5)
                 print(string_samples + string_dropout + string_prediction1)
                 image_list.append(mcd_image)
                 cmap_list.append('viridis')
                 title_list.append("Monte Carlo")
-
 
             if self.overlap_box.isChecked():
                 overlap_image = self.overlap_images(image_list)
@@ -313,13 +368,13 @@ class Ui(QtWidgets.QDialog):
                                max_images_per_row=self.find_len_per_row(),
                                figsize=(length * 5, rows * 5))
 
-
     def lrp_analyze(self, image, rule):
         print("LRP")
 
         lrp_image = LRP.analyze_image_lrp(image, self.keras_model, self.keras_preprocess, rule)
         lrp_image = convert_to_uint8(lrp_image)
         zeros_array = np.zeros_like(lrp_image)
+
         lrp_image = cv.merge([zeros_array, zeros_array, lrp_image])  # LRP nur im roten Kanal
         return lrp_image
 
@@ -345,79 +400,91 @@ class Ui(QtWidgets.QDialog):
         print("GRAD_CAM")
         import subprocess
         # Specify the path to the TensorFlow script
-        tensorflow_script_path = "CAM/framework_grad_cam.py"
+        tensorflow_script_path = "framework_grad_cam.py"
         # Specify the model_name and filepath as arguments
         model_name = self.model.currentText()
+        last_conv_layer = self.last_conv_layer
         if self.noise_checkbox.isChecked() or self.noise_walk_checkbox.isChecked():
             filepath = 'data/noise_image.png'
         else:
             filepath = image_path
         # Run the TensorFlow script as a subprocess with arguments
-        subprocess.run(["python", tensorflow_script_path, model_name, filepath])
+        import json
+        json_img_size = json.dumps(self.img_size)
+
+
+        subprocess.run(["python", tensorflow_script_path, model_name, filepath, last_conv_layer, json_img_size,
+                        self.custom_model_path, self.custom_model_weights_path, self.custom_model_mapping_path,
+                        str(self.custom_model_size_channels.value())])
         grad_cam_image = cv.imread("data/grad_cam.jpg")
         grad_cam_image = convert_to_uint8(grad_cam_image)
         return grad_cam_image
-    
+
     def grad_cam_plus_analyze(self, image_path):
         # TODO Pickle Model Übergeben, Last Conv Layer
         print("GRAD_CAM_++")
         import subprocess
         # Specify the path to the TensorFlow script
-        tensorflow_script_path = "CAM/framework_gcam_plus.py"
+        tensorflow_script_path = "framework_gcam_plus.py"
         # Specify the model_name and filepath as arguments
         model_name = self.model.currentText()
+        last_conv_layer = self.last_conv_layer
         if self.noise_checkbox.isChecked() or self.noise_walk_checkbox.isChecked():
             filepath = 'data/noise_image.png'
         else:
             filepath = image_path
-        # Run the TensorFlow script as a subprocess with arguments
-        subprocess.run(["python", tensorflow_script_path, model_name, filepath])
+            # Run the TensorFlow script as a subprocess with arguments
+        import json
+        json_img_size = json.dumps(self.img_size)
+        subprocess.run(["python", tensorflow_script_path, model_name, filepath, last_conv_layer, json_img_size,
+                            self.custom_model_path, self.custom_model_weights_path, self.custom_model_mapping_path,
+                            str(self.custom_model_size_channels.value())])
         grad_cam_image = cv.imread("data/grad_cam_plusplus.jpg")
         grad_cam_image = convert_to_uint8(grad_cam_image)
         return grad_cam_image
 
     def lime_analyzer(self, image, samples, features):
         print("LIME_ANALYZER")
-        lime_image = LIME.get_lime_explanation(image, self.keras_model, samples, features)
+        lime_image = LIME.get_lime_explanation(image, self.keras_model, samples, features,self.keras_preprocess)
         lime_image = convert_to_uint8(lime_image)
         return lime_image
 
     def lime_heatmap(self, image, samples):
         print("LIME_HEATMAP")
-        heatmap = LIME.get_lime_heat_map(image, self.keras_model, samples)
+        heatmap = LIME.get_lime_heat_map(image, self.keras_model, samples,self.keras_preprocess)
         heatmap = convert_to_uint8(heatmap)
         zeros_array = np.zeros_like(heatmap)
         heatmap = cv.merge([heatmap, zeros_array, zeros_array])  # LIME Heatmap nur blau
         return heatmap
-    
+
     def mcDropout(self, image, mcd_samples, mcd_dropoutrate, mcd_apply_skip, mcd_layers):
         print("MCD_PREDICTION")
-        mcd_prediction = mcd.get_mcd_uncertainty(image, self.keras_model, self.keras_preprocess, self.keras_decode, mcd_samples, mcd_dropoutrate, mcd_apply_skip, mcd_layers)
+        mcd_prediction = mcd.get_mcd_uncertainty(image, self.keras_model, self.keras_preprocess, self.keras_decode,
+                                                 mcd_samples, mcd_dropoutrate, mcd_apply_skip, mcd_layers)
         return mcd_prediction
 
-        
     def show_new_window(self):
         AnotherWindowGame()
 
     def mcd_create_layer_list(self):
         mcd_layers = []
-        if(self.mcd_activation_radio.isChecked):
+        if (self.mcd_activation_radio.isChecked):
             mcd_layers.append("ReLU")
             mcd_layers.append("Softmax")
             mcd_layers.append("LeakyReLU")
             mcd_layers.append("PReLU")
             mcd_layers.append("ELU")
-        if(self.mcd_batch_norm_radio.isChecked):
+        if (self.mcd_batch_norm_radio.isChecked):
             mcd_layers.append("BatchNormalization")
-        if(self.mcd_convolutional_radio.isChecked):
+        if (self.mcd_convolutional_radio.isChecked):
             mcd_layers.append("conv")
-        if(self.mcd_dense_radio.isChecked):
+        if (self.mcd_dense_radio.isChecked):
             mcd_layers.append("Dense")
-        if(self.mcd_group_norm_radio.isChecked):
+        if (self.mcd_group_norm_radio.isChecked):
             mcd_layers.append("GroupNormalization")
-        if(self.mcd_layer_norm_radio.isChecked):
+        if (self.mcd_layer_norm_radio.isChecked):
             mcd_layers.append("LayerNormalization")
-        if(self.mcd_unit_norm_radio.isChecked):
+        if (self.mcd_unit_norm_radio.isChecked):
             mcd_layers.append("UnitNormalization")
         return mcd_layers
 
@@ -447,12 +514,12 @@ def convert_to_uint8(image):
     else:
         # Handle other data types or raise an error if needed
         raise ValueError("Unsupported data type. Supported types are float32, float64, and uint8.")
-    
-def create_mcd_image( size, text1, text2, pred1, pred2, pred3, pred4, pred5):
 
+
+def create_mcd_image( text1, text2, pred1, pred2, pred3, pred4, pred5):
     from PIL import Image, ImageDraw, ImageFont
     # Set image dimensions
-    width, height = size
+    width, height = (224,224)
 
     # Create a white background image
     image = Image.new("RGB", (width, height), "white")
@@ -462,7 +529,7 @@ def create_mcd_image( size, text1, text2, pred1, pred2, pred3, pred4, pred5):
 
     # Set font properties
     font_size = 10
-    #font = ImageFont.truetype("arial.ttf", font_size)  # Use a suitable font file path
+    # font = ImageFont.truetype("arial.ttf", font_size)  # Use a suitable font file path
     font = ImageFont.load_default()
 
     # Set text positions
@@ -473,7 +540,6 @@ def create_mcd_image( size, text1, text2, pred1, pred2, pred3, pred4, pred5):
     x5, y5 = int(width * 0), int(height * 0.7)
     x6, y6 = int(width * 0), int(height * 0.8)
     x7, y7 = int(width * 0), int(height * 0.9)
-
 
     # Draw black text on the image
     draw.text((x1, y1), text1, font=font, fill="black")
@@ -488,6 +554,7 @@ def create_mcd_image( size, text1, text2, pred1, pred2, pred3, pred4, pred5):
     image_array = np.array(image)
     image_array = convert_to_uint8(image_array)
     return image_array
+
 
 app = QtWidgets.QApplication(sys.argv)
 with open('ui.qss', 'r') as styles_file:

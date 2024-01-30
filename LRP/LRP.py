@@ -16,5 +16,8 @@ def analyze_image_lrp(image, model, preprocess, rule):
     lrp_image = analyzer.analyze(image_processed)
     lrp_image = lrp_image.sum(axis=np.argmax(np.asarray(lrp_image.shape) == 3))
     lrp_image /= np.max(np.abs(lrp_image))
-    lrp_image = lrp_image[0]
+    if lrp_image.shape == 3:
+        lrp_image = lrp_image[0]
     return lrp_image
+
+

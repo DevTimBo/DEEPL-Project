@@ -29,9 +29,11 @@ def get_mcd_uncertainty(image, model, preprocess, decode, samples, dropoutRate, 
         # skip or apply to these layers
         modelMC = applyMonteCarloApplyTo(apply, modelMC, modelNoMC, dropoutRate)
         predictions = modelMC.predict(picture_input_preprocessed)
+        print(predictions)
         predictions_readable.append(decode(predictions))
     
-    # prediction    
+    # prediction
+
     uncertainty = processPredictions(predictions_readable, modelNoMC, picture_input_preprocessed, decode)
 
     return uncertainty
@@ -157,7 +159,7 @@ def processPredictions(predictions_readable, modelNoMC, picture_input_preprocess
     countTopFiveAccourence = []
 
     for k in range(len(predictions_readable)):
-        # print(predictions_readable[k])
+        print(predictions_readable[k])
         if (predictions_readable[k][0][0][1] == predictionNormalModel[0][0][1]):
             counterTopOne = counterTopOne + 1
         if (predictions_readable[k][0][1][1] == predictionNormalModel[0][1][1]):
