@@ -315,7 +315,7 @@ class Ui(QtWidgets.QDialog):
                 string_prediction5 = "MCD Pred.TOP5 = " + str(float(mcd_prediction[8]) * 100) + "% " + str(
                     mcd_prediction[9])
                 print(string_prediction5)
-                mcd_image = create_mcd_image(size, string_samples, string_dropout, string_prediction1,
+                mcd_image = create_mcd_image(string_samples, string_dropout, string_prediction1,
                                              string_prediction2, string_prediction3, string_prediction4,
                                              string_prediction5)
                 print(string_samples + string_dropout + string_prediction1)
@@ -372,6 +372,7 @@ class Ui(QtWidgets.QDialog):
         lrp_image = LRP.analyze_image_lrp(image, self.keras_model, self.keras_preprocess, rule)
         lrp_image = convert_to_uint8(lrp_image)
         zeros_array = np.zeros_like(lrp_image)
+
         lrp_image = cv.merge([zeros_array, zeros_array, lrp_image])  # LRP nur im roten Kanal
         return lrp_image
 
@@ -501,10 +502,10 @@ def convert_to_uint8(image):
         raise ValueError("Unsupported data type. Supported types are float32, float64, and uint8.")
 
 
-def create_mcd_image(size, text1, text2, pred1, pred2, pred3, pred4, pred5):
+def create_mcd_image( text1, text2, pred1, pred2, pred3, pred4, pred5):
     from PIL import Image, ImageDraw, ImageFont
     # Set image dimensions
-    width, height = size
+    width, height = (224,224)
 
     # Create a white background image
     image = Image.new("RGB", (width, height), "white")
