@@ -12,14 +12,16 @@ import numpy as np
 from PIL import Image
 from tensorflow.keras.utils import get_file
 
-img_path = 'DEEPL-Project\CAM\Images\welpe.jpg'
+#img_path = 'DEEPL-Project\CAM\Images\welpe.jpg'
 OUTPUT_FOLDER = 'DEEPL-Project\CAM\Images\gradcamplusplus_output'
+OUTPUT_FOLDER_SH = r'CAM\Images\gradcamplusplus_output\Small_Heatmap'
+OUTPUT_FOLDER_LH = r'CAM\Images\gradcamplusplus_output\Large_Heatmap'
 heatmap_name = 'cam2_1.jpg'
 result_name = 'cam2_2.jpg'
 WEIGHTS_PATH_VGG16_MURA = "https://github.com/samson6460/tf_keras_gradcamplusplus/releases/download/Weights/tf_keras_vgg16_mura_model.h5"
 #TODO Hier auch Name konstant halten 
-last_conv_layer_name = "block5_conv3"
-target_size = (224, 224)
+#last_conv_layer_name = "block5_conv3"
+#target_size = (224, 224)
 
 def grad_cam_plus(model, img,
                   layer_name="block5_conv3", label_name=None,
@@ -155,7 +157,7 @@ def show_imgwithheat(img_path, heatmap, alpha=0.4, return_array=False):
         #display(imgwithheat)
         plt.imshow(imgwithheat)
         plt.title("Grad-CAM++")
-        plt.savefig(os.path.join(OUTPUT_FOLDER, result_name))
+        plt.savefig(os.path.join(OUTPUT_FOLDER_LH, result_name))
     except NameError:
         imgwithheat.show()
 
@@ -170,8 +172,8 @@ def make_gradcam_plusplus(model, img_path, last_conv_layer_name, target_size):
     img = preprocess_image(img_path, target_size)
     heatmap_plus = grad_cam_plus(model, img, last_conv_layer_name)
     plt.imshow(heatmap_plus)
-    plt.savefig(os.path.join(OUTPUT_FOLDER, heatmap_name))
+    plt.savefig(os.path.join(OUTPUT_FOLDER_SH, heatmap_name))
     # heatmap hochskaliert + überlagert 
     show_imgwithheat(img_path, heatmap_plus)
-
-make_gradcam_plusplus(model, img_path, last_conv_layer_name, target_size)
+ 
+#make_gradcam_plusplus(model, img_path, last_conv_layer_name, target_size)

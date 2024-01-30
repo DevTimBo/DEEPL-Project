@@ -1,4 +1,6 @@
 import grad_cam
+from grad_cam_plusplus import make_gradcam_plusplus
+from grad_cam_plusplus import vgg16_mura_model
 import os
 os.environ["KERAS_BACKEND"] = "tensorflow"
 import numpy as np
@@ -9,7 +11,9 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from PIL import Image
 
-model_builder = keras.applications.xception.Xception
+
+# Für Grad-CAM 
+""" model_builder = keras.applications.xception.Xception
 img_size = (299, 299)
 preprocess_input = keras.applications.xception.preprocess_input
 decode_predictions = keras.applications.xception.decode_predictions
@@ -22,11 +26,20 @@ model = model_builder(weights="imagenet")
 model.layers[-1].activation = None  # OPTIONAL
 
 
-""" img_path = keras.utils.get_file(
+
+img_path = keras.utils.get_file(
     "hund.jpg",
    "https://einfachtierisch.de/media/cache/article_main_image_tablet/cms/2013/05/Hundewelpe-Retriever-Halsband.jpg?522506"
-) """
+) """ 
+
+# Für Grad-CAM++
+WEIGHTS_PATH_VGG16_MURA = "https://github.com/samson6460/tf_keras_gradcamplusplus/releases/download/Weights/tf_keras_vgg16_mura_model.h5"
+#TODO Hier auch Name konstant halten 
+last_conv_layer_name = "block5_conv3"
+target_size = (224, 224)
+model = vgg16_mura_model()
 
 img_path = r'CAM\Images\puppy.jpg'
 
-grad_cam.make_gradcam(model, img_path, img_size, preprocess_input, decode_predictions, last_conv_layer_name)
+#grad_cam.make_gradcam(model, img_path, img_size, preprocess_input, decode_predictions, last_conv_layer_name)
+make_gradcam_plusplus(model, img_path, last_conv_layer_name, target_size)
