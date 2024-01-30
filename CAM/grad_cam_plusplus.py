@@ -15,9 +15,11 @@ from tensorflow.keras.utils import get_file
 #img_path = 'DEEPL-Project\CAM\Images\welpe.jpg'
 OUTPUT_FOLDER = 'DEEPL-Project\CAM\Images\gradcamplusplus_output'
 OUTPUT_FOLDER_SH = r'CAM\Images\gradcamplusplus_output\Small_Heatmap'
+OUTPUT_FOLDER_MH = r'CAM\Images\gradcamplusplus_output\Mid_Heatmap'
 OUTPUT_FOLDER_LH = r'CAM\Images\gradcamplusplus_output\Large_Heatmap'
 heatmap_name = 'cam2_1.jpg'
-result_name = 'cam2_2.jpg'
+heatmap_name2 = 'cam2_2.jpg'
+result_name = 'cam2_3.jpg'
 WEIGHTS_PATH_VGG16_MURA = "https://github.com/samson6460/tf_keras_gradcamplusplus/releases/download/Weights/tf_keras_vgg16_mura_model.h5"
 #TODO Hier auch Name konstant halten 
 #last_conv_layer_name = "block5_conv3"
@@ -148,6 +150,17 @@ def show_imgwithheat(img_path, heatmap, alpha=0.4, return_array=False):
     heatmap = cv2.resize(heatmap, (img.shape[1], img.shape[0]))
     heatmap = (heatmap*255).astype("uint8")
     heatmap = cv2.applyColorMap(heatmap, cv2.COLORMAP_JET)
+
+    # ADDED ##################################################################################################
+    superimposed_img = heatmap * alpha
+    superimposed_img = np.clip(superimposed_img, 0, 255).astype("uint8")
+    superimposed_img = cv2.cvtColor(superimposed_img, cv2.COLOR_BGR2RGB)
+    plt.imshow(superimposed_img)
+    plt.savefig(os.path.join(OUTPUT_FOLDER_MH, heatmap_name2))
+    #plt.imshow(superimposed_img)
+    #plt.show()
+
+
     superimposed_img = heatmap * alpha + img
     superimposed_img = np.clip(superimposed_img, 0, 255).astype("uint8")
     superimposed_img = cv2.cvtColor(superimposed_img, cv2.COLOR_BGR2RGB)
