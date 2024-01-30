@@ -43,7 +43,9 @@ def set_channels(channels_temp):
 
 
 def preprocess(img):
+    print(channels)
     if channels == 1:
+        print("Gray")
         img = cv2.cvtColor(img[0], cv2.COLOR_BGR2GRAY)
         resized_image = cv2.resize(img, size)[None]
     else:
@@ -89,7 +91,7 @@ if __name__ == "__main__":
     size = (28, 28)
     model = keras.models.load_model('mnist_int.keras')
     model.load_weights('mnist_weights_int.keras')
-
+    model.summary()
     image = cv2.imread("sample.png", cv2.IMREAD_GRAYSCALE)
 
     resize_image = cv2.resize(image, size)

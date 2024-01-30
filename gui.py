@@ -1,9 +1,9 @@
-from PyQt5 import QtWidgets, uic
+from PyQt5 import uic
 import sys
 import cv2 as cv
 import LRP.LRP as LRP
 import LIME.LIME as LIME
-import custom_model.custom_model
+from custom import custom_model as custom_model
 from MonteCarloDropout import mcd
 from utils import datei_laden, IMAGE_EDIT, PLOTTING
 import numpy as np
@@ -54,7 +54,7 @@ class Ui(QtWidgets.QDialog):
         self.keras_preprocess = -1
         self.keras_decode = -1
         self.last_conv_layer = -1
-
+        self.img_size = (0,0)
         # Custom Model
         self.custom_model_path = ''
         self.custom_model_weights_path = ''
@@ -187,7 +187,6 @@ class Ui(QtWidgets.QDialog):
         elif self.model.currentText() == "ResNet50":
             print("not implemented")
         else:
-            import custom_model.custom_model as custom_model
             custom_model.set_csv_file_path(self.custom_model_mapping_path)
             custom_model.set_size((self.custom_model_size_x.value(), self.custom_model_size_y.value()))
             custom_model.set_channels(self.custom_model_size_channels.value())
@@ -196,6 +195,9 @@ class Ui(QtWidgets.QDialog):
             self.keras_decode = custom_model.decode_predictions
             self.keras_preprocess = custom_model.preprocess
             self.last_conv_layer = self.custom_conv_layer.toPlainText()
+
+
+
 
         if self.analyze_mode.currentText() == "Single Image":
             if self.single_image_path != "":
@@ -211,17 +213,17 @@ class Ui(QtWidgets.QDialog):
         title_list = []
         cmap_list = []
         if self.model.currentText() == "VGG16":
-            size = (224, 224)
-            resized_image = cv.resize(image, size)
+            self.img_size = (224, 224)
+            resized_image = cv.resize(image, self.img_size)
         elif self.model.currentText() == "VGG19":
-            size = (224, 224)
-            resized_image = cv.resize(image, size)
+            self.img_size = (224, 224)
+            resized_image = cv.resize(image, self.img_size)
         elif self.model.currentText() == "ResNet50":
-            size = (224, 224)
-            resized_image = cv.resize(image, size)
+            self.img_size = (224, 224)
+            resized_image = cv.resize(image, self.img_size)
         else:
-            size = (self.custom_model_size_x.value(), self.custom_model_size_y.value())
-            resized_image = cv.resize(image, size)
+            self.img_size = (self.custom_model_size_x.value(), self.custom_model_size_y.value())
+            resized_image = cv.resize(image, self.img_size)
         noise_walk_value = 0
         if self.noise_walk_checkbox.isChecked():
 
@@ -398,15 +400,22 @@ class Ui(QtWidgets.QDialog):
         print("GRAD_CAM")
         import subprocess
         # Specify the path to the TensorFlow script
-        tensorflow_script_path = "CAM/framework_grad_cam.py"
+        tensorflow_script_path = "framework_grad_cam.py"
         # Specify the model_name and filepath as arguments
         model_name = self.model.currentText()
+        last_conv_layer = self.last_conv_layer
         if self.noise_checkbox.isChecked() or self.noise_walk_checkbox.isChecked():
             filepath = 'data/noise_image.png'
         else:
             filepath = image_path
         # Run the TensorFlow script as a subprocess with arguments
-        subprocess.run(["python", tensorflow_script_path, model_name, filepath])
+        import json
+        json_img_size = json.dumps(self.img_size)
+
+
+        subprocess.run(["python", tensorflow_script_path, model_name, filepath, last_conv_layer, json_img_size,
+                        self.custom_model_path, self.custom_model_weights_path, self.custom_model_mapping_path,
+                        str(self.custom_model_size_channels.value())])
         grad_cam_image = cv.imread("data/grad_cam.jpg")
         grad_cam_image = convert_to_uint8(grad_cam_image)
         return grad_cam_image
@@ -416,15 +425,20 @@ class Ui(QtWidgets.QDialog):
         print("GRAD_CAM_++")
         import subprocess
         # Specify the path to the TensorFlow script
-        tensorflow_script_path = "CAM/framework_gcam_plus.py"
+        tensorflow_script_path = "framework_gcam_plus.py"
         # Specify the model_name and filepath as arguments
         model_name = self.model.currentText()
+        last_conv_layer = self.last_conv_layer
         if self.noise_checkbox.isChecked() or self.noise_walk_checkbox.isChecked():
             filepath = 'data/noise_image.png'
         else:
             filepath = image_path
-        # Run the TensorFlow script as a subprocess with arguments
-        subprocess.run(["python", tensorflow_script_path, model_name, filepath])
+            # Run the TensorFlow script as a subprocess with arguments
+        import json
+        json_img_size = json.dumps(self.img_size)
+        subprocess.run(["python", tensorflow_script_path, model_name, filepath, last_conv_layer, json_img_size,
+                            self.custom_model_path, self.custom_model_weights_path, self.custom_model_mapping_path,
+                            str(self.custom_model_size_channels.value())])
         grad_cam_image = cv.imread("data/grad_cam_plusplus.jpg")
         grad_cam_image = convert_to_uint8(grad_cam_image)
         return grad_cam_image
