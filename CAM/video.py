@@ -3,7 +3,7 @@ import os
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
- 
+
 
 def cut_video(capture):
     frameNr = 0
