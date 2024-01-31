@@ -20,6 +20,8 @@ from PyQt5.QtWidgets import (qApp, QFileDialog,
 import os
 
 import keras
+
+
 class AnotherWindowGame(QWidget, QtCore.QThread):
     """
     This "window" is a QWidget. If it has no parent, it
@@ -54,7 +56,8 @@ class Ui(QtWidgets.QDialog):
         self.keras_preprocess = -1
         self.keras_decode = -1
         self.last_conv_layer = -1
-        self.img_size = (0,0)
+        self.img_size = (0, 0)
+        self.custom_channels = 3
         # Custom Model
         self.custom_model_path = ''
         self.custom_model_weights_path = ''
@@ -181,23 +184,23 @@ class Ui(QtWidgets.QDialog):
             self.keras_model = vgg16.VGG16(weights="imagenet")
             self.keras_preprocess = vgg16.preprocess_input
             self.keras_decode = vgg16.decode_predictions
-            self.last_conv_layer = "block5_conv3"
+            self.img_size = (self.keras_model.input_shape[1], self.keras_model.input_shape[2])
+            self.custom_channels = self.keras_model.input_shape[3]
         elif self.model.currentText() == "VGG19":
             print("not implemented")
         elif self.model.currentText() == "ResNet50":
             print("not implemented")
         else:
             custom_model.set_csv_file_path(self.custom_model_mapping_path)
-            custom_model.set_size((self.custom_model_size_x.value(), self.custom_model_size_y.value()))
-            custom_model.set_channels(self.custom_model_size_channels.value())
+
             self.keras_model = keras.models.load_model(self.custom_model_path)
             self.keras_model.load_weights(self.custom_model_weights_path)
             self.keras_decode = custom_model.decode_predictions
             self.keras_preprocess = custom_model.preprocess
-            self.last_conv_layer = self.custom_conv_layer.toPlainText()
-
-
-
+            self.img_size = (self.keras_model.input_shape[1], self.keras_model.input_shape[2])
+            self.custom_channels = self.keras_model.input_shape[3]
+            custom_model.set_size(self.img_size)
+            custom_model.set_channels(self.custom_channels)
 
         if self.analyze_mode.currentText() == "Single Image":
             if self.single_image_path != "":
@@ -208,7 +211,7 @@ class Ui(QtWidgets.QDialog):
         elif self.analyze_mode.currentText() == "Video":
             if self.video_path != "":
                 self.video_analyzer()
-    
+
     def video_analyzer(self):
         video_path = self.video_path
         analyzed_video_path = self.grad_cam_video_analyze(video_path)
@@ -232,7 +235,7 @@ class Ui(QtWidgets.QDialog):
         # Layout for the video player pop-up
         dialogLayout = QVBoxLayout()
         dialogLayout.addLayout(video_layout)
-        dialogLayout.addWidget(closeDialogButton)   
+        dialogLayout.addWidget(closeDialogButton)
 
         videoPlayerDialog.setLayout(dialogLayout)
 
@@ -241,24 +244,25 @@ class Ui(QtWidgets.QDialog):
 
         # Show the video player pop-up
         videoPlayerDialog.exec_()
-        
 
     def image_analyzer(self, image, image_path):
         image_list = []
         title_list = []
         cmap_list = []
-        if self.model.currentText() == "VGG16":
-            self.img_size = (224, 224)
-            resized_image = cv.resize(image, self.img_size)
-        elif self.model.currentText() == "VGG19":
-            self.img_size = (224, 224)
-            resized_image = cv.resize(image, self.img_size)
-        elif self.model.currentText() == "ResNet50":
-            self.img_size = (224, 224)
-            resized_image = cv.resize(image, self.img_size)
-        else:
-            self.img_size = (self.custom_model_size_x.value(), self.custom_model_size_y.value())
-            resized_image = cv.resize(image, self.img_size)
+
+        # if self.model.currentText() == "VGG16":
+        #     self.img_size = (224, 224)
+        #     resized_image = cv.resize(image, self.img_size)
+        # elif self.model.currentText() == "VGG19":
+        #     self.img_size = (224, 224)
+        #     resized_image = cv.resize(image, self.img_size)
+        # elif self.model.currentText() == "ResNet50":
+        #     self.img_size = (224, 224)
+        #     resized_image = cv.resize(image, self.img_size)
+        # else:
+        #     self.img_size = (self.custom_model_size_x.value(), self.custom_model_size_y.value())
+        #
+        resized_image = cv.resize(image, self.img_size)
         noise_walk_value = 0
         if self.noise_walk_checkbox.isChecked():
 
@@ -331,7 +335,8 @@ class Ui(QtWidgets.QDialog):
                 mcd_dropoutrate = self.mcd_percent_spinBox.value()
                 mcd_LayerList = self.mcd_create_layer_list()
 
-                mcd_prediction = self.mcDropout(resized_image, mcd_samples, mcd_dropoutrate, mcd_apply_skip, mcd_LayerList)
+                mcd_prediction = self.mcDropout(resized_image, mcd_samples, mcd_dropoutrate, mcd_apply_skip,
+                                                mcd_LayerList)
                 print(mcd_prediction)
                 string_samples = str(mcd_samples) + " sample(s)"
                 print(string_samples)
@@ -438,7 +443,6 @@ class Ui(QtWidgets.QDialog):
         tensorflow_script_path = "framework_grad_cam.py"
         # Specify the model_name and filepath as arguments
         model_name = self.model.currentText()
-        last_conv_layer = self.last_conv_layer
         if self.noise_checkbox.isChecked() or self.noise_walk_checkbox.isChecked():
             filepath = 'data/noise_image.png'
         else:
@@ -446,11 +450,9 @@ class Ui(QtWidgets.QDialog):
         # Run the TensorFlow script as a subprocess with arguments
         import json
         json_img_size = json.dumps(self.img_size)
-
-
-        subprocess.run(["python", tensorflow_script_path, model_name, filepath, last_conv_layer, json_img_size,
+        subprocess.run(["python", tensorflow_script_path, model_name, filepath, json_img_size,
                         self.custom_model_path, self.custom_model_weights_path, self.custom_model_mapping_path,
-                        str(self.custom_model_size_channels.value())])
+                        str(self.custom_channels)])
         grad_cam_image = cv.imread("data/grad_cam.jpg")
         grad_cam_image = convert_to_uint8(grad_cam_image)
         return grad_cam_image
@@ -463,7 +465,6 @@ class Ui(QtWidgets.QDialog):
         tensorflow_script_path = "framework_gcam_plus.py"
         # Specify the model_name and filepath as arguments
         model_name = self.model.currentText()
-        last_conv_layer = self.last_conv_layer
         if self.noise_checkbox.isChecked() or self.noise_walk_checkbox.isChecked():
             filepath = 'data/noise_image.png'
         else:
@@ -471,13 +472,13 @@ class Ui(QtWidgets.QDialog):
             # Run the TensorFlow script as a subprocess with arguments
         import json
         json_img_size = json.dumps(self.img_size)
-        subprocess.run(["python", tensorflow_script_path, model_name, filepath, last_conv_layer, json_img_size,
-                            self.custom_model_path, self.custom_model_weights_path, self.custom_model_mapping_path,
-                            str(self.custom_model_size_channels.value())])
+        subprocess.run(["python", tensorflow_script_path, model_name, filepath, json_img_size,
+                        self.custom_model_path, self.custom_model_weights_path, self.custom_model_mapping_path,
+                        str(self.custom_channels)])
         grad_cam_image = cv.imread("data/grad_cam_plusplus.jpg")
         grad_cam_image = convert_to_uint8(grad_cam_image)
         return grad_cam_image
-    
+
     def grad_cam_video_analyze(self, video_path):
         # TODO Pickle Model Übergeben, Last Conv Layer
         print("GRAD_CAM_Video")
@@ -486,26 +487,25 @@ class Ui(QtWidgets.QDialog):
         tensorflow_script_path = "framework_grad_video.py"
         # Specify the model_name and filepath as arguments
         model_name = self.model.currentText()
-        last_conv_layer = self.last_conv_layer
         filepath = video_path
-            # Run the TensorFlow script as a subprocess with arguments
+        # Run the TensorFlow script as a subprocess with arguments
         import json
         json_img_size = json.dumps(self.img_size)
-        subprocess.run(["python", tensorflow_script_path, model_name, filepath, last_conv_layer, json_img_size,
-                            self.custom_model_path, self.custom_model_weights_path, self.custom_model_mapping_path,
-                            str(self.custom_model_size_channels.value())])
+        subprocess.run(["python", tensorflow_script_path, model_name, filepath, json_img_size,
+                        self.custom_model_path, self.custom_model_weights_path, self.custom_model_mapping_path,
+                        str(self.custom_channels)])
         grad_cam_video = "data\LH_video.avi"
         return grad_cam_video
 
     def lime_analyzer(self, image, samples, features):
         print("LIME_ANALYZER")
-        lime_image = LIME.get_lime_explanation(image, self.keras_model, samples, features,self.keras_preprocess)
+        lime_image = LIME.get_lime_explanation(image, self.keras_model, samples, features, self.keras_preprocess)
         lime_image = convert_to_uint8(lime_image)
         return lime_image
 
     def lime_heatmap(self, image, samples):
         print("LIME_HEATMAP")
-        heatmap = LIME.get_lime_heat_map(image, self.keras_model, samples,self.keras_preprocess)
+        heatmap = LIME.get_lime_heat_map(image, self.keras_model, samples, self.keras_preprocess)
         heatmap = convert_to_uint8(heatmap)
         zeros_array = np.zeros_like(heatmap)
         heatmap = cv.merge([heatmap, zeros_array, zeros_array])  # LIME Heatmap nur blau
@@ -570,10 +570,10 @@ def convert_to_uint8(image):
         raise ValueError("Unsupported data type. Supported types are float32, float64, and uint8.")
 
 
-def create_mcd_image( text1, text2, pred1, pred2, pred3, pred4, pred5):
+def create_mcd_image(text1, text2, pred1, pred2, pred3, pred4, pred5):
     from PIL import Image, ImageDraw, ImageFont
     # Set image dimensions
-    width, height = (224,224)
+    width, height = (224, 224)
 
     # Create a white background image
     image = Image.new("RGB", (width, height), "white")

@@ -131,13 +131,12 @@ if __name__ == "__main__":
     # Extract command-line arguments
     model_name = sys.argv[1]
     filepath = sys.argv[2]
-    last_conv_layer = sys.argv[3]
-    json_string = sys.argv[4]
+    json_string = sys.argv[3]
     import json
     
     img_size = json.loads(json_string)
-    custom_model_path = sys.argv[5]
-    custom_model_weights_path = sys.argv[6]
+    custom_model_path = sys.argv[4]
+    custom_model_weights_path = sys.argv[5]
     print(f"Model :{model_name}:")
 
     if model_name == "VGG16":
@@ -149,10 +148,10 @@ if __name__ == "__main__":
         decode_predictions = vgg16.decode_predictions
     else:
 
-        custom_model_mapping_path = sys.argv[7]
+        custom_model_mapping_path = sys.argv[6]
         custom_model.set_csv_file_path(custom_model_mapping_path)
         custom_model.set_size(img_size)
-        channel_num = sys.argv[8]
+        channel_num = sys.argv[7]
         custom_model.set_channels(int(channel_num))
 
         import keras
