@@ -12,7 +12,7 @@ SH_frames = r'CAM\Images\gradcam_output\Small_Heatmap'
 video_out_LH = r'CAM\Images\gradcam_output\videos\LH_video.avi'
 video_out_SH = r'CAM\Images\gradcam_output\videos\SH_video.avi'
 fps = 24
-
+ 
 OUTPUT_FOLDER = r'CAM\Images\gradcam_output'
 heatmap_name = 'cam1_1.jpg'
 
@@ -26,7 +26,7 @@ def make_gradcam_video(model, video_path_in, img_size, preprocess_input, decode_
 
     preds = []
 
-        # Wendet gradcam auf jedes Frame an 
+    # Wendet gradcam auf jedes Frame an 
     i = 0
     for image in sorted_frames:
         img_path = os.path.join(FRAME_FOLDER, image)

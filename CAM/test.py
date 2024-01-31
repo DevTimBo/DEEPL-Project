@@ -4,6 +4,7 @@ import grad_cam
 from grad_cam_plusplus import make_gradcam_plusplus
 from grad_cam_plusplus import vgg16_mura_model
 from gradcam_video import make_gradcam_video
+from gradcamplusplus_video import make_gradcamplusplus_video
 import os
 os.environ["KERAS_BACKEND"] = "tensorflow"
 import numpy as np
@@ -50,4 +51,5 @@ img_path = r'CAM\Images\puppy.jpg'
 
 #grad_cam.make_gradcam(model, img_path, img_size, preprocess_input, decode_predictions, last_conv_layer_name)
 #make_gradcam_plusplus(model, img_path, last_conv_layer_name, target_size)
-make_gradcam_video(model, video_path_in, img_size, preprocess_input, decode_predictions, last_conv_layer_name)
+#make_gradcam_video(model, video_path_in, img_size, preprocess_input, decode_predictions, last_conv_layer_name)
+make_gradcamplusplus_video()

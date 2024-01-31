@@ -189,4 +189,3 @@ def make_gradcam_plusplus(model, img_path, last_conv_layer_name, target_size):
     # heatmap hochskaliert + überlagert 
     show_imgwithheat(img_path, heatmap_plus)
  
-#make_gradcam_plusplus(model, img_path, last_conv_layer_name, target_size)

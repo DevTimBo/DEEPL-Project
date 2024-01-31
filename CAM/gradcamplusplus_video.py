@@ -1,5 +1,48 @@
 import video
 import grad_cam_plusplus
+from grad_cam_plusplus import make_gradcam_plusplus
 import cv2
 import os 
-import keras
+import keras 
+
+FRAME_FOLDER = r'CAM\video_Frames'
+LH_frames = r'CAM\Images\gradcamplusplus_output\Large_Heatmap'
+SH_frames = r'CAM\Images\gradcamplusplus_output\Mid_Heatmap'
+video_out_LH = r'CAM\Images\gradcamplusplus_output\videos\LH_video.avi'
+video_out_SH = r'CAM\Images\gradcamplusplus_output\videos\SH_video.avi'
+fps = 24
+
+OUTPUT_FOLDER = r'CAM\Images\gradcamplusplus_output'
+heatmap_name = 'cam1_1.jpg'
+
+def make_gradcamplusplus_video(model, video_path_in, target_size, last_conv_layer_name):
+    capture = cv2.VideoCapture(video_path_in)
+    # Auf 5 limitiert 
+    video.cut_video(capture)
+    sorted_frames = sorted(os.listdir(FRAME_FOLDER), key=extract_number)
+    for img in sorted_frames:
+        print(img)
+
+    preds = []
+
+    # Wendet gradcam++ auf jedes Frame an 
+    i = 0
+    for image in sorted_frames:
+        img_path = os.path.join(FRAME_FOLDER, image)
+        make_gradcam_plusplus()
+        #preds.append(grad_cam.get_pred())
+        #print(preds)
+        i += 1 
+        if i == 5:
+            break
+
+    sorted_frames_LH = sorted(os.listdir(LH_frames), key=video.extract_number)
+    sorted_frames_SH = sorted(os.listdir(SH_frames), key=video.extract_number)
+
+def extract_number(filename):
+    filename = filename.split('.jpg')[0]
+    return int(filename)
+
+
+
+    
