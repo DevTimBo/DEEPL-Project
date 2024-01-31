@@ -14,7 +14,8 @@ def grad_cam_plus(model, img,
                   category_id=None):
 
 
-    img_tensor = np.expand_dims(img, axis=0)
+    #img_tensor = np.expand_dims(img, axis=0) # commented out because input tensor shape ended up being too much by one dimension
+    img_tensor = img
     conv_layer = model.get_layer(layer_name)
     heatmap_model = Model([model.inputs], [conv_layer.output, model.output])
 
@@ -64,6 +65,9 @@ def preprocess_image(img_path, target_size=(224, 224)):
         img = custom_model.preprocess(img)
         img = img[0]
         print(f"Image shape: {img.shape}")
+    else:
+        pass
+    print(f"After Image Shape: {img.shape}")
     img /= 255
 
     return img
@@ -95,25 +99,22 @@ if __name__ == "__main__":
     # Extract command-line arguments
     model_name = sys.argv[1]
     filepath = sys.argv[2]
-    last_conv_layer = sys.argv[3]
-    json_string = sys.argv[4]
+    json_string = sys.argv[3]
     import json
     # Deserialize the JSON-formatted string to get the original tuple
     img_size = json.loads(json_string)
-    custom_model_path = sys.argv[5]
-    custom_model_weights_path = sys.argv[6]
+    custom_model_path = sys.argv[4]
+    custom_model_weights_path = sys.argv[5]
     print(f"Model :{model_name}:")
     if model_name == "VGG16":
         import keras.applications.vgg16 as vgg16
         # Keras Model
         model = vgg16.VGG16(weights="imagenet")
     else:
-
-
-        custom_model_mapping_path = sys.argv[7]
+        custom_model_mapping_path = sys.argv[6]
         custom_model.set_csv_file_path(custom_model_mapping_path)
         custom_model.set_size(img_size)
-        channel_num = sys.argv[8]
+        channel_num = sys.argv[7]
         custom_model.set_channels(int(channel_num))
 
         import keras

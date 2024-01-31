@@ -99,3 +99,12 @@ if __name__ == "__main__":
     prediction = model.predict(image_processed)
     decoded_pred = decode_predictions(prediction)
     print(f"Prediction: {decoded_pred}")
+    all_layers = model.layers
+    for layer in reversed(all_layers):
+        if 'conv' in layer.name:
+            last_conv_layer = layer.name
+            break
+    img_size = (model.input_shape[1], model.input_shape[2])
+    channels = model.input_shape[3]
+    print(img_size)
+    print(channels)
