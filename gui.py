@@ -210,6 +210,8 @@ class Ui(QtWidgets.QDialog):
                 self.video_analyzer()
     
     def video_analyzer(self):
+        video_path = self.video_path
+        analyzed_video_path = self.grad_cam_video_analyze(video_path)
         # Create a QDialog for the video player pop-up
         videoPlayerDialog = QtWidgets.QDialog(self)
         videoPlayerDialog.setWindowTitle('Video Player')
@@ -235,7 +237,7 @@ class Ui(QtWidgets.QDialog):
         videoPlayerDialog.setLayout(dialogLayout)
 
         # Load a video into the VideoPlayer
-        videoPlayer.load_video(self.video_path)
+        videoPlayer.load_video(analyzed_video_path)
 
         # Show the video player pop-up
         videoPlayerDialog.exec_()
@@ -475,6 +477,25 @@ class Ui(QtWidgets.QDialog):
         grad_cam_image = cv.imread("data/grad_cam_plusplus.jpg")
         grad_cam_image = convert_to_uint8(grad_cam_image)
         return grad_cam_image
+    
+    def grad_cam_video_analyze(self, video_path):
+        # TODO Pickle Model Übergeben, Last Conv Layer
+        print("GRAD_CAM_Video")
+        import subprocess
+        # Specify the path to the TensorFlow script
+        tensorflow_script_path = "framework_grad_video.py"
+        # Specify the model_name and filepath as arguments
+        model_name = self.model.currentText()
+        last_conv_layer = self.last_conv_layer
+        filepath = video_path
+            # Run the TensorFlow script as a subprocess with arguments
+        import json
+        json_img_size = json.dumps(self.img_size)
+        subprocess.run(["python", tensorflow_script_path, model_name, filepath, last_conv_layer, json_img_size,
+                            self.custom_model_path, self.custom_model_weights_path, self.custom_model_mapping_path,
+                            str(self.custom_model_size_channels.value())])
+        grad_cam_video = "data\LH_video.avi"
+        return grad_cam_video
 
     def lime_analyzer(self, image, samples, features):
         print("LIME_ANALYZER")
