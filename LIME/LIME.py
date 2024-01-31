@@ -6,6 +6,7 @@ import numpy as np
 def get_lime_explanation(image, model, samples, features, preprocess):
     image = preprocess(np.array(image)[None])
     image = image[0]
+    print(f"Image shape: {image.shape}")
     explainer = lime_image.LimeImageExplainer()
     explanation = explainer.explain_instance(image, model.predict, top_labels=5, hide_color=0,
                                              num_samples=samples)
