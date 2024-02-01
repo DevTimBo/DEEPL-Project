@@ -275,14 +275,18 @@ class Ui(QtWidgets.QDialog):
             steps = 1
             stepsize = 0
             image_list.append(resized_image)
-            title_list.append(f"Original")
+            decoded_pred = pred_get_string(self.keras_model, self.keras_decode, resized_image)
+            title_list.append(f"Original {decoded_pred[0][0][1]} - {round(float(decoded_pred[0][0][2]),2)}")
             cmap_list.append("viridis")
             if self.noise_checkbox.isChecked():
                 noise_level = self.noiselevel_box.value()
                 resized_image = IMAGE_EDIT.add_noise(resized_image, noise_level)
 
                 image_list.append(resized_image)
-                title_list.append("Noise")
+
+                decoded_pred = pred_get_string(self.keras_model, self.keras_decode, resized_image)
+                title_list.append(f"Noise {decoded_pred[0][0][1]} - {round(float(decoded_pred[0][0][2]),2)}")
+
                 cmap_list.append("viridis")
                 cv.imwrite("data/noise_image.png", resized_image)
 
@@ -290,7 +294,8 @@ class Ui(QtWidgets.QDialog):
             if self.noise_walk_checkbox.isChecked():
                 resized_image = IMAGE_EDIT.add_noise(resized_image, noise_walk_value)
                 image_list.append(resized_image)
-                title_list.append(f"Noise Level: {noise_walk_value}")
+                decoded_pred = pred_get_string(self.keras_model, self.keras_decode, resized_image)
+                title_list.append(f"Noise Level {noise_walk_value} {decoded_pred[0][0][1]} - {round(float(decoded_pred[0][0][2]),2)}")
                 cmap_list.append("viridis")
                 cv.imwrite("data/noise_image.png", resized_image)
 
@@ -595,7 +600,10 @@ def convert_to_uint8(image):
         # Handle other data types or raise an error if needed
         raise ValueError("Unsupported data type. Supported types are float32, float64, and uint8.")
 
-
+def pred_get_string(model, decode, image):
+    preds = model.predict(image[None])
+    decoded_pred = decode(preds, top=1)
+    return decoded_pred
 def create_mcd_image(text1, text2, pred1, pred2, pred3, pred4, pred5):
     from PIL import Image, ImageDraw, ImageFont
     # Set image dimensions
