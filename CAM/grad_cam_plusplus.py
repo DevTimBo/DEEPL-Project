@@ -168,9 +168,10 @@ def show_imgwithheat(img_path, heatmap, alpha=0.4, return_array=False):
     imgwithheat = Image.fromarray(superimposed_img)
     try:
         #display(imgwithheat)
-        plt.imshow(imgwithheat)
-        plt.title("Grad-CAM++")
-        plt.savefig(os.path.join(OUTPUT_FOLDER_LH, result_name))
+        cv2.imwrite(os.path.join(OUTPUT_FOLDER_LH, result_name), superimposed_img)
+        #plt.imshow(imgwithheat)
+        #plt.title("Grad-CAM++")
+        #plt.savefig(os.path.join(OUTPUT_FOLDER_LH, result_name))
     except NameError:
         imgwithheat.show()
 
