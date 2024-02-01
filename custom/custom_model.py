@@ -43,15 +43,14 @@ def set_channels(channels_temp):
 
 
 def preprocess(img):
-    print(channels)
     if channels == 1:
-        print("Gray")
-        img = cv2.cvtColor(img[0], cv2.COLOR_BGR2GRAY)
-        resized_image = cv2.resize(img, size)[None]
+        raise Exception("Not implemented yet")
     else:
+        print(f"Size of image: {size}")
+        print(f"Image shape: {img.shape}")
         resized_image = cv2.resize(img[0], size)
     print(resized_image.shape)
-    resized_image = np.transpose(resized_image, [1, 2, 0])
+    resized_image = np.transpose(resized_image, [0, 1, 2])
     print(resized_image.shape)
     return resized_image[None]
 
@@ -88,15 +87,16 @@ if __name__ == "__main__":
     import keras
     import numpy as np
 
-    size = (28, 28)
-    model = keras.models.load_model('mnist_int.keras')
-    model.load_weights('mnist_weights_int.keras')
-    model.summary()
-    image = cv2.imread("sample.png", cv2.IMREAD_GRAYSCALE)
 
-    resize_image = cv2.resize(image, size)
-    image_processed = np.array(resize_image)[None]
-    prediction = model.predict(image_processed)
+    model = keras.models.load_model('mnistRGB.keras')
+    model.load_weights('mnistRGB_weights.keras')
+    model.summary()
+    image = cv2.imread("sample.png")
+    image = cv2.resize(image, (28, 28))
+    set_channels(3)
+    set_size((28, 28))
+    image = preprocess(image[None])
+    prediction = model.predict(image)
     decoded_pred = decode_predictions(prediction)
     print(f"Prediction: {decoded_pred}")
     all_layers = model.layers
@@ -106,5 +106,3 @@ if __name__ == "__main__":
             break
     img_size = (model.input_shape[1], model.input_shape[2])
     channels = model.input_shape[3]
-    print(img_size)
-    print(channels)

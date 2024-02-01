@@ -6,17 +6,27 @@ from keras import layers
 
 # Model / data parameters
 num_classes = 10
-input_shape = (28, 28, 1)
+input_shape = (28, 28, 3)
 
 # Load the data and split it between train and test sets
 (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
+def to_rgb(x):
+    x_rgb = np.zeros((x.shape[0], 28, 28, 3))
+    for i in range(3):
+        x_rgb[..., i] = x[..., 0]
+    return x_rgb
+
 
 # Scale images to the [0, 1] range
 x_train = x_train.astype("float32") / 255
 x_test = x_test.astype("float32") / 255
-# Make sure images have shape (28, 28, 1)
+
+
 x_train = np.expand_dims(x_train, -1)
 x_test = np.expand_dims(x_test, -1)
+
+x_train = to_rgb(x_train)
+x_test = to_rgb(x_test)
 print("x_train shape:", x_train.shape)
 print(x_train.shape[0], "train samples")
 print(x_test.shape[0], "test samples")
@@ -48,8 +58,8 @@ model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accur
 
 model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, validation_split=0.1)
 
-model.save("mnist.keras")
-model.save_weights("mnist_weights.keras")
+model.save("mnistRGB.keras")
+model.save_weights("mnistRGB_weights.keras")
 
 score = model.evaluate(x_test, y_test, verbose=0)
 print("Test loss:", score[0])

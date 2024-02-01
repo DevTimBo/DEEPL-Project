@@ -109,14 +109,14 @@
   <widget class="QLabel" name="label_14">
    <property name="geometry">
     <rect>
-     <x>1050</x>
+     <x>990</x>
      <y>370</y>
-     <width>91</width>
+     <width>211</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>Custom Model</string>
+    <string>Custom Model (Input needs 3 Channels)</string>
    </property>
   </widget>
   <widget class="QPushButton" name="load_model_button">
