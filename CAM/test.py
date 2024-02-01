@@ -17,7 +17,7 @@ from PIL import Image
 
 
 # Für Grad-CAM 
-model_builder = keras.applications.xception.Xception
+""" model_builder = keras.applications.xception.Xception
 img_size = (299, 299)
 preprocess_input = keras.applications.xception.preprocess_input
 decode_predictions = keras.applications.xception.decode_predictions
@@ -32,7 +32,7 @@ model.layers[-1].activation = None  # OPTIONAL
 img_path = keras.utils.get_file(
     "hund.jpg",
    "https://einfachtierisch.de/media/cache/article_main_image_tablet/cms/2013/05/Hundewelpe-Retriever-Halsband.jpg?522506"
-) 
+)  """
 
 # + Video 
 
@@ -41,15 +41,15 @@ video_path_in = r'CAM\data\cat.mp4'
 #------------------------------------------
 
 # Für Grad-CAM++
-""" WEIGHTS_PATH_VGG16_MURA = "https://github.com/samson6460/tf_keras_gradcamplusplus/releases/download/Weights/tf_keras_vgg16_mura_model.h5"
+WEIGHTS_PATH_VGG16_MURA = "https://github.com/samson6460/tf_keras_gradcamplusplus/releases/download/Weights/tf_keras_vgg16_mura_model.h5"
 #TODO Hier auch Name konstant halten 
 last_conv_layer_name = "block5_conv3"
 target_size = (224, 224)
-model = vgg16_mura_model() """
+model = vgg16_mura_model()
 
 img_path = r'CAM\Images\puppy.jpg'
 
 #grad_cam.make_gradcam(model, img_path, img_size, preprocess_input, decode_predictions, last_conv_layer_name)
-#make_gradcam_plusplus(model, img_path, last_conv_layer_name, target_size)
+make_gradcam_plusplus(model, img_path, last_conv_layer_name, target_size)
 #make_gradcam_video(model, video_path_in, img_size, preprocess_input, decode_predictions, last_conv_layer_name)
-make_gradcamplusplus_video()
+#make_gradcamplusplus_video(model, video_path_in, target_size, last_conv_layer_name)

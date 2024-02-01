@@ -29,7 +29,7 @@ def make_gradcamplusplus_video(model, video_path_in, target_size, last_conv_laye
     i = 0
     for image in sorted_frames:
         img_path = os.path.join(FRAME_FOLDER, image)
-        make_gradcam_plusplus()
+        make_gradcam_plusplus(model, img_path, last_conv_layer_name, target_size)
         #preds.append(grad_cam.get_pred())
         #print(preds)
         i += 1 
