@@ -610,7 +610,9 @@ def pred_get_string(model, decode, image):
     decoded_pred = decode(preds, top=1)
     return decoded_pred
 
-def create_mcd_image(text1, text2, pred1, pred2, pred3, pred4, pred5):
+
+def create_mcd_image(text1, text2, pred1, float_pred1, pred2, float_pred2, pred3, float_pred3, pred4, float_pred4,
+                     pred5, float_pred5):
     from PIL import Image, ImageDraw, ImageFont
     # Set image dimensions
     width, height = (224, 224)
@@ -629,20 +631,26 @@ def create_mcd_image(text1, text2, pred1, pred2, pred3, pred4, pred5):
     # Set text positions
     x1, y1 = int(width * 0), int(height * 0.2)
     x2, y2 = int(width * 0), int(height * 0.3)
-    x3, y3 = int(width * 0), int(height * 0.5)
-    x4, y4 = int(width * 0), int(height * 0.6)
-    x5, y5 = int(width * 0), int(height * 0.7)
+    x3, y3 = int(width * 0), int(height * 0.4)
+    x4, y4 = int(width * 0), int(height * 0.5)
+    x5, y5 = int(width * 0), int(height * 0.6)
     x6, y6 = int(width * 0), int(height * 0.8)
     x7, y7 = int(width * 0), int(height * 0.9)
 
+    # Draw a linePlot
+    draw.line((x1, y1, x1 + int(width / 100 * float_pred1), y1), fill=("red"), width=int(height / 10))
+    draw.line((x2, y2, x2 + int(width / 100 * float_pred2), y2), fill=("red"), width=int(height / 10))
+    draw.line((x3, y3, x3 + int(width / 100 * float_pred3), y3), fill=("red"), width=int(height / 10))
+    draw.line((x4, y4, x4 + int(width / 100 * float_pred4), y4), fill=("red"), width=int(height / 10))
+    draw.line((x5, y5, x5 + int(width / 100 * float_pred5), y5), fill=("red"), width=int(height / 10))
+
     # Draw black text on the image
-    draw.text((x1, y1), text1, font=font, fill="black")
-    draw.text((x2, y2), text2, font=font, fill="black")
-    draw.text((x3, y3), pred1, font=font, fill="black")
-    draw.text((x4, y4), pred2, font=font, fill="black")
-    draw.text((x5, y5), pred3, font=font, fill="black")
-    draw.text((x6, y6), pred4, font=font, fill="black")
-    draw.text((x7, y7), pred5, font=font, fill="black")
+    draw.text((x1, y1), pred1, font=font, fill="black")
+    draw.text((x2, y2), pred2, font=font, fill="black")
+    draw.text((x3, y3), pred3, font=font, fill="black")
+    draw.text((x4, y4), pred4, font=font, fill="black")
+    draw.text((x5, y5), pred5, font=font, fill="black")
+    draw.text((x6, y6), text1 + " " + text2, font=font, fill="black")
 
     # Convert the PIL Image to a NumPy array
     image_array = np.array(image)
