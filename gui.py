@@ -297,7 +297,7 @@ class Ui(QtWidgets.QDialog):
             if self.lrp_checkbox.isChecked():
                 rule = self.lrp_rule_box.currentText()
                 lrp_image = self.lrp_analyze(resized_image, rule)
-
+                lrp_image = convert_to_uint8(lrp_image)
                 title_list.append(f"LRP: {rule}")
                 cmap_list.append('viridis')
                 image_list.append(lrp_image)
@@ -305,14 +305,24 @@ class Ui(QtWidgets.QDialog):
             if self.gradcam_checkbox.isChecked():
                 print(self.grad_cam_version_combobox.currentText())
                 if self.grad_cam_version_combobox.currentText() == "GradCam":
-                    grad_cam_image = self.grad_cam_analyze(image_path)
-                    title_list.append(f"GRAD CAM")
+                    grad_cam_image, grad_cam_heatmap = self.grad_cam_analyze(image_path)
+                    if self.heatmap_box_cam.isChecked():
+                        image_list.append(grad_cam_heatmap)
+                        title_list.append(f"GRAD CAM Heatmap")
+                    else:
+                        image_list.append(grad_cam_image)
+                        title_list.append(f"GRAD CAM")
+
                 elif self.grad_cam_version_combobox.currentText() == "GradCam++":
-                    grad_cam_image = self.grad_cam_plus_analyze(image_path)
-                    title_list.append(f"GRAD CAM++")
+                    grad_cam_image, grad_cam_heatmap = self.grad_cam_plus_analyze(image_path)
+                    if self.heatmap_box_cam.isChecked():
+                        image_list.append(grad_cam_heatmap)
+                        title_list.append(f"GRAD CAM++ Heatmap")
+                    else:
+                        image_list.append(grad_cam_image)
+                        title_list.append(f"GRAD CAM++")
 
                 cmap_list.append('viridis')
-                image_list.append(grad_cam_image)
 
             if self.lime_checkbox.isChecked():
                 # Samples must be ~50+
@@ -320,14 +330,23 @@ class Ui(QtWidgets.QDialog):
                     samples = self.lime_samples_box.value()
                     features = "All"
                     lime_image = self.lime_heatmap(resized_image, samples)
+                    title_list.append(f"LIME Heatmap - Samples: {samples}, Features: {features}")
                 else:
                     samples = self.lime_samples_box.value()
                     features = self.lime_features_box.value()
                     lime_image = self.lime_analyzer(resized_image, samples, features)
+                    title_list.append(f"LIME - Samples: {samples}, Features: {features}")
 
-                title_list.append(f"LIME - Samples: {samples}, Features: {features}")
                 cmap_list.append('viridis')
                 image_list.append(lime_image)
+
+            if self.overlap_box.isChecked():
+                overlap_image = self.overlap_images(image_list, title_list)
+                print("Overlap Image")
+                overlap_image = convert_to_uint8(overlap_image)
+                title_list.append('Overlap IMAGE')
+                image_list.append(overlap_image)
+                cmap_list.append('viridis')
 
             if self.monte_carlo_checkbox.isChecked():
                 mcd_samples = self.mcd_samples_box.value()
@@ -364,14 +383,6 @@ class Ui(QtWidgets.QDialog):
                 image_list.append(mcd_image)
                 cmap_list.append('viridis')
                 title_list.append("Monte Carlo")
-
-            if self.overlap_box.isChecked():
-                overlap_image = self.overlap_images(image_list)
-                print("Overlap Image")
-                overlap_image = convert_to_uint8(overlap_image)
-                title_list.append('Overlap IMAGE')
-                image_list.append(overlap_image)
-                cmap_list.append('viridis')
 
             noise_walk_value = noise_walk_value + stepsize
 
@@ -453,31 +464,45 @@ class Ui(QtWidgets.QDialog):
         subprocess.run(["python", tensorflow_script_path, model_name, filepath, json_img_size,
                         self.custom_model_path, self.custom_model_weights_path, self.custom_model_mapping_path,
                         str(self.custom_channels)])
-        grad_cam_image = cv.imread("data/grad_cam.jpg")
+
+        grad_cam_image = cv.imread("CAM/Images/gradcam_output/Large_Heatmap/cam1_3.jpg")
         grad_cam_image = convert_to_uint8(grad_cam_image)
-        return grad_cam_image
+        grad_cam_image = cv.resize(grad_cam_image, self.img_size)
+
+        grad_cam_heatmap = cv.imread("CAM/Images/gradcam_output/Mid_Heatmap/cam1_2.jpg")
+        grad_cam_heatmap = convert_to_uint8(grad_cam_heatmap)
+        grad_cam_heatmap = cv.resize(grad_cam_heatmap, self.img_size)
+
+        return grad_cam_image, grad_cam_heatmap
 
     def grad_cam_plus_analyze(self, image_path):
         # TODO Pickle Model Übergeben, Last Conv Layer
-        print("GRAD_CAM_++")
+        print("GRAD_CAM")
         import subprocess
         # Specify the path to the TensorFlow script
-        tensorflow_script_path = "framework_gcam_plus.py"
+        tensorflow_script_path = "framework_grad_cam.py"
         # Specify the model_name and filepath as arguments
         model_name = self.model.currentText()
         if self.noise_checkbox.isChecked() or self.noise_walk_checkbox.isChecked():
             filepath = 'data/noise_image.png'
         else:
             filepath = image_path
-            # Run the TensorFlow script as a subprocess with arguments
+        # Run the TensorFlow script as a subprocess with arguments
         import json
         json_img_size = json.dumps(self.img_size)
         subprocess.run(["python", tensorflow_script_path, model_name, filepath, json_img_size,
                         self.custom_model_path, self.custom_model_weights_path, self.custom_model_mapping_path,
                         str(self.custom_channels)])
-        grad_cam_image = cv.imread("data/grad_cam_plusplus.jpg")
+
+        grad_cam_image = cv.imread("CAM/Images/gradcam_output/Large_Heatmap/cam1_3.jpg")
         grad_cam_image = convert_to_uint8(grad_cam_image)
-        return grad_cam_image
+        grad_cam_image = cv.resize(grad_cam_image, self.img_size)
+
+        grad_cam_heatmap = cv.imread("CAM/Images/gradcam_output/Mid_Heatmap/cam1_2.jpg")
+        grad_cam_heatmap = convert_to_uint8(grad_cam_heatmap)
+        grad_cam_heatmap = cv.resize(grad_cam_heatmap, self.img_size)
+
+        return grad_cam_image, grad_cam_heatmap
 
     def grad_cam_video_analyze(self, video_path):
         # TODO Pickle Model Übergeben, Last Conv Layer
@@ -542,15 +567,16 @@ class Ui(QtWidgets.QDialog):
             mcd_layers.append("UnitNormalization")
         return mcd_layers
 
-    def overlap_images(self, image_list):
+    def overlap_images(self, image_list, title_list):
         print("OVERLAP")
-        if len(image_list) > 1:
-            length = self.find_len_per_row()
-            overlap_images = image_list[-length:]
-            for image in overlap_images:
-                print(image.shape)
-            overlap_image = IMAGE_EDIT.overlap_images(overlap_images)
+        overlap_images = []
+        for i, title in enumerate(title_list):
+            if "lrp" in title.lower():
+                overlap_images.append(image_list[i] * 2)
+            elif "heatmap" in title.lower():
 
+                overlap_images.append(image_list[i] // 2)  # Heatmaps sind zu dominant man sieht lrp nicht mehr
+        overlap_image = IMAGE_EDIT.overlap_images(overlap_images)
         return overlap_image
 
     def closeEvent(self, event):

@@ -27,3 +27,8 @@ def overlap_images(image_list):
     return result_image
 
 
+def normalize_array_np(arr):
+    min_val = arr.min()
+    max_val = arr.max()
+    normalized_arr = (arr - min_val) / (max_val - min_val)
+    return normalized_arr

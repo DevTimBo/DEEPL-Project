@@ -600,7 +600,7 @@
     <item>
      <widget class="QCheckBox" name="overlap_box">
       <property name="text">
-       <string>Overlap all of the above</string>
+       <string>Overlap all of the above (Only works with Heatmaps and LRP)</string>
       </property>
      </widget>
     </item>

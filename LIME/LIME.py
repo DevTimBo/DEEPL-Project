@@ -1,7 +1,7 @@
 from lime import lime_image
 from skimage.segmentation import mark_boundaries
 import numpy as np
-
+from utils.IMAGE_EDIT import normalize_array_np
 
 def get_lime_explanation(image, model, samples, features, preprocess):
     image = preprocess(np.array(image)[None])
@@ -35,8 +35,4 @@ def get_lime_heat_map(image, model, samples, preprocess):
     print(f"LIME {heatmap.max()}")
     return heatmap
 
-def normalize_array_np(arr):
-    min_val = arr.min()
-    max_val = arr.max()
-    normalized_arr = (arr - min_val) / (max_val - min_val)
-    return normalized_arr
+

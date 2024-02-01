@@ -14,7 +14,7 @@ superimposed_img = None
 test_superim = None
 heatmap_name2 = None
 
-OUTPUT_FOLDER = 'DEEPL-Project\CAM\Images\gradcam_output'
+OUTPUT_FOLDER = 'CAM\Images\gradcam_output'
 OUTPUT_FOLDER_SH = r'CAM\Images\gradcam_output\Small_Heatmap'
 OUTPUT_FOLDER_MH = r'CAM\Images\gradcam_output\Mid_Heatmap'
 OUTPUT_FOLDER_LH = r'CAM\Images\gradcam_output\Large_Heatmap'
