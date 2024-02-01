@@ -363,22 +363,27 @@ class Ui(QtWidgets.QDialog):
                 print(string_dropout)
                 string_prediction1 = "MCD Pred.TOP1 = " + str(float(mcd_prediction[0]) * 100) + "% " + str(
                     mcd_prediction[1])
+                float_prediction1 = float(mcd_prediction[0]) * 100
                 print(string_prediction1)
                 string_prediction2 = "MCD Pred.TOP2 = " + str(float(mcd_prediction[2]) * 100) + "% " + str(
                     mcd_prediction[3])
+                float_prediction2 = float(mcd_prediction[2]) * 100
                 print(string_prediction2)
                 string_prediction3 = "MCD Pred.TOP3 = " + str(float(mcd_prediction[4]) * 100) + "% " + str(
                     mcd_prediction[5])
+                float_prediction3 = float(mcd_prediction[4]) * 100
                 print(string_prediction3)
                 string_prediction4 = "MCD Pred.TOP4 = " + str(float(mcd_prediction[6]) * 100) + "% " + str(
                     mcd_prediction[7])
+                float_prediction4 = float(mcd_prediction[6]) * 100
                 print(string_prediction4)
                 string_prediction5 = "MCD Pred.TOP5 = " + str(float(mcd_prediction[8]) * 100) + "% " + str(
                     mcd_prediction[9])
+                float_prediction5 = float(mcd_prediction[8]) * 100
                 print(string_prediction5)
-                mcd_image = create_mcd_image(string_samples, string_dropout, string_prediction1,
-                                             string_prediction2, string_prediction3, string_prediction4,
-                                             string_prediction5)
+                mcd_image = create_mcd_image(string_samples, string_dropout, string_prediction1, float_prediction1,
+                                             string_prediction2, float_prediction2, string_prediction3, float_prediction3, string_prediction4, float_prediction4,
+                                             string_prediction5, float_prediction5)
                 print(string_samples + string_dropout + string_prediction1)
                 image_list.append(mcd_image)
                 cmap_list.append('viridis')
@@ -596,7 +601,7 @@ def convert_to_uint8(image):
         raise ValueError("Unsupported data type. Supported types are float32, float64, and uint8.")
 
 
-def create_mcd_image(text1, text2, pred1, pred2, pred3, pred4, pred5):
+def create_mcd_image(text1, text2, pred1, float_pred1, pred2, float_pred2, pred3, float_pred3, pred4, float_pred4, pred5, float_pred5):
     from PIL import Image, ImageDraw, ImageFont
     # Set image dimensions
     width, height = (224, 224)
@@ -615,21 +620,27 @@ def create_mcd_image(text1, text2, pred1, pred2, pred3, pred4, pred5):
     # Set text positions
     x1, y1 = int(width * 0), int(height * 0.2)
     x2, y2 = int(width * 0), int(height * 0.3)
-    x3, y3 = int(width * 0), int(height * 0.5)
-    x4, y4 = int(width * 0), int(height * 0.6)
-    x5, y5 = int(width * 0), int(height * 0.7)
+    x3, y3 = int(width * 0), int(height * 0.4)
+    x4, y4 = int(width * 0), int(height * 0.5)
+    x5, y5 = int(width * 0), int(height * 0.6)
     x6, y6 = int(width * 0), int(height * 0.8)
     x7, y7 = int(width * 0), int(height * 0.9)
 
-    # Draw black text on the image
-    draw.text((x1, y1), text1, font=font, fill="black")
-    draw.text((x2, y2), text2, font=font, fill="black")
-    draw.text((x3, y3), pred1, font=font, fill="black")
-    draw.text((x4, y4), pred2, font=font, fill="black")
-    draw.text((x5, y5), pred3, font=font, fill="black")
-    draw.text((x6, y6), pred4, font=font, fill="black")
-    draw.text((x7, y7), pred5, font=font, fill="black")
+    # Draw a linePlot
+    draw.line((x1, y1, x1 + int(width/100*float_pred1), y1), fill=("red"), width= int(height/10))
+    draw.line((x2, y2, x2 + int(width/100*float_pred2), y2), fill=("red"), width= int(height/10))
+    draw.line((x3, y3, x3 + int(width/100*float_pred3), y3), fill=("red"), width= int(height/10))
+    draw.line((x4, y4, x4 + int(width/100*float_pred4), y4), fill=("red"), width= int(height/10))
+    draw.line((x5, y5, x5 + int(width/100*float_pred5), y5), fill=("red"), width= int(height/10))
 
+    # Draw black text on the image
+    draw.text((x1, y1), pred1, font=font, fill="black")
+    draw.text((x2, y2), pred2, font=font, fill="black")
+    draw.text((x3, y3), pred3, font=font, fill="black")
+    draw.text((x4, y4), pred4, font=font, fill="black")
+    draw.text((x5, y5), pred5, font=font, fill="black")
+    draw.text((x6, y6), text1 + " " + text2, font=font, fill="black")
+    
     # Convert the PIL Image to a NumPy array
     image_array = np.array(image)
     image_array = convert_to_uint8(image_array)
