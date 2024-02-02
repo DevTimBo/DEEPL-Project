@@ -160,27 +160,78 @@ def processPredictions(predictions_readable, modelNoMC, picture_input_preprocess
 
     for k in range(len(predictions_readable)):
         print(predictions_readable[k])
+        
+        # counter Top1
         if (predictions_readable[k][0][0][1] == predictionNormalModel[0][0][1]):
+            counterTopOne = counterTopOne + 5
+        if (predictions_readable[k][0][1][1] == predictionNormalModel[0][0][1]):
+            counterTopOne = counterTopOne + 4
+        if (predictions_readable[k][0][2][1] == predictionNormalModel[0][0][1]):
+            counterTopOne = counterTopOne + 3
+        if (predictions_readable[k][0][3][1] == predictionNormalModel[0][0][1]):
+            counterTopOne = counterTopOne + 2
+        if (predictions_readable[k][0][4][1] == predictionNormalModel[0][0][1]):
             counterTopOne = counterTopOne + 1
+
+        # counter Top2
+        if (predictions_readable[k][0][0][1] == predictionNormalModel[0][1][1]):
+            counterTopTwo = counterTopTwo + 5
         if (predictions_readable[k][0][1][1] == predictionNormalModel[0][1][1]):
+            counterTopTwo = counterTopTwo + 4
+        if (predictions_readable[k][0][2][1] == predictionNormalModel[0][1][1]):
+            counterTopTwo = counterTopTwo + 3
+        if (predictions_readable[k][0][3][1] == predictionNormalModel[0][1][1]):
+            counterTopTwo = counterTopTwo + 2
+        if (predictions_readable[k][0][4][1] == predictionNormalModel[0][1][1]):
             counterTopTwo = counterTopTwo + 1
+        
+        # counter Top3
+        if (predictions_readable[k][0][0][1] == predictionNormalModel[0][2][1]):
+            counterTopThree = counterTopThree + 5
+        if (predictions_readable[k][0][1][1] == predictionNormalModel[0][2][1]):
+            counterTopThree = counterTopThree + 4
         if (predictions_readable[k][0][2][1] == predictionNormalModel[0][2][1]):
+            counterTopThree = counterTopThree + 3
+        if (predictions_readable[k][0][3][1] == predictionNormalModel[0][2][1]):
+            counterTopThree = counterTopThree + 2
+        if (predictions_readable[k][0][4][1] == predictionNormalModel[0][2][1]):
             counterTopThree = counterTopThree + 1
+        
+        # counter Top4
+        if (predictions_readable[k][0][0][1] == predictionNormalModel[0][3][1]):
+            counterTopFour = counterTopFour + 5
+        if (predictions_readable[k][0][1][1] == predictionNormalModel[0][3][1]):
+            counterTopFour = counterTopFour + 4
+        if (predictions_readable[k][0][2][1] == predictionNormalModel[0][3][1]):
+            counterTopFour = counterTopFour + 3
         if (predictions_readable[k][0][3][1] == predictionNormalModel[0][3][1]):
+            counterTopFour = counterTopFour + 2
+        if (predictions_readable[k][0][4][1] == predictionNormalModel[0][3][1]):
             counterTopFour = counterTopFour + 1
+
+        # counter Top5
+        if (predictions_readable[k][0][0][1] == predictionNormalModel[0][4][1]):
+            counterTopFive = counterTopFive + 5
+        if (predictions_readable[k][0][1][1] == predictionNormalModel[0][4][1]):
+            counterTopFive = counterTopFive + 4
+        if (predictions_readable[k][0][2][1] == predictionNormalModel[0][4][1]):
+            counterTopFive = counterTopFive + 3
+        if (predictions_readable[k][0][3][1] == predictionNormalModel[0][4][1]):
+            counterTopFive = counterTopFive + 2
         if (predictions_readable[k][0][4][1] == predictionNormalModel[0][4][1]):
             counterTopFive = counterTopFive + 1
+
     # print (predictionNormalModel)
-    #hits = str(counter/len(predictions_readable))
-            
-    countTopFiveAccourence.append(counterTopOne/len(predictions_readable))
+    # hits = str(counter/len(predictions_readable))
+    # counter get appended and are divided by the length of the list and divided through the highest points possible (5)        
+    countTopFiveAccourence.append(counterTopOne/(len(predictions_readable)*5))
     countTopFiveAccourence.append(predictionNormalModel[0][0][1])
-    countTopFiveAccourence.append(counterTopTwo/len(predictions_readable))
+    countTopFiveAccourence.append(counterTopTwo/(len(predictions_readable)*5))
     countTopFiveAccourence.append(predictionNormalModel[0][1][1])
-    countTopFiveAccourence.append(counterTopThree/len(predictions_readable))
+    countTopFiveAccourence.append(counterTopThree/(len(predictions_readable)*5))
     countTopFiveAccourence.append(predictionNormalModel[0][2][1])
-    countTopFiveAccourence.append(counterTopFour/len(predictions_readable))
+    countTopFiveAccourence.append(counterTopFour/(len(predictions_readable)*5))
     countTopFiveAccourence.append(predictionNormalModel[0][3][1])
-    countTopFiveAccourence.append(counterTopFive/len(predictions_readable))
+    countTopFiveAccourence.append(counterTopFive/(len(predictions_readable)*5))
     countTopFiveAccourence.append(predictionNormalModel[0][4][1])
     return countTopFiveAccourence
