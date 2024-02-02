@@ -543,7 +543,7 @@ class Ui(QtWidgets.QDialog):
         heatmap = LIME.get_lime_heat_map(image, self.keras_model, samples, self.keras_preprocess)
         heatmap = convert_to_uint8(heatmap)
         zeros_array = np.zeros_like(heatmap)
-        heatmap = cv.merge([heatmap, zeros_array, zeros_array])  # LIME Heatmap nur blau
+        heatmap = cv.merge([zeros_array, heatmap, zeros_array])  # LIME Heatmap nur blau
         return heatmap
 
     def mcDropout(self, image, mcd_samples, mcd_dropoutrate, mcd_apply_skip, mcd_layers):
@@ -583,11 +583,27 @@ class Ui(QtWidgets.QDialog):
         for i, title in enumerate(title_list):
             if "lrp" in title.lower():
                 overlap_images.append(image_list[i] * 2)
-            elif "heatmap" in title.lower():
-
+            elif "lime heatmap" in title.lower():
                 overlap_images.append(image_list[i] // 2)  # Heatmaps sind zu dominant man sieht lrp nicht mehr
+            elif "grad cam heatmap" in title.lower():
+                overlap_images.append(image_list[i] // 2)
         overlap_image = IMAGE_EDIT.overlap_images(overlap_images)
         return overlap_image
+    def overlap_images_try(self, image_list, title_list):
+        print("OVERLAP New")
+        red_image = cv.cvtColor(np.zeros_like(image_list[0]), cv.COLOR_BGR2GRAY)
+        green_image = red_image
+        blue_image = red_image
+        for i, title in enumerate(title_list):
+            if "lrp" in title.lower():
+                red_image = cv.cvtColor(image_list[i], cv.COLOR_BGR2GRAY) * 3
+            elif "lime heatmap" in title.lower():
+                green_image = cv.cvtColor(image_list[i], cv.COLOR_BGR2GRAY)
+            elif "grad cam heatmap" in title.lower():
+                blue_image = cv.cvtColor(image_list[i], cv.COLOR_BGR2GRAY)
+        overlap_image = cv.merge([blue_image, green_image, red_image])
+        return overlap_image
+
 
     def closeEvent(self, event):
         self.hide()
