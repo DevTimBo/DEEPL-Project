@@ -292,7 +292,7 @@
     <rect>
      <x>870</x>
      <y>10</y>
-     <width>331</width>
+     <width>359</width>
      <height>51</height>
     </rect>
    </property>
@@ -309,6 +309,20 @@
       <property name="text">
        <string>Load Video</string>
       </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QComboBox" name="videoComboBox">
+      <item>
+       <property name="text">
+        <string>GradCam</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>GradCam++</string>
+       </property>
+      </item>
      </widget>
     </item>
    </layout>
@@ -689,8 +703,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>167</width>
-           <height>196</height>
+           <width>124</width>
+           <height>231</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">

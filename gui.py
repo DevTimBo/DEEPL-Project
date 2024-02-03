@@ -11,6 +11,7 @@ import tensorflow as tf
 import threading
 from VideoPlayer import VideoPlayer
 from PyQt5.QtWidgets import QVBoxLayout, QWidget
+from PyQt5.QtGui import QIcon
 
 tf.compat.v1.disable_eager_execution()
 from PyQt5 import QtCore
@@ -70,6 +71,10 @@ class Ui(QtWidgets.QDialog):
         # Initialize the video player
         self.video_player = VideoPlayer()
         self.video_layout.addWidget(self.video_player)
+        
+        # Set Icon
+        icon = QIcon("data\og.png")  # Replace with the path to your icon
+        self.setWindowIcon(icon)
 
         # Buttons
         self.button_load_single_image.clicked.connect(self.file_dialog_single)
@@ -218,7 +223,10 @@ class Ui(QtWidgets.QDialog):
 
     def video_analyzer(self):
         video_path = self.video_path
-        analyzed_video_path = self.grad_cam_video_analyze(video_path)
+        if self.videoComboBox.currentText() == "GradCam":
+            analyzed_video_path = self.grad_cam_video_analyze(video_path)
+        elif self.videoComboBox.currentText() == "GradCam++":
+            analyzed_video_path = self.grad_cam_video_analyze(video_path)
         # Create a QDialog for the video player pop-up
         videoPlayerDialog = QtWidgets.QDialog(self)
         videoPlayerDialog.setWindowTitle('Video Player')
