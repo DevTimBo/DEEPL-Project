@@ -550,16 +550,23 @@
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="lime_positive_only_box">
+       <widget class="QCheckBox" name="lime_hide_rest_box">
         <property name="text">
-         <string>Positive Only</string>
+         <string>Hide BG</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="lime_hide_rest_box">
+       <widget class="QCheckBox" name="lime_positive_only_box">
         <property name="text">
-         <string>Hide Background</string>
+         <string>+ Only</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="lime_mask_only_box">
+        <property name="text">
+         <string>Mask Only</string>
         </property>
        </widget>
       </item>
@@ -810,7 +817,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QPushButton" name="pushButton_3">
+  <widget class="QPushButton" name="tutorial_button">
    <property name="geometry">
     <rect>
      <x>1382</x>

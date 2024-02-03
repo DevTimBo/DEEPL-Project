@@ -81,6 +81,7 @@ class Ui(QtWidgets.QDialog):
         self.button_load_many_images.clicked.connect(self.file_dialog_many)
         self.button_load_video.clicked.connect(self.file_dialog_video)
         self.button_analyze.clicked.connect(self.analyze_thread_start)
+        self.tutorial_button.clicked.connect(self.show_tutorial_window)
 
         self.load_model_button.clicked.connect(lambda: self.file_open_dialog_model('model'))
         self.load_model_weights_button.clicked.connect(lambda: self.file_open_dialog_model('weights'))
@@ -357,10 +358,14 @@ class Ui(QtWidgets.QDialog):
                         hide_rest = True
                     else:
                         hide_rest = False
+                    if self.lime_mask_only_box.isChecked():
+                        mask_only = True
+                    else:
+                        mask_only = False
 
                     samples = self.lime_samples_box.value()
                     features = self.lime_features_box.value()
-                    lime_image = self.lime_analyzer(resized_image, samples, features, positive_only, hide_rest)
+                    lime_image = self.lime_analyzer(resized_image, samples, features, positive_only, hide_rest, mask_only)
                     title_list.append(f"LIME - Samples: {samples}, Features: {features}")
 
                 cmap_list.append('viridis')
@@ -553,9 +558,10 @@ class Ui(QtWidgets.QDialog):
         grad_cam_video = "data\LH_video.avi"
         return grad_cam_video
 
-    def lime_analyzer(self, image, samples, features, positive_only, hide_rest):
+    def lime_analyzer(self, image, samples, features, positive_only, hide_rest, mask_only):
         print("LIME_ANALYZER")
-        lime_image = LIME.get_lime_explanation(image, self.keras_model, samples, features, self.keras_preprocess, positive_only, hide_rest)
+        lime_image = LIME.get_lime_explanation(image, self.keras_model, samples, features, self.keras_preprocess, 
+                                               positive_only, hide_rest, mask_only)
         lime_image = convert_to_uint8(lime_image)
         return lime_image
 
@@ -576,6 +582,15 @@ class Ui(QtWidgets.QDialog):
     def show_new_window(self):
         AnotherWindowGame()
 
+    def show_tutorial_window(self):
+        # Load the help dialog from the .ui file
+        help_dialog = QtWidgets.QDialog(self)
+        uic.loadUi('tutorial.ui', help_dialog)
+
+        # Add any additional customization or connections here
+        help_dialog.exec_()
+        
+    
     def mcd_create_layer_list(self):
         mcd_layers = []
         if (self.mcd_activation_radio.isChecked):

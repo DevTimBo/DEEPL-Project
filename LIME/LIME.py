@@ -3,7 +3,7 @@ from skimage.segmentation import mark_boundaries
 import numpy as np
 from utils.IMAGE_EDIT import normalize_array_np
 
-def get_lime_explanation(image, model, samples, features, preprocess, positive_only, hide_rest):
+def get_lime_explanation(image, model, samples, features, preprocess, positive_only, hide_rest, mask_only):
     image = preprocess(np.array(image)[None])
     image = image[0]
     print(f"Image shape: {image.shape}")
@@ -12,11 +12,13 @@ def get_lime_explanation(image, model, samples, features, preprocess, positive_o
                                              num_samples=samples)
     temp, mask = explanation.get_image_and_mask(explanation.top_labels[0], positive_only=positive_only, num_features=features,
                                                 hide_rest=hide_rest)
-    image = mark_boundaries(temp / 2 + 0.5, mask)
-    image = (image + image.max()).astype(np.float32)
+    if mask_only == True:
+        image = mask
+    else:
+        image = mark_boundaries(temp / 2 + 0.5, mask)
+        image = (image + image.max()).astype(np.float32)
     image = normalize_array_np(image)
     return image
-
 
 def get_lime_heat_map(image, model, samples, preprocess):
     image = preprocess(np.array(image)[None])
