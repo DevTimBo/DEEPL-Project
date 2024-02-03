@@ -3,15 +3,15 @@ from skimage.segmentation import mark_boundaries
 import numpy as np
 from utils.IMAGE_EDIT import normalize_array_np
 
-def get_lime_explanation(image, model, samples, features, preprocess):
+def get_lime_explanation(image, model, samples, features, preprocess, positive_only, hide_rest):
     image = preprocess(np.array(image)[None])
     image = image[0]
     print(f"Image shape: {image.shape}")
     explainer = lime_image.LimeImageExplainer()
     explanation = explainer.explain_instance(image, model.predict, top_labels=5, hide_color=0,
                                              num_samples=samples)
-    temp, mask = explanation.get_image_and_mask(explanation.top_labels[0], positive_only=False, num_features=features,
-                                                hide_rest=False)
+    temp, mask = explanation.get_image_and_mask(explanation.top_labels[0], positive_only=positive_only, num_features=features,
+                                                hide_rest=hide_rest)
     image = mark_boundaries(temp / 2 + 0.5, mask)
     image = (image + image.max()).astype(np.float32)
     image = normalize_array_np(image)

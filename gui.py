@@ -349,9 +349,18 @@ class Ui(QtWidgets.QDialog):
                     lime_image = self.lime_heatmap(resized_image, samples)
                     title_list.append(f"LIME Heatmap - Samples: {samples}, Features: {features}")
                 else:
+                    if self.lime_positive_only_box.isChecked():
+                        positive_only = True
+                    else:
+                        positive_only = False
+                    if self.lime_hide_rest_box.isChecked():
+                        hide_rest = True
+                    else:
+                        hide_rest = False
+
                     samples = self.lime_samples_box.value()
                     features = self.lime_features_box.value()
-                    lime_image = self.lime_analyzer(resized_image, samples, features)
+                    lime_image = self.lime_analyzer(resized_image, samples, features, positive_only, hide_rest)
                     title_list.append(f"LIME - Samples: {samples}, Features: {features}")
 
                 cmap_list.append('viridis')
@@ -544,9 +553,9 @@ class Ui(QtWidgets.QDialog):
         grad_cam_video = "data\LH_video.avi"
         return grad_cam_video
 
-    def lime_analyzer(self, image, samples, features):
+    def lime_analyzer(self, image, samples, features, positive_only, hide_rest):
         print("LIME_ANALYZER")
-        lime_image = LIME.get_lime_explanation(image, self.keras_model, samples, features, self.keras_preprocess)
+        lime_image = LIME.get_lime_explanation(image, self.keras_model, samples, features, self.keras_preprocess, positive_only, hide_rest)
         lime_image = convert_to_uint8(lime_image)
         return lime_image
 
