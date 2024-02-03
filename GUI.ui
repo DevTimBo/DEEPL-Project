@@ -337,11 +337,6 @@
       </item>
       <item>
        <property name="text">
-        <string>ResNet50</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
         <string>Custom</string>
        </property>
       </item>

@@ -187,9 +187,13 @@ class Ui(QtWidgets.QDialog):
             self.img_size = (self.keras_model.input_shape[1], self.keras_model.input_shape[2])
             self.custom_channels = self.keras_model.input_shape[3]
         elif self.model.currentText() == "VGG19":
-            print("not implemented")
-        elif self.model.currentText() == "ResNet50":
-            print("not implemented")
+            import keras.applications.vgg19 as vgg19
+            # Keras Model
+            self.keras_model = vgg19.VGG19(weights="imagenet")
+            self.keras_preprocess = vgg19.preprocess_input
+            self.keras_decode = vgg19.decode_predictions
+            self.img_size = (self.keras_model.input_shape[1], self.keras_model.input_shape[2])
+            self.custom_channels = self.keras_model.input_shape[3]
         else:
             custom_model.set_csv_file_path(self.custom_model_mapping_path)
 
