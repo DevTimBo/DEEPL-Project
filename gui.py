@@ -560,7 +560,7 @@ class Ui(QtWidgets.QDialog):
     
     def gcam_plus_video_analyze(self, video_path):
         # TODO Pickle Model Übergeben, Last Conv Layer
-        print("GRAD_CAM_Video")
+        print("GRAD_CAM++_Video")
         import subprocess
         # Specify the path to the TensorFlow script
         tensorflow_script_path = "framework_gplus_video.py"
