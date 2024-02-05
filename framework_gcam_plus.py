@@ -12,11 +12,10 @@ import numpy as np
 from PIL import Image
 from tensorflow.keras.utils import get_file
 
-# img_path = 'DEEPL-Project\CAM\Images\welpe.jpg'
-OUTPUT_FOLDER = 'CAM\Images\gradcam_output'
-OUTPUT_FOLDER_SH = r'CAM\Images\gradcam_output\Small_Heatmap'
-OUTPUT_FOLDER_MH = r'CAM\Images\gradcam_output\Mid_Heatmap'
-OUTPUT_FOLDER_LH = r'CAM\Images\gradcam_output\Large_Heatmap'
+OUTPUT_FOLDER = 'data\gcam_plus_output'
+OUTPUT_FOLDER_SH = r'data\gcam_plus_output\Small_Heatmap'
+OUTPUT_FOLDER_MH = r'data\gcam_plus_output\Mid_Heatmap'
+OUTPUT_FOLDER_LH = r'data\gcam_plus_output\Large_Heatmap'
 heatmap_name = 'cam2_1.jpg'
 heatmap_name2 = 'cam2_2.jpg'
 result_name = 'cam2_3.jpg'
