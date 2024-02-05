@@ -18,10 +18,10 @@ def cut_video(capture):
             break
         frameNr = frameNr+1
         i += 1
-        if frameNr == 150:
+        if frameNr == 150: ## BEGRENZUNG!!!
             break
-        if i == 5:
-            break
+        #if i == 5:
+            #break
     capture.release()
 
 def get_frame_size(sample_path):

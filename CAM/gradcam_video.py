@@ -49,8 +49,8 @@ def make_gradcam_video(model, video_path_in, img_size, preprocess_input, decode_
         i += 1 
         if i == 5:
             break
-
-    # Fügt jedem Bild aus dem SH Ordner Text hinzu
+ 
+    # Fügt jedem Bild aus dem SH Ordner Text hinzu 
     i = 0
     for index, img in enumerate(sorted_frames_SH):
         img_path = os.path.join(SH_frames, img)

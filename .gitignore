@@ -30,6 +30,9 @@ MANIFEST
 LIME/images/
 unused_functions.py
 Space Invaders
+*.jpg
+*.png
+*.avi
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
