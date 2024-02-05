@@ -7,11 +7,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import keras
 
-FRAME_FOLDER = r'data\frames'
+FRAME_FOLDER = r'data\gradcam_output\frames'
 LH_frames = r'data\gradcam_output\Large_Heatmap'
 SH_frames = r'data\gradcam_output\Small_Heatmap'
-video_out_LH = r'data\LH_video.avi'
-video_out_SH = r'data\SH_video.avi' 
+video_out_LH = r'data\gradcam_output\video\LH_video.avi'
+video_out_SH = r'data\gradcam_output\video\SH_video.avi' 
 fps = 24
 
 def make_gradcam_video(model, video_path_in, img_size, preprocess_input, decode_predictions, last_conv_layer_name):

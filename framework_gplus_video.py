@@ -4,11 +4,11 @@ import cv2
 import os 
 import keras 
 
-FRAME_FOLDER = r'data\frames'
+FRAME_FOLDER = r'data\gcam_plus_output\frames'
 LH_frames = r'data\gradcam_output\Large_Heatmap'
 SH_frames = r'data\gradcam_output\Small_Heatmap'
-video_out_LH = r'data\LH_video.avi'
-video_out_SH = r'data\SH_video.avi' 
+video_out_LH = r'data\gcam_plus_output\video\LH_video.avi'
+video_out_SH = r'data\gcam_plus_output\video\SH_video.avi' 
 fps = 24
 
 OUTPUT_FOLDER = 'data\gcam_plus_output'
@@ -45,13 +45,6 @@ def extract_number(filename):
 if __name__ == "__main__":
     import sys
     from custom import custom_model
-    
-    FRAME_FOLDER = r'data\frames'
-    LH_frames = r'data\gradcam_output\Large_Heatmap'
-    SH_frames = r'data\gradcam_output\Small_Heatmap'
-    video_out_LH = r'data\LH_video.avi'
-    video_out_SH = r'data\SH_video.avi' 
-    fps = 24
     
     # Extract command-line arguments
     model_name = sys.argv[1]
