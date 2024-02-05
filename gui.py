@@ -227,7 +227,7 @@ class Ui(QtWidgets.QDialog):
         if self.videoComboBox.currentText() == "GradCam":
             analyzed_video_path = self.grad_cam_video_analyze(video_path)
         elif self.videoComboBox.currentText() == "GradCam++":
-            analyzed_video_path = self.grad_cam_video_analyze(video_path)
+            analyzed_video_path = self.gcam_plus_video_analyze(video_path)
         # Create a QDialog for the video player pop-up
         videoPlayerDialog = QtWidgets.QDialog(self)
         videoPlayerDialog.setWindowTitle('Video Player')
@@ -555,7 +555,25 @@ class Ui(QtWidgets.QDialog):
         subprocess.run(["python", tensorflow_script_path, model_name, filepath, json_img_size,
                         self.custom_model_path, self.custom_model_weights_path, self.custom_model_mapping_path,
                         str(self.custom_channels)])
-        grad_cam_video = "data\LH_video.avi"
+        grad_cam_video = "data\gradcam_output\video\LH_video.avi"
+        return grad_cam_video
+    
+    def gcam_plus_video_analyze(self, video_path):
+        # TODO Pickle Model Übergeben, Last Conv Layer
+        print("GRAD_CAM_Video")
+        import subprocess
+        # Specify the path to the TensorFlow script
+        tensorflow_script_path = "framework_gplus_video.py"
+        # Specify the model_name and filepath as arguments
+        model_name = self.model.currentText()
+        filepath = video_path
+        # Run the TensorFlow script as a subprocess with arguments
+        import json
+        json_img_size = json.dumps(self.img_size)
+        subprocess.run(["python", tensorflow_script_path, model_name, filepath, json_img_size,
+                        self.custom_model_path, self.custom_model_weights_path, self.custom_model_mapping_path,
+                        str(self.custom_channels)])
+        grad_cam_video = "data\gcam_plus_output\video\LH_video.avi"
         return grad_cam_video
 
     def lime_analyzer(self, image, samples, features, positive_only, hide_rest, mask_only):
