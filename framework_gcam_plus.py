@@ -143,12 +143,12 @@ def preprocess_image(img_path, target_size=(224, 224)):
     img = image.img_to_array(img)
     print(f"Before Image Shape: {img.shape}")
     #img = img[None]
-    if model_name.strip() == "Custom":
-        img = custom_model.preprocess(img)
-        img = img[0]
-        print(f"Image shape: {img.shape}")
-    else:
-        pass
+    #if model_name.strip() == "Custom":
+        #img = custom_model.preprocess(img)
+        #img = img[0]
+        #print(f"Image shape: {img.shape}")
+    #else:
+        #pass
     print(f"After Image Shape: {img.shape}")
     img /= 255
 

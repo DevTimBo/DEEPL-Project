@@ -4,7 +4,7 @@ import cv2
 import os 
 import keras 
 
-FRAME_FOLDER = r'data\gcam_plus_output\frames'
+FRAME_FOLDER = r'data\frames'
 LH_frames = r'data\gradcam_output\Large_Heatmap'
 SH_frames = r'data\gradcam_output\Small_Heatmap'
 video_out_LH = r'data\gcam_plus_output\video\LH_video.avi'
@@ -31,7 +31,7 @@ def make_gradcamplusplus_video(model, video_path_in, target_size, last_conv_laye
         #preds.append(grad_cam.get_pred())
         #print(preds)
         i += 1 
-        if i == 50:
+        if i == 5:
             break
 
     sorted_frames_LH = sorted(os.listdir(LH_frames), key=video.extract_number)
@@ -86,15 +86,15 @@ if __name__ == "__main__":
 
         model = keras.models.load_model(custom_model_path)
         model.load_weights(custom_model_weights_path)
-
+        preprocess = custom_model.preprocess
+        decode_predictions = custom_model.decode_predictions
+        
     all_layers = model.layers
     last_conv_layer = None
     for layer in reversed(all_layers):
         if 'conv' in layer.name:
             last_conv_layer = layer.name
             break
-    preprocess = custom_model.preprocess
-    decode_predictions = custom_model.decode_predictions
 
     make_gradcamplusplus_video(model, filepath, img_size, last_conv_layer)
     

@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import keras
 
-FRAME_FOLDER = r'data\gradcam_output\frames'
+FRAME_FOLDER = r'data\frames'
 LH_frames = r'data\gradcam_output\Large_Heatmap'
 SH_frames = r'data\gradcam_output\Small_Heatmap'
 video_out_LH = r'data\gradcam_output\video\LH_video.avi'
@@ -166,6 +166,8 @@ if __name__ == "__main__":
 
         model = keras.models.load_model(custom_model_path)
         model.load_weights(custom_model_weights_path)
+        preprocess = custom_model.preprocess
+        decode_predictions = custom_model.decode_predictions
 
     all_layers = model.layers
     last_conv_layer = None
@@ -173,8 +175,6 @@ if __name__ == "__main__":
         if 'conv' in layer.name:
             last_conv_layer = layer.name
             break
-    preprocess = custom_model.preprocess
-    decode_predictions = custom_model.decode_predictions
 
     make_gradcam_video(model, filepath, img_size, preprocess,
                        decode_predictions, last_conv_layer)
