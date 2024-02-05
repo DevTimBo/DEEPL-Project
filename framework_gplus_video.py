@@ -37,6 +37,9 @@ def make_gradcamplusplus_video(model, video_path_in, target_size, last_conv_laye
     sorted_frames_LH = sorted(os.listdir(LH_frames), key=video.extract_number)
     sorted_frames_SH = sorted(os.listdir(SH_frames), key=video.extract_number)
 
+    video.convert_images_to_video(LH_frames, video_out_LH, fps)
+    video.convert_images_to_video(SH_frames, video_out_SH, fps)
+
 def extract_number(filename):
     filename = filename.split('.jpg')[0]
     return int(filename)
