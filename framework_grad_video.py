@@ -1,4 +1,4 @@
-from CAM import grad_cam
+import framework_grad_cam as grad_cam
 import framework_video as video
 import cv2
 import os 
@@ -7,9 +7,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 import keras
 
+FRAME_FOLDER = r'data\frames'
+LH_frames = r'data\gradcam_output\Large_Heatmap'
+SH_frames = r'data\gradcam_output\Small_Heatmap'
+video_out_LH = r'data\LH_video.avi'
+video_out_SH = r'data\SH_video.avi' 
+fps = 24
+
 def make_gradcam_video(model, video_path_in, img_size, preprocess_input, decode_predictions, last_conv_layer_name):
     capture = cv2.VideoCapture(video_path_in)
-    # Auf 5 limitiert 
     video.cut_video(capture)
     sorted_frames = sorted(os.listdir(FRAME_FOLDER), key=extract_number)
     for img in sorted_frames:
@@ -71,7 +77,6 @@ def make_gradcam(model, img_path, img_size, preprocess, decode_predictions, last
     result_name = f'cam1_3{frameNr}.jpg'
     preprocess_input = preprocess
     img_array = preprocess_input(grad_cam.get_img_array(img_path, size=img_size))
-    # print(img_array)
     model.layers[-1].activation = None  # OPTIONAL
     preds = model.predict(img_array)
     prediction = decode_predictions(preds, top=1)[0]
@@ -120,13 +125,6 @@ def get_pred():
 if __name__ == "__main__":
     import sys
     from custom import custom_model
-    
-    FRAME_FOLDER = r'data\frames'
-    LH_frames = r'data\gradcam_output\Large_Heatmap'
-    SH_frames = r'data\gradcam_output\Small_Heatmap'
-    video_out_LH = r'data\LH_video.avi'
-    video_out_SH = r'data\SH_video.avi' 
-    fps = 24
     
     # Extract command-line arguments
     model_name = sys.argv[1]
