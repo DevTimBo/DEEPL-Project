@@ -30,8 +30,8 @@ MANIFEST
 LIME/images/
 unused_functions.py
 Space Invaders
-data\gcam_plus_output
-data\grad_cam_output
+data/gcam_plus_output/
+data/grad_cam_output/
 *.jpg
 *.png
 *.avi
