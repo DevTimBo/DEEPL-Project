@@ -362,10 +362,14 @@ class Ui(QtWidgets.QDialog):
                         mask_only = True
                     else:
                         mask_only = False
+                    if self.lime_min_weight_box.isChecked():
+                        min_weight = self.lime_min_weight_box_2.value()
+                    else:
+                        min_weight = 0
 
                     samples = self.lime_samples_box.value()
                     features = self.lime_features_box.value()
-                    lime_image = self.lime_analyzer(resized_image, samples, features, positive_only, hide_rest, mask_only)
+                    lime_image = self.lime_analyzer(resized_image, samples, features, positive_only, hide_rest, mask_only, min_weight)
                     title_list.append(f"LIME - Samples: {samples}, Features: {features}")
 
                 cmap_list.append('viridis')
@@ -576,10 +580,10 @@ class Ui(QtWidgets.QDialog):
         grad_cam_video = "data\gcam_plus_output\LH_video.avi"
         return grad_cam_video
 
-    def lime_analyzer(self, image, samples, features, positive_only, hide_rest, mask_only):
+    def lime_analyzer(self, image, samples, features, positive_only, hide_rest, mask_only, min_weight):
         print("LIME_ANALYZER")
         lime_image = LIME.get_lime_explanation(image, self.keras_model, samples, features, self.keras_preprocess, 
-                                               positive_only, hide_rest, mask_only)
+                                               positive_only, hide_rest, mask_only, min_weight)
         lime_image = convert_to_uint8(lime_image)
         return lime_image
 
