@@ -142,7 +142,7 @@ def preprocess_image(img_path, target_size=(224, 224)):
     img = image.load_img(img_path, target_size=target_size)
     img = image.img_to_array(img)
     print(f"Before Image Shape: {img.shape}")
-    img = img[None]
+    #img = img[None]
     if model_name.strip() == "Custom":
         img = custom_model.preprocess(img)
         img = img[0]

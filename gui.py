@@ -501,11 +501,11 @@ class Ui(QtWidgets.QDialog):
                         self.custom_model_path, self.custom_model_weights_path, self.custom_model_mapping_path,
                         str(self.custom_channels)])
 
-        grad_cam_image = cv.imread("CAM/Images/gradcam_output/Large_Heatmap/cam1_3.jpg")
+        grad_cam_image = cv.imread("data\gradcam_output\Large_Heatmap\cam1_3.jpg")
         grad_cam_image = convert_to_uint8(grad_cam_image)
         grad_cam_image = cv.resize(grad_cam_image, self.img_size)
 
-        grad_cam_heatmap = cv.imread("CAM/Images/gradcam_output/Mid_Heatmap/cam1_2.jpg")
+        grad_cam_heatmap = cv.imread("data\gradcam_output\Mid_Heatmap\cam1_2.jpg")
         grad_cam_heatmap = convert_to_uint8(grad_cam_heatmap)
         grad_cam_heatmap = cv.resize(grad_cam_heatmap, self.img_size)
 
@@ -513,10 +513,10 @@ class Ui(QtWidgets.QDialog):
 
     def grad_cam_plus_analyze(self, image_path):
         # TODO Pickle Model Übergeben, Last Conv Layer
-        print("GRAD_CAM")
+        print("GRAD_CAM++")
         import subprocess
         # Specify the path to the TensorFlow script
-        tensorflow_script_path = "framework_grad_cam.py"
+        tensorflow_script_path = "framework_gcam_plus.py"
         # Specify the model_name and filepath as arguments
         model_name = self.model.currentText()
         if self.noise_checkbox.isChecked() or self.noise_walk_checkbox.isChecked():
@@ -530,11 +530,11 @@ class Ui(QtWidgets.QDialog):
                         self.custom_model_path, self.custom_model_weights_path, self.custom_model_mapping_path,
                         str(self.custom_channels)])
 
-        grad_cam_image = cv.imread("CAM/Images/gradcam_output/Large_Heatmap/cam1_3.jpg")
+        grad_cam_image = cv.imread("data\gcam_plus_output\Large_Heatmap\cam2_3.jpg")
         grad_cam_image = convert_to_uint8(grad_cam_image)
         grad_cam_image = cv.resize(grad_cam_image, self.img_size)
 
-        grad_cam_heatmap = cv.imread("CAM/Images/gradcam_output/Mid_Heatmap/cam1_2.jpg")
+        grad_cam_heatmap = cv.imread("data\gcam_plus_output\Mid_Heatmap\cam2_2.jpg")
         grad_cam_heatmap = convert_to_uint8(grad_cam_heatmap)
         grad_cam_heatmap = cv.resize(grad_cam_heatmap, self.img_size)
 
