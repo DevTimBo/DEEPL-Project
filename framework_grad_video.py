@@ -167,16 +167,15 @@ if __name__ == "__main__":
         model = keras.models.load_model(custom_model_path)
         model.load_weights(custom_model_weights_path)
 
-        all_layers = model.layers
-        last_conv_layer = None
-        for layer in reversed(all_layers):
-            if 'conv' in layer.name:
-                last_conv_layer = layer.name
-                break
-        preprocess = custom_model.preprocess
-        decode_predictions = custom_model.decode_predictions
+    all_layers = model.layers
+    last_conv_layer = None
+    for layer in reversed(all_layers):
+        if 'conv' in layer.name:
+            last_conv_layer = layer.name
+            break
+    preprocess = custom_model.preprocess
+    decode_predictions = custom_model.decode_predictions
 
-    # Call your function
     make_gradcam_video(model, filepath, img_size, preprocess,
                        decode_predictions, last_conv_layer)
     
