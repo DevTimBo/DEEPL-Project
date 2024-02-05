@@ -13,13 +13,21 @@ from PIL import Image
 from tensorflow.keras.utils import get_file
 
 OUTPUT_FOLDER = 'data\gcam_plus_output'
-OUTPUT_FOLDER_SH = r'data\gcam_plus_output\Small_Heatmap'
-OUTPUT_FOLDER_MH = r'data\gcam_plus_output\Mid_Heatmap'
-OUTPUT_FOLDER_LH = r'data\gcam_plus_output\Large_Heatmap'
+OUTPUT_FOLDER_SH = r'data\gcam_plus_output'
+OUTPUT_FOLDER_MH = r'data\gcam_plus_output'
+OUTPUT_FOLDER_LH = r'data\gcam_plus_output'
 heatmap_name = 'cam2_1.jpg'
 heatmap_name2 = 'cam2_2.jpg'
 result_name = 'cam2_3.jpg'
 
+def make_gradcam_plusplus(model, img_path, last_conv_layer_name, target_size):
+    # heatmap unskaliert
+    img = preprocess_image(img_path, target_size)
+    heatmap_plus = grad_cam_plus(model, img, last_conv_layer_name)
+    plt.imshow(heatmap_plus)
+    plt.savefig(os.path.join(OUTPUT_FOLDER_SH, heatmap_name))
+    # heatmap hochskaliert + überlagert
+    show_imgwithheat(img_path, heatmap_plus)
 
 
 def grad_cam_plus(model, img,
@@ -126,16 +134,6 @@ def show_imgwithheat(img_path, heatmap, alpha=0.4, return_array=False):
 
     if return_array:
         return superimposed_img
-
-def make_gradcam_plusplus(model, img_path, last_conv_layer_name, target_size):
-    # heatmap unskaliert
-    img = preprocess_image(img_path, target_size)
-    heatmap_plus = grad_cam_plus(model, img, last_conv_layer_name)
-    plt.imshow(heatmap_plus)
-    plt.savefig(os.path.join(OUTPUT_FOLDER_SH, heatmap_name))
-    # heatmap hochskaliert + überlagert
-    show_imgwithheat(img_path, heatmap_plus)
-
 
 def preprocess_image(img_path, target_size=(224, 224)):
 
