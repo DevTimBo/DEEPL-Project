@@ -13,22 +13,20 @@ from PIL import Image
 from tensorflow.keras.utils import get_file
 
 OUTPUT_FOLDER = 'data\gcam_plus_output'
-OUTPUT_FOLDER_SH = r'data\gcam_plus_output'
-OUTPUT_FOLDER_MH = r'data\gcam_plus_output'
-OUTPUT_FOLDER_LH = r'data\gcam_plus_output'
+OUTPUT_FOLDER_SH = r'data\gcam_plus_output\Small_Heatmap'
+OUTPUT_FOLDER_MH = r'data\gcam_plus_output\Mid_Heatmap'
+OUTPUT_FOLDER_LH = r'data\gcam_plus_output\Large_Heatmap'
 heatmap_name = 'cam2_1.jpg'
 heatmap_name2 = 'cam2_2.jpg'
 result_name = 'cam2_3.jpg'
 
-def make_gradcam_plusplus(model, img_path, last_conv_layer_name, target_size):
-    # heatmap unskaliert
-    img = preprocess_image(img_path, target_size)
-    heatmap_plus = grad_cam_plus(model, img, last_conv_layer_name)
-    plt.imshow(heatmap_plus)
-    plt.savefig(os.path.join(OUTPUT_FOLDER_SH, heatmap_name))
-    # heatmap hochskaliert + überlagert
-    show_imgwithheat(img_path, heatmap_plus)
-
+#heatmap_name = 'cam2_1.jpg'
+#heatmap_name2 = 'cam2_2.jpg'
+#result_name = 'cam2_3.jpg'
+WEIGHTS_PATH_VGG16_MURA = "https://github.com/samson6460/tf_keras_gradcamplusplus/releases/download/Weights/tf_keras_vgg16_mura_model.h5"
+#TODO Hier auch Name konstant halten 
+#last_conv_layer_name = "block5_conv3"
+#target_size = (224, 224)
 
 def grad_cam_plus(model, img,
                   layer_name="block5_conv3", label_name=None,
@@ -69,17 +67,17 @@ def grad_cam_plus(model, img,
     global_sum = np.sum(conv_output, axis=(0, 1, 2))
 
     alpha_num = conv_second_grad[0]
-    alpha_denom = conv_second_grad[0] * 2.0 + conv_third_grad[0] * global_sum
+    alpha_denom = conv_second_grad[0]*2.0 + conv_third_grad[0]*global_sum
     alpha_denom = np.where(alpha_denom != 0.0, alpha_denom, 1e-10)
 
-    alphas = alpha_num / alpha_denom
-    alpha_normalization_constant = np.sum(alphas, axis=(0, 1))
+    alphas = alpha_num/alpha_denom
+    alpha_normalization_constant = np.sum(alphas, axis=(0,1))
     alphas /= alpha_normalization_constant
 
     weights = np.maximum(conv_first_grad[0], 0.0)
 
-    deep_linearization_weights = np.sum(weights * alphas, axis=(0, 1))
-    grad_cam_map = np.sum(deep_linearization_weights * conv_output[0], axis=2)
+    deep_linearization_weights = np.sum(weights*alphas, axis=(0,1))
+    grad_cam_map = np.sum(deep_linearization_weights*conv_output[0], axis=2)
 
     heatmap = np.maximum(grad_cam_map, 0)
     max_heat = np.max(heatmap)
@@ -90,8 +88,55 @@ def grad_cam_plus(model, img,
     return heatmap
 
 
+def vgg16_mura_model():
+    """Get a vgg16 model.
 
+    The model can classify bone X-rays into three categories:
+    wrist, shoulder and elbow.
+    It will download the weights automatically for the first time.
 
+    Return:
+        A tf.keras model object.
+    """
+    path_weights = get_file(
+        "tf_keras_vgg16_mura_model.h5",
+        WEIGHTS_PATH_VGG16_MURA,
+        cache_subdir="models")
+
+    model = load_model(path_weights)
+
+    return model
+
+#TODO target_size, image_size ? Konstant halten 
+def preprocess_image(img_path, target_size=(224, 224)):
+    """Preprocess the image by reshape and normalization.
+
+    Args:
+        img_path: A string.
+        target_size: A tuple, reshape to this size.
+    Return:
+        An image array.
+    """
+    img = image.load_img(img_path, target_size=target_size)
+    img = image.img_to_array(img)
+    img /= 255
+
+    return img
+
+def preprocess_image(img_path, target_size=(224, 224)):
+    """Preprocess the image by reshape and normalization.
+
+    Args:
+        img_path: A string.
+        target_size: A tuple, reshape to this size.
+    Return:
+        An image array.
+    """
+    img = image.load_img(img_path, target_size=target_size)
+    img = image.img_to_array(img)
+    img /= 255
+
+    return img
 
 def show_imgwithheat(img_path, heatmap, alpha=0.4, return_array=False):
     """Show the image with heatmap.
@@ -106,7 +151,7 @@ def show_imgwithheat(img_path, heatmap, alpha=0.4, return_array=False):
     """
     img = cv2.imread(img_path)
     heatmap = cv2.resize(heatmap, (img.shape[1], img.shape[0]))
-    heatmap = (heatmap * 255).astype("uint8")
+    heatmap = (heatmap*255).astype("uint8")
     heatmap = cv2.applyColorMap(heatmap, cv2.COLORMAP_JET)
 
     # ADDED ##################################################################################################
@@ -115,8 +160,9 @@ def show_imgwithheat(img_path, heatmap, alpha=0.4, return_array=False):
     superimposed_img = cv2.cvtColor(superimposed_img, cv2.COLOR_BGR2RGB)
     plt.imshow(superimposed_img)
     plt.savefig(os.path.join(OUTPUT_FOLDER_MH, heatmap_name2))
-    # plt.imshow(superimposed_img)
-    # plt.show()
+    #plt.imshow(superimposed_img)
+    #plt.show()
+
 
     superimposed_img = heatmap * alpha + img
     superimposed_img = np.clip(superimposed_img, 0, 255).astype("uint8")
@@ -124,33 +170,35 @@ def show_imgwithheat(img_path, heatmap, alpha=0.4, return_array=False):
 
     imgwithheat = Image.fromarray(superimposed_img)
     try:
-        # display(imgwithheat)
+        #display(imgwithheat)
         cv2.imwrite(os.path.join(OUTPUT_FOLDER_LH, result_name), superimposed_img)
-        # plt.imshow(imgwithheat)
-        # plt.title("Grad-CAM++")
-        # plt.savefig(os.path.join(OUTPUT_FOLDER_LH, result_name))
+        #plt.imshow(imgwithheat)
+        #plt.title("Grad-CAM++")
+        #plt.savefig(os.path.join(OUTPUT_FOLDER_LH, result_name))
     except NameError:
         imgwithheat.show()
 
     if return_array:
         return superimposed_img
+    
 
-def preprocess_image(img_path, target_size=(224, 224)):
+model = vgg16_mura_model()
 
-    img = image.load_img(img_path, target_size=target_size)
-    img = image.img_to_array(img)
-    #print(f"Before Image Shape: {img.shape}")
-    #img = img[None]
-    #if model_name.strip() == "Custom":
-        #img = custom_model.preprocess(img)
-        #img = img[0]
-        #print(f"Image shape: {img.shape}")
-    #else:
-        #pass
-    #print(f"After Image Shape: {img.shape}")
-    img /= 255
+def make_gradcam_plusplus(model, img_path, last_conv_layer_name, target_size, frameNr = ''):
+    global heatmap_name2, result_name
+    heatmap_name = f'cam2_1{frameNr}.jpg'
+    heatmap_name2 = f'cam2_2{frameNr}.jpg'
+    result_name = f'cam2_3{frameNr}.jpg'
+    # heatmap unskaliert 
+    img = preprocess_image(img_path, target_size)
+    heatmap_plus = grad_cam_plus(model, img, last_conv_layer_name)
+    plt.imshow(heatmap_plus)
+    plt.savefig(os.path.join(OUTPUT_FOLDER_SH, heatmap_name))
+    # heatmap hochskaliert + überlagert 
+    show_imgwithheat(img_path, heatmap_plus)
 
-    return img
+def get_pred():
+    pass
 
 if __name__ == "__main__":
     import sys

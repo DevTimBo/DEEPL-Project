@@ -14,7 +14,7 @@ fps = 24
 OUTPUT_FOLDER = 'data\gcam_plus_output'
 heatmap_name = 'cam1_1.jpg'
 
-def make_gradcamplusplus_video(model, video_path_in, target_size, last_conv_layer_name):
+def make_gradcamplusplus_video(model, video_path_in, target_size, last_conv_layer_name,):
     capture = cv2.VideoCapture(video_path_in)
     video.cut_video(capture)
     sorted_frames = sorted(os.listdir(FRAME_FOLDER), key=extract_number)
@@ -26,14 +26,15 @@ def make_gradcamplusplus_video(model, video_path_in, target_size, last_conv_laye
     # Wendet gradcam++ auf jedes Frame an 
     i = 0
     for image in sorted_frames:
+        print(image, i)
         img_path = os.path.join(FRAME_FOLDER, image)
-        gplus.make_gradcam_plusplus(model, img_path, last_conv_layer_name, target_size)
+        gplus.make_gradcam_plusplus(model, img_path, last_conv_layer_name, target_size, i)
         #preds.append(grad_cam.get_pred())
         #print(preds)
         i += 1 
         if i == 5:
             break
-
+ 
     sorted_frames_LH = sorted(os.listdir(LH_frames), key=video.extract_number)
     sorted_frames_SH = sorted(os.listdir(SH_frames), key=video.extract_number)
 
