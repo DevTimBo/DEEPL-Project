@@ -128,6 +128,9 @@
      <height>23</height>
     </rect>
    </property>
+   <property name="toolTip">
+    <string>load your custom model</string>
+   </property>
    <property name="text">
     <string>Load Model</string>
    </property>
@@ -140,6 +143,9 @@
      <width>91</width>
      <height>23</height>
     </rect>
+   </property>
+   <property name="toolTip">
+    <string>pre trained custom model? load its weights</string>
    </property>
    <property name="text">
     <string>Load Weights</string>
@@ -166,6 +172,9 @@
       </item>
       <item>
        <widget class="QSpinBox" name="noiselevel_box">
+        <property name="toolTip">
+         <string>set noise level for the image</string>
+        </property>
         <property name="maximum">
          <number>255</number>
         </property>
@@ -231,9 +240,9 @@
   <widget class="QWidget" name="horizontalLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>380</x>
+     <x>483</x>
      <y>10</y>
-     <width>344</width>
+     <width>241</width>
      <height>51</height>
     </rect>
    </property>
@@ -247,15 +256,11 @@
     </item>
     <item>
      <widget class="QPushButton" name="button_load_many_images">
+      <property name="toolTip">
+       <string>Load multiple images to analyze</string>
+      </property>
       <property name="text">
        <string>Load Image</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QCheckBox" name="time_series_checkbox">
-      <property name="text">
-       <string>Images are time series</string>
       </property>
      </widget>
     </item>
@@ -280,6 +285,9 @@
     </item>
     <item>
      <widget class="QPushButton" name="button_load_single_image">
+      <property name="toolTip">
+       <string>Load an image to analyze</string>
+      </property>
       <property name="text">
        <string>Load Image</string>
       </property>
@@ -306,6 +314,9 @@
     </item>
     <item>
      <widget class="QPushButton" name="button_load_video">
+      <property name="toolTip">
+       <string>Load a video to analyze</string>
+      </property>
       <property name="text">
        <string>Load Video</string>
       </property>
@@ -339,6 +350,9 @@
    <layout class="QHBoxLayout" name="horizontalLayout_5">
     <item>
      <widget class="QComboBox" name="model">
+      <property name="toolTip">
+       <string>these are our built in analyzable models</string>
+      </property>
       <item>
        <property name="text">
         <string>VGG16</string>
@@ -358,6 +372,9 @@
     </item>
     <item>
      <widget class="QComboBox" name="analyze_mode">
+      <property name="toolTip">
+       <string>pick which analysis you want to carry out</string>
+      </property>
       <item>
        <property name="text">
         <string>Single Image</string>
@@ -377,6 +394,9 @@
     </item>
     <item>
      <widget class="QPushButton" name="button_analyze">
+      <property name="toolTip">
+       <string>Start Analysis</string>
+      </property>
       <property name="text">
        <string>Analyze</string>
       </property>
@@ -388,14 +408,17 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>310</y>
-     <width>429</width>
-     <height>389</height>
+     <y>308</y>
+     <width>441</width>
+     <height>391</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_3">
     <item>
      <widget class="QCheckBox" name="lrp_checkbox">
+      <property name="toolTip">
+       <string>activate LRP</string>
+      </property>
       <property name="text">
        <string>Layer-wise Relevance Propagation (LRP)</string>
       </property>
@@ -498,6 +521,9 @@
         <property name="mouseTracking">
          <bool>false</bool>
         </property>
+        <property name="toolTip">
+         <string>activate GRAD-CAM</string>
+        </property>
         <property name="text">
          <string>GRAD-CAM</string>
         </property>
@@ -508,6 +534,9 @@
       </item>
       <item>
        <widget class="QCheckBox" name="heatmap_box_cam">
+        <property name="toolTip">
+         <string>just show CAM's Heatmap</string>
+        </property>
         <property name="text">
          <string>Heatmap: CAM</string>
         </property>
@@ -544,6 +573,9 @@
      <layout class="QHBoxLayout" name="horizontalLayout_6">
       <item>
        <widget class="QCheckBox" name="lime_checkbox">
+        <property name="toolTip">
+         <string>activate LIME</string>
+        </property>
         <property name="text">
          <string>LIME</string>
         </property>
@@ -551,6 +583,9 @@
       </item>
       <item>
        <widget class="QCheckBox" name="lime_hide_rest_box">
+        <property name="toolTip">
+         <string>hide the background when no features are on it</string>
+        </property>
         <property name="text">
          <string>Hide BG</string>
         </property>
@@ -558,6 +593,9 @@
       </item>
       <item>
        <widget class="QCheckBox" name="lime_positive_only_box">
+        <property name="toolTip">
+         <string>only show positive features</string>
+        </property>
         <property name="text">
          <string>+ Only</string>
         </property>
@@ -565,6 +603,9 @@
       </item>
       <item>
        <widget class="QCheckBox" name="lime_mask_only_box">
+        <property name="toolTip">
+         <string>show the features only</string>
+        </property>
         <property name="text">
          <string>Mask Only</string>
         </property>
@@ -572,6 +613,9 @@
       </item>
       <item>
        <widget class="QCheckBox" name="heatmap_box_lime">
+        <property name="toolTip">
+         <string>shows all features with different shades, the brighter they are the heavier their weights.</string>
+        </property>
         <property name="text">
          <string>Heatmap: LIME</string>
         </property>
@@ -590,6 +634,9 @@
       </item>
       <item>
        <widget class="QSpinBox" name="lime_samples_box">
+        <property name="toolTip">
+         <string>set number of samples, the more the better but it takes longer!</string>
+        </property>
         <property name="minimum">
          <number>50</number>
         </property>
@@ -614,6 +661,9 @@
       </item>
       <item>
        <widget class="QSpinBox" name="lime_features_box">
+        <property name="toolTip">
+         <string>features are prioritised from best to worse. example: set it to 1 to find the most important feature!</string>
+        </property>
         <property name="minimum">
          <number>1</number>
         </property>
@@ -638,6 +688,9 @@
       </item>
       <item>
        <widget class="QDoubleSpinBox" name="lime_min_weight_box_2">
+        <property name="toolTip">
+         <string>set minimum weights of the shown features</string>
+        </property>
         <property name="singleStep">
          <double>0.010000000000000</double>
         </property>
@@ -656,6 +709,9 @@
      <layout class="QHBoxLayout" name="horizontalLayout_12">
       <item>
        <widget class="QCheckBox" name="monte_carlo_checkbox">
+        <property name="toolTip">
+         <string>activate MCD</string>
+        </property>
         <property name="text">
          <string>Monte Carlo Dropout</string>
         </property>
@@ -670,6 +726,9 @@
       </item>
       <item>
        <widget class="QSpinBox" name="mcd_samples_box">
+        <property name="toolTip">
+         <string>set number of samples</string>
+        </property>
         <property name="minimum">
          <number>1</number>
         </property>
@@ -686,7 +745,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QSpinBox" name="mcd_percent_spinBox"/>
+       <widget class="QSpinBox" name="mcd_percent_spinBox">
+        <property name="toolTip">
+         <string>set dropout rate</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
@@ -742,7 +805,7 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>152</width>
+           <width>164</width>
            <height>231</height>
           </rect>
          </property>
@@ -844,6 +907,9 @@
      <height>31</height>
     </rect>
    </property>
+   <property name="toolTip">
+    <string>click for help</string>
+   </property>
    <property name="text">
     <string>?</string>
    </property>
@@ -919,6 +985,9 @@
      <width>131</width>
      <height>23</height>
     </rect>
+   </property>
+   <property name="toolTip">
+    <string>load your mapping</string>
    </property>
    <property name="text">
     <string>Load Mapping.csv</string>
