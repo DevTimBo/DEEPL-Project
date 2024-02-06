@@ -1,4 +1,3 @@
-import framework_grad_cam as grad_cam
 import framework_video as video
 import cv2
 import os 
@@ -6,12 +5,13 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import keras
+import tensorflow as tf
 
 FRAME_FOLDER = r'data\frames'
 LH_frames = r'data\gradcam_output\Large_Heatmap'
 SH_frames = r'data\gradcam_output\Small_Heatmap'
-video_out_LH = r'data\gradcam_output\video\LH_video.avi'
-video_out_SH = r'data\gradcam_output\video\SH_video.avi' 
+video_out_LH = r'data\gradcam_output\LH_video.avi'
+video_out_SH = r'data\gradcam_output\SH_video.avi' 
 fps = 24
 
 def make_gradcam_video(model, video_path_in, img_size, preprocess_input, decode_predictions, last_conv_layer_name):
@@ -29,7 +29,7 @@ def make_gradcam_video(model, video_path_in, img_size, preprocess_input, decode_
         img_path = os.path.join(FRAME_FOLDER, image)
         make_gradcam(model, img_path, img_size, 
                             preprocess_input, decode_predictions, last_conv_layer_name, i)
-        preds.append(grad_cam.get_pred())
+        preds.append(get_pred())
         print(preds)
         i += 1 
         if i == 5:
@@ -76,17 +76,45 @@ def make_gradcam(model, img_path, img_size, preprocess, decode_predictions, last
     heatmap_name2 = f'cam1_2{frameNr}.jpg'
     result_name = f'cam1_3{frameNr}.jpg'
     preprocess_input = preprocess
-    img_array = preprocess_input(grad_cam.get_img_array(img_path, size=img_size))
+    img_array = preprocess_input(get_img_array(img_path, size=img_size))
     model.layers[-1].activation = None  # OPTIONAL
     preds = model.predict(img_array)
     prediction = decode_predictions(preds, top=1)[0]
     print("Predicted:", prediction)
-    heatmap = grad_cam.make_gradcam_heatmap(img_array, model, last_conv_layer_name)
+    heatmap = make_gradcam_heatmap(img_array, model, last_conv_layer_name)
     plt.imshow(heatmap)
     plt.savefig(os.path.join(OUTPUT_FOLDER_SH, heatmap_name))
     result_path = os.path.join(OUTPUT_FOLDER_LH, result_name)
     save_and_display_gradcam(img_path, preds, heatmap, result_path, alpha=0.4)
-    
+
+def get_img_array(img_path, size):
+    img = keras.utils.load_img(img_path, target_size=size)
+    array = keras.utils.img_to_array(img)
+    array = np.expand_dims(array, axis=0)
+    return array
+
+def make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=None):
+    grad_model = keras.models.Model(
+        model.inputs, [model.get_layer(last_conv_layer_name).output, model.output]
+    )
+
+    with tf.GradientTape() as tape:
+        last_conv_layer_output, preds = grad_model(img_array)
+        if pred_index is None:
+            pred_index = tf.argmax(preds[0])
+        class_channel = preds[:, pred_index]
+
+    grads = tape.gradient(class_channel, last_conv_layer_output)
+
+    pooled_grads = tf.reduce_mean(grads, axis=(0, 1, 2))
+
+    last_conv_layer_output = last_conv_layer_output[0]
+    heatmap = last_conv_layer_output @ pooled_grads[..., tf.newaxis]
+    heatmap = tf.squeeze(heatmap)
+
+    heatmap = tf.maximum(heatmap, 0) / tf.math.reduce_max(heatmap)
+    return heatmap.numpy()
+
 def save_and_display_gradcam(img_path, preds, heatmap, cam_path, alpha=0.4):
     global superimposed_img, test_superim
 

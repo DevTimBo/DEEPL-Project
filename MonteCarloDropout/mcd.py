@@ -11,8 +11,13 @@ def get_mcd_uncertainty(image, model, preprocess, decode, samples, dropoutRate, 
     picture_input_preprocessed = preprocess(image[None])  
     
     # models
-    modelNoMC = model
-    modelMC = model
+    model_weights = model.get_weights()
+    # coping empty model
+    modelNoMC = keras.models.clone_model(model)
+    modelMC = keras.models.clone_model(model)
+    # set weights again
+    modelNoMC.set_weights(model_weights)
+    modelMC.set_weights(model_weights)
 
     # list of decoded predictions
     predictions_readable = []
@@ -25,12 +30,12 @@ def get_mcd_uncertainty(image, model, preprocess, decode, samples, dropoutRate, 
         apply = applyTo(apply_skip_list, modelMC)
 
     # apply MonteCarlo and write predictions
-    for r in range(samples):    
-        # skip or apply to these layers
-        modelMC = applyMonteCarloApplyTo(apply, modelMC, modelNoMC, dropoutRate)
-        predictions = modelMC.predict(picture_input_preprocessed)
-        print(predictions)
-        predictions_readable.append(decode(predictions))
+    for r in range(samples):  
+        #apply MCD with hyper: skip or apply to these layers
+        modelMC = applyMonteCarloApplyTo(apply, modelMC, modelNoMC, dropoutRate, model)
+        predictions = decode(modelMC.predict(picture_input_preprocessed))
+        #print(decode(predictions))
+        predictions_readable.append(predictions)
     
     # prediction
 
@@ -47,7 +52,7 @@ def applyTo(applyToLayers, modelMC):
     for i in range(len(modelMC.layers)):
         if (modelMC.layers[i].__class__.__name__ in applyToLayers):
             applyTo.append(i)
-            print(applyTo)
+            # print(applyTo)
 
     return applyTo
 
@@ -138,9 +143,10 @@ def zero_weights(weights, percentage):
 #             modelMC.layers[i].set_weights(b)
 #     return modelMC
 
-def applyMonteCarloApplyTo(applytoList, modelMC, modelNoMC, dropoutRate):
-    for i in range(len(modelMC.layers)):
+def applyMonteCarloApplyTo(applytoList, modelMC, modelNoMC, dropoutRate, model):
+    for i in range(len(modelNoMC.layers)):
         #print(f"Layers Len: {len(modelMC.layers)}")
+        b = 0
         if (i) in applytoList:
             b = modelNoMC.layers[i].get_weights()
             b = zero_weights(b, dropoutRate/100)
@@ -156,10 +162,14 @@ def processPredictions(predictions_readable, modelNoMC, picture_input_preprocess
     counterTopFive = 0
     predictionNormalModel = decode(modelNoMC.predict(picture_input_preprocessed))
     
+    print("Normal Prediction:")
+    print(predictionNormalModel[0][0][1])    
+
     countTopFiveAccourence = []
 
     for k in range(len(predictions_readable)):
-        print(predictions_readable[k])
+        print("MCD:")
+        print(predictions_readable[k][0][0][1])
         
         # counter Top1
         if (predictions_readable[k][0][0][1] == predictionNormalModel[0][0][1]):
@@ -223,15 +233,15 @@ def processPredictions(predictions_readable, modelNoMC, picture_input_preprocess
 
     # print (predictionNormalModel)
     # hits = str(counter/len(predictions_readable))
-    # counter get appended and are divided by the length of the list and divided through the highest points possible (5)        
-    countTopFiveAccourence.append(counterTopOne/(len(predictions_readable)*5))
+    # counter get appended and are divided by the length of the list and divided through the highest points possible (5) *100 for %        
+    countTopFiveAccourence.append("{:.2f}".format(counterTopOne*100/(len(predictions_readable)*5)))
     countTopFiveAccourence.append(predictionNormalModel[0][0][1])
-    countTopFiveAccourence.append(counterTopTwo/(len(predictions_readable)*5))
+    countTopFiveAccourence.append("{:.2f}".format(counterTopTwo*100/(len(predictions_readable)*5)))
     countTopFiveAccourence.append(predictionNormalModel[0][1][1])
-    countTopFiveAccourence.append(counterTopThree/(len(predictions_readable)*5))
+    countTopFiveAccourence.append("{:.2f}".format(counterTopThree*100/(len(predictions_readable)*5)))
     countTopFiveAccourence.append(predictionNormalModel[0][2][1])
-    countTopFiveAccourence.append(counterTopFour/(len(predictions_readable)*5))
+    countTopFiveAccourence.append("{:.2f}".format(counterTopFour*100/(len(predictions_readable)*5)))
     countTopFiveAccourence.append(predictionNormalModel[0][3][1])
-    countTopFiveAccourence.append(counterTopFive/(len(predictions_readable)*5))
+    countTopFiveAccourence.append("{:.2f}".format(counterTopFive*100/(len(predictions_readable)*5)))
     countTopFiveAccourence.append(predictionNormalModel[0][4][1])
     return countTopFiveAccourence

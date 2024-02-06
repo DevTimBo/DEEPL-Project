@@ -362,10 +362,14 @@ class Ui(QtWidgets.QDialog):
                         mask_only = True
                     else:
                         mask_only = False
+                    if self.lime_min_weight_box.isChecked():
+                        min_weight = self.lime_min_weight_box_2.value()
+                    else:
+                        min_weight = 0
 
                     samples = self.lime_samples_box.value()
                     features = self.lime_features_box.value()
-                    lime_image = self.lime_analyzer(resized_image, samples, features, positive_only, hide_rest, mask_only)
+                    lime_image = self.lime_analyzer(resized_image, samples, features, positive_only, hide_rest, mask_only, min_weight)
                     title_list.append(f"LIME - Samples: {samples}, Features: {features}")
 
                 cmap_list.append('viridis')
@@ -392,25 +396,25 @@ class Ui(QtWidgets.QDialog):
                 print(string_samples)
                 string_dropout = "Dropout: " + str(mcd_dropoutrate) + "%"
                 print(string_dropout)
-                string_prediction1 = "MCD Pred.TOP1 = " + str(float(mcd_prediction[0]) * 100) + "% " + str(
+                string_prediction1 = "MCD Pred.TOP1 = " + str(float(mcd_prediction[0])) + "% " + str(
                     mcd_prediction[1])
-                float_prediction1 = float(mcd_prediction[0]) * 100
+                float_prediction1 = float(mcd_prediction[0])
                 print(string_prediction1)
-                string_prediction2 = "MCD Pred.TOP2 = " + str(float(mcd_prediction[2]) * 100) + "% " + str(
+                string_prediction2 = "MCD Pred.TOP2 = " + str(float(mcd_prediction[2])) + "% " + str(
                     mcd_prediction[3])
-                float_prediction2 = float(mcd_prediction[2]) * 100
+                float_prediction2 = float(mcd_prediction[2])
                 print(string_prediction2)
-                string_prediction3 = "MCD Pred.TOP3 = " + str(float(mcd_prediction[4]) * 100) + "% " + str(
+                string_prediction3 = "MCD Pred.TOP3 = " + str(float(mcd_prediction[4])) + "% " + str(
                     mcd_prediction[5])
-                float_prediction3 = float(mcd_prediction[4]) * 100
+                float_prediction3 = float(mcd_prediction[4])
                 print(string_prediction3)
-                string_prediction4 = "MCD Pred.TOP4 = " + str(float(mcd_prediction[6]) * 100) + "% " + str(
+                string_prediction4 = "MCD Pred.TOP4 = " + str(float(mcd_prediction[6])) + "% " + str(
                     mcd_prediction[7])
-                float_prediction4 = float(mcd_prediction[6]) * 100
+                float_prediction4 = float(mcd_prediction[6])
                 print(string_prediction4)
-                string_prediction5 = "MCD Pred.TOP5 = " + str(float(mcd_prediction[8]) * 100) + "% " + str(
+                string_prediction5 = "MCD Pred.TOP5 = " + str(float(mcd_prediction[8])) + "% " + str(
                     mcd_prediction[9])
-                float_prediction5 = float(mcd_prediction[8]) * 100
+                float_prediction5 = float(mcd_prediction[8])
                 print(string_prediction5)
                 mcd_image = create_mcd_image(string_samples, string_dropout, string_prediction1, float_prediction1,
                                              string_prediction2, float_prediction2, string_prediction3, float_prediction3, string_prediction4, float_prediction4,
@@ -555,12 +559,12 @@ class Ui(QtWidgets.QDialog):
         subprocess.run(["python", tensorflow_script_path, model_name, filepath, json_img_size,
                         self.custom_model_path, self.custom_model_weights_path, self.custom_model_mapping_path,
                         str(self.custom_channels)])
-        grad_cam_video = "data\gradcam_output\video\LH_video.avi"
+        grad_cam_video = "data\gradcam_output\LH_video.avi"
         return grad_cam_video
     
     def gcam_plus_video_analyze(self, video_path):
         # TODO Pickle Model Übergeben, Last Conv Layer
-        print("GRAD_CAM_Video")
+        print("GRAD_CAM++_Video")
         import subprocess
         # Specify the path to the TensorFlow script
         tensorflow_script_path = "framework_gplus_video.py"
@@ -573,13 +577,13 @@ class Ui(QtWidgets.QDialog):
         subprocess.run(["python", tensorflow_script_path, model_name, filepath, json_img_size,
                         self.custom_model_path, self.custom_model_weights_path, self.custom_model_mapping_path,
                         str(self.custom_channels)])
-        grad_cam_video = "data\gcam_plus_output\video\LH_video.avi"
+        grad_cam_video = "data\gcam_plus_output\LH_video.avi"
         return grad_cam_video
 
-    def lime_analyzer(self, image, samples, features, positive_only, hide_rest, mask_only):
+    def lime_analyzer(self, image, samples, features, positive_only, hide_rest, mask_only, min_weight):
         print("LIME_ANALYZER")
         lime_image = LIME.get_lime_explanation(image, self.keras_model, samples, features, self.keras_preprocess, 
-                                               positive_only, hide_rest, mask_only)
+                                               positive_only, hide_rest, mask_only, min_weight)
         lime_image = convert_to_uint8(lime_image)
         return lime_image
 

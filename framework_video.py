@@ -47,7 +47,7 @@ def convert_images_to_video(Image_folder, video_path, fps):
     for image in images:
         video.write(cv2.imread(os.path.join(Image_folder, image)))
         
-    #cv2.destroyAllWindows()
+    cv2.destroyAllWindows()
     video.release()
 
 def draw_on_image(img_path, font_size, text="Der Text fehlt"):
