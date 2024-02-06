@@ -200,6 +200,14 @@ class Ui(QtWidgets.QDialog):
             self.keras_decode = vgg19.decode_predictions
             self.img_size = (self.keras_model.input_shape[1], self.keras_model.input_shape[2])
             self.custom_channels = self.keras_model.input_shape[3]
+        # elif self.model.currentText() == "ResNet50":
+        #     import keras.applications.resnet50 as ResNet50
+        #     # Keras Model
+        #     self.keras_model = ResNet50.ResNet50(weights="imagenet")
+        #     self.keras_preprocess = ResNet50.preprocess_input
+        #     self.keras_decode = ResNet50.decode_predictions
+        #     self.img_size = (self.keras_model.input_shape[1], self.keras_model.input_shape[2])
+        #     self.custom_channels = self.keras_model.input_shape[3]
         else:
             custom_model.set_csv_file_path(self.custom_model_mapping_path)
 
@@ -221,6 +229,8 @@ class Ui(QtWidgets.QDialog):
         elif self.analyze_mode.currentText() == "Video":
             if self.video_path != "":
                 self.video_analyzer()
+
+
 
     def video_analyzer(self):
         video_path = self.video_path
@@ -460,6 +470,8 @@ class Ui(QtWidgets.QDialog):
                                figsize=(length * 5, rows * 5))
 
     def lrp_analyze(self, image, rule):
+        import time
+        start_time = time.time()
         print("LRP")
 
         lrp_image = LRP.analyze_image_lrp(image, self.keras_model, self.keras_preprocess, rule)
@@ -467,6 +479,7 @@ class Ui(QtWidgets.QDialog):
         zeros_array = np.zeros_like(lrp_image)
 
         lrp_image = cv.merge([zeros_array, zeros_array, lrp_image])  # LRP nur im roten Kanal
+        print("---LRP %s seconds ---" % (time.time() - start_time))
         return lrp_image
 
     def find_len_per_row(self):
@@ -487,18 +500,16 @@ class Ui(QtWidgets.QDialog):
         return len_per_row
 
     def grad_cam_analyze(self, image_path):
-        # TODO Pickle Model Übergeben, Last Conv Layer
+
+
         print("GRAD_CAM")
         import subprocess
-        # Specify the path to the TensorFlow script
         tensorflow_script_path = "framework_grad_cam.py"
-        # Specify the model_name and filepath as arguments
         model_name = self.model.currentText()
         if self.noise_checkbox.isChecked() or self.noise_walk_checkbox.isChecked():
             filepath = 'data/noise_image.png'
         else:
             filepath = image_path
-        # Run the TensorFlow script as a subprocess with arguments
         import json
         json_img_size = json.dumps(self.img_size)
         subprocess.run(["python", tensorflow_script_path, model_name, filepath, json_img_size,
@@ -512,10 +523,10 @@ class Ui(QtWidgets.QDialog):
         grad_cam_heatmap = cv.imread("data\gradcam_output\Mid_Heatmap\cam1_2.jpg")
         grad_cam_heatmap = convert_to_uint8(grad_cam_heatmap)
         grad_cam_heatmap = cv.resize(grad_cam_heatmap, self.img_size)
-
         return grad_cam_image, grad_cam_heatmap
 
     def grad_cam_plus_analyze(self, image_path):
+        import time
         # TODO Pickle Model Übergeben, Last Conv Layer
         print("GRAD_CAM++")
         import subprocess
@@ -738,3 +749,5 @@ with open('ui.qss', 'r') as styles_file:
 app.setStyleSheet(qss)
 window = Ui()
 app.exec_()
+
+

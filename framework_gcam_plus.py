@@ -12,21 +12,15 @@ import numpy as np
 from PIL import Image
 from tensorflow.keras.utils import get_file
 
-OUTPUT_FOLDER = 'data\gcam_plus_output'
-OUTPUT_FOLDER_SH = r'data\gcam_plus_output\Small_Heatmap'
-OUTPUT_FOLDER_MH = r'data\gcam_plus_output\Mid_Heatmap'
-OUTPUT_FOLDER_LH = r'data\gcam_plus_output\Large_Heatmap'
+OUTPUT_FOLDER = 'data/gcam_plut_output'
+OUTPUT_FOLDER_SH = r'data/gcam_plus_output\Small_Heatmap'
+OUTPUT_FOLDER_MH = r'data/gcam_plus_output\Mid_Heatmap'
+OUTPUT_FOLDER_LH = r'data/gcam_plus_output\Large_Heatmap'
 heatmap_name = 'cam2_1.jpg'
 heatmap_name2 = 'cam2_2.jpg'
 result_name = 'cam2_3.jpg'
 
-#heatmap_name = 'cam2_1.jpg'
-#heatmap_name2 = 'cam2_2.jpg'
-#result_name = 'cam2_3.jpg'
-WEIGHTS_PATH_VGG16_MURA = "https://github.com/samson6460/tf_keras_gradcamplusplus/releases/download/Weights/tf_keras_vgg16_mura_model.h5"
-#TODO Hier auch Name konstant halten 
-#last_conv_layer_name = "block5_conv3"
-#target_size = (224, 224)
+
 
 def grad_cam_plus(model, img,
                   layer_name="block5_conv3", label_name=None,
@@ -87,27 +81,6 @@ def grad_cam_plus(model, img,
 
     return heatmap
 
-
-def vgg16_mura_model():
-    """Get a vgg16 model.
-
-    The model can classify bone X-rays into three categories:
-    wrist, shoulder and elbow.
-    It will download the weights automatically for the first time.
-
-    Return:
-        A tf.keras model object.
-    """
-    path_weights = get_file(
-        "tf_keras_vgg16_mura_model.h5",
-        WEIGHTS_PATH_VGG16_MURA,
-        cache_subdir="models")
-
-    model = load_model(path_weights)
-
-    return model
-
-#TODO target_size, image_size ? Konstant halten 
 def preprocess_image(img_path, target_size=(224, 224)):
     """Preprocess the image by reshape and normalization.
 
@@ -123,20 +96,6 @@ def preprocess_image(img_path, target_size=(224, 224)):
 
     return img
 
-def preprocess_image(img_path, target_size=(224, 224)):
-    """Preprocess the image by reshape and normalization.
-
-    Args:
-        img_path: A string.
-        target_size: A tuple, reshape to this size.
-    Return:
-        An image array.
-    """
-    img = image.load_img(img_path, target_size=target_size)
-    img = image.img_to_array(img)
-    img /= 255
-
-    return img
 
 def show_imgwithheat(img_path, heatmap, alpha=0.4, return_array=False):
     """Show the image with heatmap.
@@ -180,9 +139,6 @@ def show_imgwithheat(img_path, heatmap, alpha=0.4, return_array=False):
 
     if return_array:
         return superimposed_img
-    
-
-model = vgg16_mura_model()
 
 def make_gradcam_plusplus(model, img_path, last_conv_layer_name, target_size, frameNr = ''):
     global heatmap_name2, result_name
