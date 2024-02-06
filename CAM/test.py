@@ -50,6 +50,6 @@ model = vgg16_mura_model()
 img_path = r'CAM\Images\puppy.jpg'
 
 #grad_cam.make_gradcam(model, img_path, img_size, preprocess_input, decode_predictions, last_conv_layer_name)
-#make_gradcam_plusplus(model, img_path, last_conv_layer_name, target_size)
+make_gradcam_plusplus(model, img_path, last_conv_layer_name, target_size)
 #make_gradcam_video(model, video_path_in, img_size, preprocess_input, decode_predictions, last_conv_layer_name)
-make_gradcamplusplus_video(model, video_path_in, target_size, last_conv_layer_name)
+#make_gradcamplusplus_video(model, video_path_in, target_size, last_conv_layer_name)
