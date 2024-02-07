@@ -163,13 +163,13 @@ def processPredictions(predictions_readable, modelNoMC, picture_input_preprocess
     predictionNormalModel = decode(modelNoMC.predict(picture_input_preprocessed))
     
     print("Normal Prediction:")
-    print(predictionNormalModel[0][0][1])    
+    print(predictionNormalModel)    
 
     countTopFiveAccourence = []
 
     for k in range(len(predictions_readable)):
         print("MCD:")
-        print(predictions_readable[k][0][0][1])
+        print(predictions_readable[k])
         
         # counter Top1
         if (predictions_readable[k][0][0][1] == predictionNormalModel[0][0][1]):
@@ -235,13 +235,13 @@ def processPredictions(predictions_readable, modelNoMC, picture_input_preprocess
     # hits = str(counter/len(predictions_readable))
     # counter get appended and are divided by the length of the list and divided through the highest points possible (5) *100 for %        
     countTopFiveAccourence.append("{:.2f}".format(counterTopOne*100/(len(predictions_readable)*5)))
-    countTopFiveAccourence.append(predictionNormalModel[0][0][1])
+    countTopFiveAccourence.append(predictionNormalModel[0][0][1] + "(" + "{:.2f}".format(predictionNormalModel[0][0][2]*100) + ")")
     countTopFiveAccourence.append("{:.2f}".format(counterTopTwo*100/(len(predictions_readable)*5)))
-    countTopFiveAccourence.append(predictionNormalModel[0][1][1])
+    countTopFiveAccourence.append(predictionNormalModel[0][1][1] + "(" + "{:.2f}".format(predictionNormalModel[0][1][2]*100) + ")")
     countTopFiveAccourence.append("{:.2f}".format(counterTopThree*100/(len(predictions_readable)*5)))
-    countTopFiveAccourence.append(predictionNormalModel[0][2][1])
+    countTopFiveAccourence.append(predictionNormalModel[0][2][1] + "(" + "{:.2f}".format(predictionNormalModel[0][2][2]*100) + ")")
     countTopFiveAccourence.append("{:.2f}".format(counterTopFour*100/(len(predictions_readable)*5)))
-    countTopFiveAccourence.append(predictionNormalModel[0][3][1])
+    countTopFiveAccourence.append(predictionNormalModel[0][3][1] + "(" + "{:.2f}".format(predictionNormalModel[0][3][2]*100) + ")")
     countTopFiveAccourence.append("{:.2f}".format(counterTopFive*100/(len(predictions_readable)*5)))
-    countTopFiveAccourence.append(predictionNormalModel[0][4][1])
+    countTopFiveAccourence.append(predictionNormalModel[0][4][1] + "(" + "{:.2f}".format(predictionNormalModel[0][4][2]*100) + ")")
     return countTopFiveAccourence

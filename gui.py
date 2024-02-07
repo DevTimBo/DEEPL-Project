@@ -396,23 +396,23 @@ class Ui(QtWidgets.QDialog):
                 print(string_samples)
                 string_dropout = "Dropout: " + str(mcd_dropoutrate) + "%"
                 print(string_dropout)
-                string_prediction1 = "MCD Pred.TOP1 = " + str(float(mcd_prediction[0])) + "% " + str(
+                string_prediction1 = "TOP1 MCD = " + str(float(mcd_prediction[0])) + "% " + str(
                     mcd_prediction[1])
                 float_prediction1 = float(mcd_prediction[0])
                 print(string_prediction1)
-                string_prediction2 = "MCD Pred.TOP2 = " + str(float(mcd_prediction[2])) + "% " + str(
+                string_prediction2 = "TOP2 MCD = " + str(float(mcd_prediction[2])) + "% " + str(
                     mcd_prediction[3])
                 float_prediction2 = float(mcd_prediction[2])
                 print(string_prediction2)
-                string_prediction3 = "MCD Pred.TOP3 = " + str(float(mcd_prediction[4])) + "% " + str(
+                string_prediction3 = "TOP3 MCD = " + str(float(mcd_prediction[4])) + "% " + str(
                     mcd_prediction[5])
                 float_prediction3 = float(mcd_prediction[4])
                 print(string_prediction3)
-                string_prediction4 = "MCD Pred.TOP4 = " + str(float(mcd_prediction[6])) + "% " + str(
+                string_prediction4 = "TOP4 MCD = " + str(float(mcd_prediction[6])) + "% " + str(
                     mcd_prediction[7])
                 float_prediction4 = float(mcd_prediction[6])
                 print(string_prediction4)
-                string_prediction5 = "MCD Pred.TOP5 = " + str(float(mcd_prediction[8])) + "% " + str(
+                string_prediction5 = "TOP5 MCD = " + str(float(mcd_prediction[8])) + "% " + str(
                     mcd_prediction[9])
                 float_prediction5 = float(mcd_prediction[8])
                 print(string_prediction5)
