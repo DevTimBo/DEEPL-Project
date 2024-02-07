@@ -287,6 +287,8 @@ class Ui(QtWidgets.QDialog):
         #
         resized_image = cv.resize(image, self.img_size)
         noise_walk_value = 0
+        temp_image_list = []
+        temp_title_list = []
         if self.noise_walk_checkbox.isChecked():
 
             max_value = self.noise_walk_max.value()
@@ -297,28 +299,29 @@ class Ui(QtWidgets.QDialog):
         else:
             steps = 1
             stepsize = 0
-            image_list.append(resized_image)
+            temp_image_list.append(resized_image)
             decoded_pred = pred_get_string(self.keras_model, self.keras_decode, resized_image)
-            title_list.append(f"Original {decoded_pred[0][0][1]} - {round(float(decoded_pred[0][0][2]),2)}")
+            temp_title_list.append(f"Original {decoded_pred[0][0][1]} - {round(float(decoded_pred[0][0][2]),2)}")
             cmap_list.append("viridis")
             if self.noise_checkbox.isChecked():
                 noise_level = self.noiselevel_box.value()
                 resized_image = IMAGE_EDIT.add_noise(resized_image, noise_level)
 
-                image_list.append(resized_image)
+                temp_image_list.append(resized_image)
 
                 decoded_pred = pred_get_string(self.keras_model, self.keras_decode, resized_image)
-                title_list.append(f"Noise {decoded_pred[0][0][1]} - {round(float(decoded_pred[0][0][2]),2)}")
+                temp_title_list.append(f"Noise {decoded_pred[0][0][1]} - {round(float(decoded_pred[0][0][2]),2)}")
 
                 cmap_list.append("viridis")
                 cv.imwrite("data/noise_image.png", resized_image)
 
         for i in range(steps):
+
             if self.noise_walk_checkbox.isChecked():
                 resized_image = IMAGE_EDIT.add_noise(resized_image, noise_walk_value)
-                image_list.append(resized_image)
+                temp_image_list.append(resized_image)
                 decoded_pred = pred_get_string(self.keras_model, self.keras_decode, resized_image)
-                title_list.append(f"Noise Level {noise_walk_value} {decoded_pred[0][0][1]} - {round(float(decoded_pred[0][0][2]),2)}")
+                temp_title_list.append(f"Noise Level {noise_walk_value} {decoded_pred[0][0][1]} - {round(float(decoded_pred[0][0][2]),2)}")
                 cmap_list.append("viridis")
                 cv.imwrite("data/noise_image.png", resized_image)
 
@@ -326,29 +329,29 @@ class Ui(QtWidgets.QDialog):
                 rule = self.lrp_rule_box.currentText()
                 lrp_image = self.lrp_analyze(resized_image, rule)
                 lrp_image = convert_to_uint8(lrp_image)
-                title_list.append(f"LRP: {rule}")
+                temp_title_list.append(f"LRP - {rule}")
                 cmap_list.append('viridis')
-                image_list.append(lrp_image)
+                temp_image_list.append(lrp_image)
 
             if self.gradcam_checkbox.isChecked():
                 print(self.grad_cam_version_combobox.currentText())
                 if self.grad_cam_version_combobox.currentText() == "GradCam":
                     grad_cam_image, grad_cam_heatmap = self.grad_cam_analyze(image_path)
                     if self.heatmap_box_cam.isChecked():
-                        image_list.append(grad_cam_heatmap)
-                        title_list.append(f"GRAD CAM Heatmap")
+                        temp_image_list.append(grad_cam_heatmap)
+                        temp_title_list.append(f"GRAD CAM Heatmap")
                     else:
-                        image_list.append(grad_cam_image)
-                        title_list.append(f"GRAD CAM")
+                        temp_image_list.append(grad_cam_image)
+                        temp_title_list.append(f"GRAD CAM")
 
                 elif self.grad_cam_version_combobox.currentText() == "GradCam++":
                     grad_cam_image, grad_cam_heatmap = self.grad_cam_plus_analyze(image_path)
                     if self.heatmap_box_cam.isChecked():
-                        image_list.append(grad_cam_heatmap)
-                        title_list.append(f"GRAD CAM++ Heatmap")
+                        temp_image_list.append(grad_cam_heatmap)
+                        temp_title_list.append(f"GRAD CAM++ Heatmap")
                     else:
-                        image_list.append(grad_cam_image)
-                        title_list.append(f"GRAD CAM++")
+                        temp_image_list.append(grad_cam_image)
+                        temp_title_list.append(f"GRAD CAM++")
 
                 cmap_list.append('viridis')
 
@@ -358,7 +361,7 @@ class Ui(QtWidgets.QDialog):
                     samples = self.lime_samples_box.value()
                     features = "All"
                     lime_image = self.lime_heatmap(resized_image, samples)
-                    title_list.append(f"LIME Heatmap - Samples: {samples}, Features: {features}")
+                    temp_title_list.append(f"LIME Heatmap - Samples - {samples}, Features - {features}")
                 else:
                     if self.lime_positive_only_box.isChecked():
                         positive_only = True
@@ -380,17 +383,17 @@ class Ui(QtWidgets.QDialog):
                     samples = self.lime_samples_box.value()
                     features = self.lime_features_box.value()
                     lime_image = self.lime_analyzer(resized_image, samples, features, positive_only, hide_rest, mask_only, min_weight)
-                    title_list.append(f"LIME - Samples: {samples}, Features: {features}")
+                    temp_title_list.append(f"LIME - Samples - {samples}, Features - {features}")
 
                 cmap_list.append('viridis')
-                image_list.append(lime_image)
+                temp_image_list.append(lime_image)
 
             if self.overlap_box.isChecked():
-                overlap_image = self.overlap_images(image_list, title_list)
+                overlap_image = self.overlap_images(temp_image_list, temp_title_list)
                 print("Overlap Image")
                 overlap_image = convert_to_uint8(overlap_image)
-                title_list.append('Overlap IMAGE')
-                image_list.append(overlap_image)
+                temp_title_list.append('Overlap IMAGE')
+                temp_image_list.append(overlap_image)
                 cmap_list.append('viridis')
 
             if self.monte_carlo_checkbox.isChecked():
@@ -430,20 +433,31 @@ class Ui(QtWidgets.QDialog):
                                              string_prediction2, float_prediction2, string_prediction3, float_prediction3, string_prediction4, float_prediction4,
                                              string_prediction5, float_prediction5)
                 print(string_samples + string_dropout + string_prediction1)
-                image_list.append(mcd_image)
+                temp_image_list.append(mcd_image)
                 cmap_list.append('viridis')
-                title_list.append("Monte Carlo")
+                temp_title_list.append("Monte Carlo")
 
+            image_list = image_list + temp_image_list
+            title_list = title_list + temp_title_list
+            temp_title_list = []
+            temp_image_list = []
             noise_walk_value = noise_walk_value + stepsize
-
+        print(f"len: {len(image_list)}, {len(title_list)}, {len(cmap_list)}")
         return image_list, cmap_list, title_list
-
+    def save_images(self, length, image_list, title_list):
+        row_num = 0
+        for i, title in enumerate(title_list):
+            if i % length == 0:
+                row_num += 1
+            cv.imwrite(f"TEMP_DATA/{row_num}_" + title + ".png", image_list[i])
     def single_image_analyzer(self):
         image = cv.imread(self.single_image_path, cv.IMREAD_COLOR)
         image_list, cmap_list, title_list = self.image_analyzer(image, self.single_image_path)
         print("Plotting")
         length = self.find_len_per_row()
         rows = len(image_list) / length
+        if self.save_image_box.isChecked():
+            self.save_images(length, image_list, title_list)
         PLOTTING.plot_n_images(image_list, title_list, cmap_list,
                                max_images_per_row=self.find_len_per_row(),
                                figsize=(length * 5, rows * 5))
@@ -461,10 +475,13 @@ class Ui(QtWidgets.QDialog):
             image_list = image_list + temp_image_list
             title_list = title_list + temp_title_list
             cmap_list = cmap_list + temp_cmap_list
+
         print("Plotting")
 
         length = self.find_len_per_row()
         rows = len(image_list) / length
+        if self.save_image_box.isChecked():
+            self.save_images(length, image_list, title_list)
         PLOTTING.plot_n_images(image_list, title_list, cmap_list,
                                max_images_per_row=self.find_len_per_row(),
                                figsize=(length * 5, rows * 5))
