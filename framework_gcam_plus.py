@@ -13,9 +13,9 @@ from PIL import Image
 from tensorflow.keras.utils import get_file
 
 OUTPUT_FOLDER = 'data/gcam_plut_output'
-OUTPUT_FOLDER_SH = r'data/gcam_plus_output\Small_Heatmap'
-OUTPUT_FOLDER_MH = r'data/gcam_plus_output\Mid_Heatmap'
-OUTPUT_FOLDER_LH = r'data/gcam_plus_output\Large_Heatmap'
+OUTPUT_FOLDER_SH = r'data/gcam_plus_output'
+OUTPUT_FOLDER_MH = r'data/gcam_plus_output'
+OUTPUT_FOLDER_LH = r'data/gcam_plus_output'
 heatmap_name = 'cam2_1.jpg'
 heatmap_name2 = 'cam2_2.jpg'
 result_name = 'cam2_3.jpg'
@@ -118,17 +118,19 @@ def show_imgwithheat(img_path, heatmap, alpha=0.4, return_array=False):
     superimposed_img = np.clip(superimposed_img, 0, 255).astype("uint8")
     #superimposed_img = cv2.cvtColor(superimposed_img, cv2.COLOR_BGR2RGB)
     cv2.imwrite(os.path.join(OUTPUT_FOLDER_MH, heatmap_name2), superimposed_img)
+
     #plt.imshow(superimposed_img)
     #plt.show()
 
 
     superimposed_img = heatmap * alpha + img
     superimposed_img = np.clip(superimposed_img, 0, 255).astype("uint8")
-    #superimposed_img = cv2.cvtColor(superimposed_img, cv2.COLOR_BGR2RGB)
+    superimposed_img = cv2.cvtColor(superimposed_img, cv2.COLOR_BGR2RGB)
 
     imgwithheat = Image.fromarray(superimposed_img)
     try:
         #display(imgwithheat)
+        superimposed_img = cv2.cvtColor(superimposed_img, cv2.COLOR_BGR2RGB)
         cv2.imwrite(os.path.join(OUTPUT_FOLDER_LH, result_name), superimposed_img)
         #plt.imshow(imgwithheat)
         #plt.title("Grad-CAM++")

@@ -15,7 +15,9 @@ def get_lime_explanation(image, model, samples, features, preprocess, positive_o
     if mask_only == True:
         image = mask
     else:
-        image = mark_boundaries(temp / 2 + 0.5, mask)
+        temp = temp[:, :, ::-1]  # Reversing the order of color channels from BGR to RGB
+        temp = temp / 2 + 0.5 # Adjust color brightness
+        image = mark_boundaries(temp, mask)
         image = (image + image.max()).astype(np.float32)
     image = normalize_array_np(image)
     return image
