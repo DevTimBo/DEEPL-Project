@@ -11,7 +11,6 @@ def cut_video(capture):
     while(True): 
         success, frame = capture.read()
         if success:
-            print("hallo1")
             cv2.imwrite(f'C:/Users/hadie/Desktop/Erk Framework/DEEPL-Project/CAM/video_Frames/{frameNr}.jpg', frame)
             print(f"Frame {frameNr} gespeichert.")
         else:

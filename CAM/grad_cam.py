@@ -8,6 +8,7 @@ from IPython.display import Image, display
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from PIL import Image
+import time
 
 prediction = None
 superimposed_img = None
@@ -21,6 +22,8 @@ OUTPUT_FOLDER_LH = r'CAM\Images\gradcam_output\Large_Heatmap'
 
 def make_gradcam(model, img_path, img_size, preprocess, decode_predictions, last_conv_layer_name, frameNr = ''):
     global prediction, heatmap_name2
+    start_time = time.time()  
+
     heatmap_name = f'cam1_1{frameNr}.jpg'
     heatmap_name2 = f'cam1_2{frameNr}.jpg'
     result_name = f'cam1_3{frameNr}.jpg'
@@ -36,6 +39,10 @@ def make_gradcam(model, img_path, img_size, preprocess, decode_predictions, last
     plt.savefig(os.path.join(OUTPUT_FOLDER_SH, heatmap_name))
     result_path = os.path.join(OUTPUT_FOLDER_LH, result_name)
     save_and_display_gradcam(img_path, preds, heatmap, result_path, alpha=0.4)
+    
+    end_time = time.time() 
+    total_time = end_time - start_time 
+    print(f"Total execution time: {total_time} seconds")
 
 
 

@@ -11,6 +11,7 @@ import cv2
 import numpy as np
 from PIL import Image
 from tensorflow.keras.utils import get_file
+import time
 
 heatmap_name2 = None
 result_name = None
@@ -171,6 +172,8 @@ model = vgg16_mura_model()
 
 def make_gradcam_plusplus(model, img_path, last_conv_layer_name, target_size, frameNr = ''):
     global heatmap_name2, result_name
+    start_time = time.time()
+
     heatmap_name = f'cam2_1{frameNr}.jpg'
     heatmap_name2 = f'cam2_2{frameNr}.jpg'
     result_name = f'cam2_3{frameNr}.jpg'
@@ -181,6 +184,10 @@ def make_gradcam_plusplus(model, img_path, last_conv_layer_name, target_size, fr
     plt.savefig(os.path.join(OUTPUT_FOLDER_SH, heatmap_name))
     # heatmap hochskaliert + überlagert 
     show_imgwithheat(img_path, heatmap_plus)
+
+    end_time = time.time() 
+    total_time = end_time - start_time 
+    print(f"Total execution time: {total_time} seconds")
 
 def get_pred():
     pass
