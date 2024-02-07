@@ -15,9 +15,9 @@ test_superim = None
 heatmap_name2 = None
 
 OUTPUT_FOLDER = 'data\gradcam_output'
-OUTPUT_FOLDER_SH = r'data\gradcam_output\Small_Heatmap'
-OUTPUT_FOLDER_MH = r'data\gradcam_output\Mid_Heatmap'
-OUTPUT_FOLDER_LH = r'data\gradcam_output\Large_Heatmap'
+OUTPUT_FOLDER_SH = r'data\gradcam_output'
+OUTPUT_FOLDER_MH = r'data\gradcam_output'
+OUTPUT_FOLDER_LH = r'data\gradcam_output'
 
 def make_gradcam(model, img_path, img_size, preprocess, decode_predictions, last_conv_layer_name, frameNr = ''):
     global prediction, heatmap_name2

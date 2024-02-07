@@ -13,9 +13,9 @@ from PIL import Image
 from tensorflow.keras.utils import get_file
 
 OUTPUT_FOLDER = 'data/gcam_plut_output'
-OUTPUT_FOLDER_SH = r'data/gcam_plus_output\Small_Heatmap'
-OUTPUT_FOLDER_MH = r'data/gcam_plus_output\Mid_Heatmap'
-OUTPUT_FOLDER_LH = r'data/gcam_plus_output\Large_Heatmap'
+OUTPUT_FOLDER_SH = r'data/gcam_plus_output'
+OUTPUT_FOLDER_MH = r'data/gcam_plus_output'
+OUTPUT_FOLDER_LH = r'data/gcam_plus_output'
 heatmap_name = 'cam2_1.jpg'
 heatmap_name2 = 'cam2_2.jpg'
 result_name = 'cam2_3.jpg'
