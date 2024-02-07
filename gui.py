@@ -200,14 +200,14 @@ class Ui(QtWidgets.QDialog):
             self.keras_decode = vgg19.decode_predictions
             self.img_size = (self.keras_model.input_shape[1], self.keras_model.input_shape[2])
             self.custom_channels = self.keras_model.input_shape[3]
-        # elif self.model.currentText() == "ResNet50":
-        #     import keras.applications.resnet50 as ResNet50
-        #     # Keras Model
-        #     self.keras_model = ResNet50.ResNet50(weights="imagenet")
-        #     self.keras_preprocess = ResNet50.preprocess_input
-        #     self.keras_decode = ResNet50.decode_predictions
-        #     self.img_size = (self.keras_model.input_shape[1], self.keras_model.input_shape[2])
-        #     self.custom_channels = self.keras_model.input_shape[3]
+        elif self.model.currentText() == "ResNet50":
+            import keras.applications.resnet50 as ResNet50
+            # Keras Model
+            self.keras_model = ResNet50.ResNet50(weights="imagenet")
+            self.keras_preprocess = ResNet50.preprocess_input
+            self.keras_decode = ResNet50.decode_predictions
+            self.img_size = (self.keras_model.input_shape[1], self.keras_model.input_shape[2])
+            self.custom_channels = self.keras_model.input_shape[3]
         else:
             custom_model.set_csv_file_path(self.custom_model_mapping_path)
 
