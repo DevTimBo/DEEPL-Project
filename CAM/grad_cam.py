@@ -9,6 +9,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from PIL import Image
 import time
+from video import get_frame_size
 
 prediction = None
 superimposed_img = None
@@ -40,6 +41,7 @@ def make_gradcam(model, img_path, img_size, preprocess, decode_predictions, last
     result_path = os.path.join(OUTPUT_FOLDER_LH, result_name)
     save_and_display_gradcam(img_path, preds, heatmap, result_path, alpha=0.4)
     
+    print("The size of the image is (w,h): ", get_frame_size(img_path))
     end_time = time.time() 
     total_time = end_time - start_time 
     print(f"Total execution time: {total_time} seconds")

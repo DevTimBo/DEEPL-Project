@@ -12,6 +12,7 @@ import numpy as np
 from PIL import Image
 from tensorflow.keras.utils import get_file
 import time
+from video import get_frame_size
 
 heatmap_name2 = None
 result_name = None
@@ -185,6 +186,7 @@ def make_gradcam_plusplus(model, img_path, last_conv_layer_name, target_size, fr
     # heatmap hochskaliert + überlagert 
     show_imgwithheat(img_path, heatmap_plus)
 
+    print("The size of the image is (w,h): ", get_frame_size(img_path))
     end_time = time.time() 
     total_time = end_time - start_time 
     print(f"Total execution time: {total_time} seconds")
