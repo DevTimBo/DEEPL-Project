@@ -4,6 +4,7 @@ from grad_cam_plusplus import make_gradcam_plusplus
 import cv2
 import os 
 import keras 
+import time
 
 FRAME_FOLDER = r'CAM\video_Frames'
 LH_frames = r'CAM\Images\gradcamplusplus_output\Large_Heatmap'
@@ -16,6 +17,7 @@ OUTPUT_FOLDER = r'CAM\Images\gradcamplusplus_output'
 heatmap_name = 'cam1_1.jpg'
 
 def make_gradcamplusplus_video(model, video_path_in, target_size, last_conv_layer_name,):
+    start_time = time.time()  
     capture = cv2.VideoCapture(video_path_in)
     # Auf 5 limitiert 
     video.cut_video(capture)
@@ -42,6 +44,10 @@ def make_gradcamplusplus_video(model, video_path_in, target_size, last_conv_laye
 
     video.convert_images_to_video(LH_frames, video_out_LH, fps)
     video.convert_images_to_video(SH_frames, video_out_SH, fps)
+
+    end_time = time.time() 
+    total_time = end_time - start_time 
+    print(f"Total execution time(Video): {total_time} seconds")
 
 """     # Fügt jedem Bild aus dem LH Ordner Text hinzu 
     i = 0

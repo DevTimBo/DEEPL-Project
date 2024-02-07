@@ -3,6 +3,7 @@ import grad_cam
 import cv2
 import os 
 import keras
+import time
 
 #TODO Die Frame Nr. wird auch noch angezeigt, dann kann man sich dazu die anderen heatmaps anschauen 
 
@@ -17,6 +18,7 @@ OUTPUT_FOLDER = r'CAM\Images\gradcam_output'
 heatmap_name = 'cam1_1.jpg'
 
 def make_gradcam_video(model, video_path_in, img_size, preprocess_input, decode_predictions, last_conv_layer_name):
+    start_time = time.time()  
     capture = cv2.VideoCapture(video_path_in)
     # Auf 5 limitiert 
     video.cut_video(capture)
@@ -35,8 +37,8 @@ def make_gradcam_video(model, video_path_in, img_size, preprocess_input, decode_
         preds.append(grad_cam.get_pred())
         print(preds)
         i += 1 
-        if i == 5:
-            break
+        #if i == 5:
+        #    break
 
     sorted_frames_LH = sorted(os.listdir(LH_frames), key=video.extract_number)
     sorted_frames_SH = sorted(os.listdir(SH_frames), key=video.extract_number)
@@ -47,8 +49,8 @@ def make_gradcam_video(model, video_path_in, img_size, preprocess_input, decode_
         img_path = os.path.join(LH_frames, img)
         video.draw_on_image(img_path, 20, str(preds[index]))
         i += 1 
-        if i == 5:
-            break
+        #if i == 5:
+         #   break
  
     # Fügt jedem Bild aus dem SH Ordner Text hinzu 
     i = 0
@@ -56,13 +58,16 @@ def make_gradcam_video(model, video_path_in, img_size, preprocess_input, decode_
         img_path = os.path.join(SH_frames, img)
         video.draw_on_image(img_path, 20, str(preds[index]))
         i += 1 
-        if i == 5:
-            break
+        #if i == 5:
+         #   break
     
     # teste 
     #video_Frames = r'CAM\video_Frames'
     video.convert_images_to_video(LH_frames, video_out_LH, fps)
     video.convert_images_to_video(SH_frames, video_out_SH, fps)
+    end_time = time.time() 
+    total_time = end_time - start_time 
+    print(f"Total execution time(Video): {total_time} seconds")
 
 
 
