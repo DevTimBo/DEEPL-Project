@@ -211,7 +211,7 @@
          <number>1</number>
         </property>
         <property name="maximum">
-         <number>3</number>
+         <number>5</number>
         </property>
        </widget>
       </item>
@@ -343,7 +343,7 @@
     <rect>
      <x>920</x>
      <y>620</y>
-     <width>288</width>
+     <width>332</width>
      <height>80</height>
     </rect>
    </property>
@@ -361,6 +361,11 @@
       <item>
        <property name="text">
         <string>VGG19</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>ResNet50</string>
        </property>
       </item>
       <item>
@@ -390,6 +395,13 @@
         <string>Video</string>
        </property>
       </item>
+     </widget>
+    </item>
+    <item>
+     <widget class="QCheckBox" name="save_image_box">
+      <property name="text">
+       <string>Save Images</string>
+      </property>
      </widget>
     </item>
     <item>
@@ -701,7 +713,7 @@
     <item>
      <widget class="QCheckBox" name="overlap_box">
       <property name="text">
-       <string>Overlap all of the above (Only works with Heatmaps and LRP)</string>
+       <string>Overlap all of the above</string>
       </property>
      </widget>
     </item>

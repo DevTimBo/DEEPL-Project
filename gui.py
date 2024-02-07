@@ -652,9 +652,7 @@ class Ui(QtWidgets.QDialog):
         for i, title in enumerate(title_list):
             if "lrp" in title.lower():
                 overlap_images.append(image_list[i] * 2)
-            elif "lime heatmap" in title.lower():
-                overlap_images.append(image_list[i] // 2)  # Heatmaps sind zu dominant man sieht lrp nicht mehr
-            elif "grad cam heatmap" in title.lower():
+            else:
                 overlap_images.append(image_list[i] // 2)
         overlap_image = IMAGE_EDIT.overlap_images(overlap_images)
         return overlap_image
