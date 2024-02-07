@@ -200,6 +200,14 @@ class Ui(QtWidgets.QDialog):
             self.keras_decode = vgg19.decode_predictions
             self.img_size = (self.keras_model.input_shape[1], self.keras_model.input_shape[2])
             self.custom_channels = self.keras_model.input_shape[3]
+        elif self.model.currentText() == "ResNet50":
+            import keras.applications.resnet50 as ResNet50
+            # Keras Model
+            self.keras_model = ResNet50.ResNet50(weights="imagenet")
+            self.keras_preprocess = ResNet50.preprocess_input
+            self.keras_decode = ResNet50.decode_predictions
+            self.img_size = (self.keras_model.input_shape[1], self.keras_model.input_shape[2])
+            self.custom_channels = self.keras_model.input_shape[3]
         else:
             custom_model.set_csv_file_path(self.custom_model_mapping_path)
 
@@ -221,6 +229,8 @@ class Ui(QtWidgets.QDialog):
         elif self.analyze_mode.currentText() == "Video":
             if self.video_path != "":
                 self.video_analyzer()
+
+
 
     def video_analyzer(self):
         video_path = self.video_path
@@ -396,23 +406,23 @@ class Ui(QtWidgets.QDialog):
                 print(string_samples)
                 string_dropout = "Dropout: " + str(mcd_dropoutrate) + "%"
                 print(string_dropout)
-                string_prediction1 = "MCD Pred.TOP1 = " + str(float(mcd_prediction[0])) + "% " + str(
+                string_prediction1 = "TOP1 MCD = " + str(float(mcd_prediction[0])) + "% " + str(
                     mcd_prediction[1])
                 float_prediction1 = float(mcd_prediction[0])
                 print(string_prediction1)
-                string_prediction2 = "MCD Pred.TOP2 = " + str(float(mcd_prediction[2])) + "% " + str(
+                string_prediction2 = "TOP2 MCD = " + str(float(mcd_prediction[2])) + "% " + str(
                     mcd_prediction[3])
                 float_prediction2 = float(mcd_prediction[2])
                 print(string_prediction2)
-                string_prediction3 = "MCD Pred.TOP3 = " + str(float(mcd_prediction[4])) + "% " + str(
+                string_prediction3 = "TOP3 MCD = " + str(float(mcd_prediction[4])) + "% " + str(
                     mcd_prediction[5])
                 float_prediction3 = float(mcd_prediction[4])
                 print(string_prediction3)
-                string_prediction4 = "MCD Pred.TOP4 = " + str(float(mcd_prediction[6])) + "% " + str(
+                string_prediction4 = "TOP4 MCD = " + str(float(mcd_prediction[6])) + "% " + str(
                     mcd_prediction[7])
                 float_prediction4 = float(mcd_prediction[6])
                 print(string_prediction4)
-                string_prediction5 = "MCD Pred.TOP5 = " + str(float(mcd_prediction[8])) + "% " + str(
+                string_prediction5 = "TOP5 MCD = " + str(float(mcd_prediction[8])) + "% " + str(
                     mcd_prediction[9])
                 float_prediction5 = float(mcd_prediction[8])
                 print(string_prediction5)
@@ -460,6 +470,8 @@ class Ui(QtWidgets.QDialog):
                                figsize=(length * 5, rows * 5))
 
     def lrp_analyze(self, image, rule):
+        import time
+        start_time = time.time()
         print("LRP")
 
         lrp_image = LRP.analyze_image_lrp(image, self.keras_model, self.keras_preprocess, rule)
@@ -467,6 +479,7 @@ class Ui(QtWidgets.QDialog):
         zeros_array = np.zeros_like(lrp_image)
 
         lrp_image = cv.merge([zeros_array, zeros_array, lrp_image])  # LRP nur im roten Kanal
+        print("---LRP %s seconds ---" % (time.time() - start_time))
         return lrp_image
 
     def find_len_per_row(self):
@@ -487,18 +500,16 @@ class Ui(QtWidgets.QDialog):
         return len_per_row
 
     def grad_cam_analyze(self, image_path):
-        # TODO Pickle Model Übergeben, Last Conv Layer
+
+
         print("GRAD_CAM")
         import subprocess
-        # Specify the path to the TensorFlow script
         tensorflow_script_path = "framework_grad_cam.py"
-        # Specify the model_name and filepath as arguments
         model_name = self.model.currentText()
         if self.noise_checkbox.isChecked() or self.noise_walk_checkbox.isChecked():
             filepath = 'data/noise_image.png'
         else:
             filepath = image_path
-        # Run the TensorFlow script as a subprocess with arguments
         import json
         json_img_size = json.dumps(self.img_size)
         subprocess.run(["python", tensorflow_script_path, model_name, filepath, json_img_size,
@@ -512,10 +523,10 @@ class Ui(QtWidgets.QDialog):
         grad_cam_heatmap = cv.imread("data\gradcam_output\Mid_Heatmap\cam1_2.jpg")
         grad_cam_heatmap = convert_to_uint8(grad_cam_heatmap)
         grad_cam_heatmap = cv.resize(grad_cam_heatmap, self.img_size)
-
         return grad_cam_image, grad_cam_heatmap
 
     def grad_cam_plus_analyze(self, image_path):
+        import time
         # TODO Pickle Model Übergeben, Last Conv Layer
         print("GRAD_CAM++")
         import subprocess
@@ -641,9 +652,7 @@ class Ui(QtWidgets.QDialog):
         for i, title in enumerate(title_list):
             if "lrp" in title.lower():
                 overlap_images.append(image_list[i] * 2)
-            elif "lime heatmap" in title.lower():
-                overlap_images.append(image_list[i] // 2)  # Heatmaps sind zu dominant man sieht lrp nicht mehr
-            elif "grad cam heatmap" in title.lower():
+            else:
                 overlap_images.append(image_list[i] // 2)
         overlap_image = IMAGE_EDIT.overlap_images(overlap_images)
         return overlap_image
@@ -738,3 +747,5 @@ with open('ui.qss', 'r') as styles_file:
 app.setStyleSheet(qss)
 window = Ui()
 app.exec_()
+
+

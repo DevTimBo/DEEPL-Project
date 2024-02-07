@@ -137,7 +137,14 @@ if __name__ == "__main__":
         img_size = (224, 224)
         preprocess = VGG19.preprocess_input
         decode_predictions = VGG19.decode_predictions
+    elif model_name.strip() == "ResNet50":
+        import keras.applications.resnet50 as ResNet50
 
+        # Keras Model
+        model = ResNet50.ResNet50(weights="imagenet")
+        img_size = (224, 224)
+        preprocess = ResNet50.preprocess_input
+        decode_predictions = ResNet50.decode_predictions
     else:
         custom_model_mapping_path = sys.argv[6]
         custom_model.set_csv_file_path(custom_model_mapping_path)

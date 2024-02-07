@@ -12,21 +12,15 @@ import numpy as np
 from PIL import Image
 from tensorflow.keras.utils import get_file
 
-OUTPUT_FOLDER = 'data\gcam_plus_output'
-OUTPUT_FOLDER_SH = r'data\gcam_plus_output\Small_Heatmap'
-OUTPUT_FOLDER_MH = r'data\gcam_plus_output\Mid_Heatmap'
-OUTPUT_FOLDER_LH = r'data\gcam_plus_output\Large_Heatmap'
+OUTPUT_FOLDER = 'data/gcam_plut_output'
+OUTPUT_FOLDER_SH = r'data/gcam_plus_output\Small_Heatmap'
+OUTPUT_FOLDER_MH = r'data/gcam_plus_output\Mid_Heatmap'
+OUTPUT_FOLDER_LH = r'data/gcam_plus_output\Large_Heatmap'
 heatmap_name = 'cam2_1.jpg'
 heatmap_name2 = 'cam2_2.jpg'
 result_name = 'cam2_3.jpg'
 
-#heatmap_name = 'cam2_1.jpg'
-#heatmap_name2 = 'cam2_2.jpg'
-#result_name = 'cam2_3.jpg'
-WEIGHTS_PATH_VGG16_MURA = "https://github.com/samson6460/tf_keras_gradcamplusplus/releases/download/Weights/tf_keras_vgg16_mura_model.h5"
-#TODO Hier auch Name konstant halten 
-#last_conv_layer_name = "block5_conv3"
-#target_size = (224, 224)
+
 
 def grad_cam_plus(model, img,
                   layer_name="block5_conv3", label_name=None,
@@ -87,27 +81,6 @@ def grad_cam_plus(model, img,
 
     return heatmap
 
-
-def vgg16_mura_model():
-    """Get a vgg16 model.
-
-    The model can classify bone X-rays into three categories:
-    wrist, shoulder and elbow.
-    It will download the weights automatically for the first time.
-
-    Return:
-        A tf.keras model object.
-    """
-    path_weights = get_file(
-        "tf_keras_vgg16_mura_model.h5",
-        WEIGHTS_PATH_VGG16_MURA,
-        cache_subdir="models")
-
-    model = load_model(path_weights)
-
-    return model
-
-#TODO target_size, image_size ? Konstant halten 
 def preprocess_image(img_path, target_size=(224, 224)):
     """Preprocess the image by reshape and normalization.
 
@@ -123,20 +96,6 @@ def preprocess_image(img_path, target_size=(224, 224)):
 
     return img
 
-def preprocess_image(img_path, target_size=(224, 224)):
-    """Preprocess the image by reshape and normalization.
-
-    Args:
-        img_path: A string.
-        target_size: A tuple, reshape to this size.
-    Return:
-        An image array.
-    """
-    img = image.load_img(img_path, target_size=target_size)
-    img = image.img_to_array(img)
-    img /= 255
-
-    return img
 
 def show_imgwithheat(img_path, heatmap, alpha=0.4, return_array=False):
     """Show the image with heatmap.
@@ -157,16 +116,15 @@ def show_imgwithheat(img_path, heatmap, alpha=0.4, return_array=False):
     # ADDED ##################################################################################################
     superimposed_img = heatmap * alpha
     superimposed_img = np.clip(superimposed_img, 0, 255).astype("uint8")
-    superimposed_img = cv2.cvtColor(superimposed_img, cv2.COLOR_BGR2RGB)
-    plt.imshow(superimposed_img)
-    plt.savefig(os.path.join(OUTPUT_FOLDER_MH, heatmap_name2))
+    #superimposed_img = cv2.cvtColor(superimposed_img, cv2.COLOR_BGR2RGB)
+    cv2.imwrite(os.path.join(OUTPUT_FOLDER_MH, heatmap_name2), superimposed_img)
     #plt.imshow(superimposed_img)
     #plt.show()
 
 
     superimposed_img = heatmap * alpha + img
     superimposed_img = np.clip(superimposed_img, 0, 255).astype("uint8")
-    superimposed_img = cv2.cvtColor(superimposed_img, cv2.COLOR_BGR2RGB)
+    #superimposed_img = cv2.cvtColor(superimposed_img, cv2.COLOR_BGR2RGB)
 
     imgwithheat = Image.fromarray(superimposed_img)
     try:
@@ -180,9 +138,6 @@ def show_imgwithheat(img_path, heatmap, alpha=0.4, return_array=False):
 
     if return_array:
         return superimposed_img
-    
-
-model = vgg16_mura_model()
 
 def make_gradcam_plusplus(model, img_path, last_conv_layer_name, target_size, frameNr = ''):
     global heatmap_name2, result_name
@@ -192,8 +147,7 @@ def make_gradcam_plusplus(model, img_path, last_conv_layer_name, target_size, fr
     # heatmap unskaliert 
     img = preprocess_image(img_path, target_size)
     heatmap_plus = grad_cam_plus(model, img, last_conv_layer_name)
-    plt.imshow(heatmap_plus)
-    plt.savefig(os.path.join(OUTPUT_FOLDER_SH, heatmap_name))
+    cv2.imwrite(os.path.join(OUTPUT_FOLDER_SH, heatmap_name), heatmap_plus)
     # heatmap hochskaliert + überlagert 
     show_imgwithheat(img_path, heatmap_plus)
 
@@ -232,7 +186,14 @@ if __name__ == "__main__":
         img_size = (224, 224)
         preprocess = VGG19.preprocess_input
         decode_predictions = VGG19.decode_predictions
+    elif model_name.strip() == "ResNet50":
+        import keras.applications.resnet50 as ResNet50
 
+        # Keras Model
+        model = ResNet50.ResNet50(weights="imagenet")
+        img_size = (224, 224)
+        preprocess = ResNet50.preprocess_input
+        decode_predictions = ResNet50.decode_predictions
     else:
         custom_model_mapping_path = sys.argv[6]
         custom_model.set_csv_file_path(custom_model_mapping_path)
