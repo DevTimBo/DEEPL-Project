@@ -118,17 +118,19 @@ def show_imgwithheat(img_path, heatmap, alpha=0.4, return_array=False):
     superimposed_img = np.clip(superimposed_img, 0, 255).astype("uint8")
     #superimposed_img = cv2.cvtColor(superimposed_img, cv2.COLOR_BGR2RGB)
     cv2.imwrite(os.path.join(OUTPUT_FOLDER_MH, heatmap_name2), superimposed_img)
+
     #plt.imshow(superimposed_img)
     #plt.show()
 
 
     superimposed_img = heatmap * alpha + img
     superimposed_img = np.clip(superimposed_img, 0, 255).astype("uint8")
-    #superimposed_img = cv2.cvtColor(superimposed_img, cv2.COLOR_BGR2RGB)
+    superimposed_img = cv2.cvtColor(superimposed_img, cv2.COLOR_BGR2RGB)
 
     imgwithheat = Image.fromarray(superimposed_img)
     try:
         #display(imgwithheat)
+        superimposed_img = cv2.cvtColor(superimposed_img, cv2.COLOR_BGR2RGB)
         cv2.imwrite(os.path.join(OUTPUT_FOLDER_LH, result_name), superimposed_img)
         #plt.imshow(imgwithheat)
         #plt.title("Grad-CAM++")
