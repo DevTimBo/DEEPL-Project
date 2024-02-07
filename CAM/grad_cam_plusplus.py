@@ -123,21 +123,6 @@ def preprocess_image(img_path, target_size=(224, 224)):
 
     return img
 
-def preprocess_image(img_path, target_size=(224, 224)):
-    """Preprocess the image by reshape and normalization.
-
-    Args:
-        img_path: A string.
-        target_size: A tuple, reshape to this size.
-    Return:
-        An image array.
-    """
-    img = image.load_img(img_path, target_size=target_size)
-    img = image.img_to_array(img)
-    img /= 255
-
-    return img
-
 def show_imgwithheat(img_path, heatmap, alpha=0.4, return_array=False):
     """Show the image with heatmap.
 

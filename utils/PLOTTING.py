@@ -181,3 +181,4 @@ def overlap_and_plot(images, title="Overlapped Image"):
     plt.axis('off')
 
     plt.show()
+
