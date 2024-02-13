@@ -1,4 +1,10 @@
-# video_player.py
+# Autor: Jason Pranata
+# Co-Autor: N/A
+# Date: 13 February 2024 
+
+# Funktionsweise:
+# Dieses Modul ist für die Wiedergabe von Videos verantwortlich. Es verwendet die QMediaPlayer-Klasse, um Videos abzuspielen.
+
 from PyQt5.QtCore import QUrl
 from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QFileDialog
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent

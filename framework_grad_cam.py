@@ -1,3 +1,10 @@
+# Autor: Hadi El-Sabbagh
+# Co-Autor: Tim Harmling, Jason Pranata
+# Date: 13 February 2024 
+
+# Funktionsweise:
+# GradCam Funktion Integration fürs Framework
+
 import os
 
 os.environ["KERAS_BACKEND"] = "tensorflow"

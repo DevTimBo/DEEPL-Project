@@ -1,3 +1,10 @@
+# Autor: Jason Pranata
+# Co-Autor: Tim Harmling
+# Date: 13 February 2024 
+
+# Funktionsweise:
+# Lime Funktionen für das Framework
+
 from lime import lime_image
 from skimage.segmentation import mark_boundaries
 import numpy as np

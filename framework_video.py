@@ -1,3 +1,11 @@
+# Autor: Hadi El-Sabbagh
+# Co-Autor: Jason Pranata
+# Date: 13 February 2024 
+
+# Funktionsweise:
+# Dieses Modul ist für die Abschnitt, Zusammenfügen, usw. von Videos verantwortlich
+# Es verwendet die OpenCV-Bibliothek, um die Videos zu bearbeiten.
+
 import cv2
 import os
 from PIL import Image

@@ -1,3 +1,10 @@
+# Autor: Hadi El-Sabbagh
+# Co-Autor: Tim Harmling, Jason Pranata
+# Date: 13 February 2024 
+
+# Funktionsweise:
+# GradCam Video Funktion Integration fürs Framework
+
 import framework_video as video
 import cv2
 import os 
