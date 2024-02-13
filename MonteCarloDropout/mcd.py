@@ -1,4 +1,4 @@
-# for pipeline
+# Author Emil Hillebrand
 import tensorflow as tf
 from tensorflow import keras
 import numpy as np
@@ -32,13 +32,12 @@ def get_mcd_uncertainty(image, model, preprocess, decode, samples, dropoutRate, 
     # apply MonteCarlo and write predictions
     for r in range(samples):  
         #apply MCD with hyper: skip or apply to these layers
-        modelMC = applyMonteCarloApplyTo(apply, modelMC, modelNoMC, dropoutRate, model)
+        modelMC = applyMonteCarloApplyTo(apply, modelMC, modelNoMC, dropoutRate)
         predictions = decode(modelMC.predict(picture_input_preprocessed))
         #print(decode(predictions))
         predictions_readable.append(predictions)
     
     # prediction
-
     uncertainty = processPredictions(predictions_readable, modelNoMC, picture_input_preprocessed, decode)
 
     return uncertainty
@@ -52,7 +51,6 @@ def applyTo(applyToLayers, modelMC):
     for i in range(len(modelMC.layers)):
         if (modelMC.layers[i].__class__.__name__ in applyToLayers):
             applyTo.append(i)
-            # print(applyTo)
 
     return applyTo
 
@@ -68,11 +66,10 @@ def skipLayers(skipTheseLayers, modelMC):
 
     return layerToSkip
 
-
+# zeroing the weights
 def zero_weights(weights, percentage):
     modified_weights = []
     for w in weights:
-        #print(w)
         num_elements = int(percentage * w.size)
         zero_indices = np.random.choice(w.size, num_elements, replace=False)
         w_flat = w.flatten()
@@ -83,7 +80,7 @@ def zero_weights(weights, percentage):
 
     return modified_weights
 
-
+# old Code how it was bevore the optimization 
 # def applyMonteCarloApplyTo(applytoList, modelMC, modelNoMC, dropoutRate):
 #     for i in range(len(modelMC.layers)):
 #         print(f"Layers Len: {len(modelMC.layers)}")
@@ -143,9 +140,9 @@ def zero_weights(weights, percentage):
 #             modelMC.layers[i].set_weights(b)
 #     return modelMC
 
-def applyMonteCarloApplyTo(applytoList, modelMC, modelNoMC, dropoutRate, model):
+# going through layers apply to choosen layers
+def applyMonteCarloApplyTo(applytoList, modelMC, modelNoMC, dropoutRate):
     for i in range(len(modelNoMC.layers)):
-        #print(f"Layers Len: {len(modelMC.layers)}")
         b = 0
         if (i) in applytoList:
             b = modelNoMC.layers[i].get_weights()
@@ -154,6 +151,7 @@ def applyMonteCarloApplyTo(applytoList, modelMC, modelNoMC, dropoutRate, model):
             modelMC.layers[i].set_weights(b)
     return modelMC
 
+# creates the list, where we get the prediction for MCD from
 def processPredictions(predictions_readable, modelNoMC, picture_input_preprocessed, decode):
     counterTopOne = 0
     counterTopTwo = 0
@@ -231,9 +229,7 @@ def processPredictions(predictions_readable, modelNoMC, picture_input_preprocess
         if (predictions_readable[k][0][4][1] == predictionNormalModel[0][4][1]):
             counterTopFive = counterTopFive + 1
 
-    # print (predictionNormalModel)
-    # hits = str(counter/len(predictions_readable))
-    # counter get appended and are divided by the length of the list and divided through the highest points possible (5) *100 for %        
+    # append to list and then return it for the called function
     countTopFiveAccourence.append("{:.2f}".format(counterTopOne*100/(len(predictions_readable)*5)))
     countTopFiveAccourence.append(predictionNormalModel[0][0][1] + "(" + "{:.2f}".format(predictionNormalModel[0][0][2]*100) + ")")
     countTopFiveAccourence.append("{:.2f}".format(counterTopTwo*100/(len(predictions_readable)*5)))
