@@ -1,4 +1,7 @@
 # Autor: Hadi El-Sabbagh 
+# Date: 13 February 2024 
+# Beschreibung: Die make_gradcam_video Funktion ist das Bindeglied zwischen der video.py und grad_cam.py
+# Hier wird die Videofunktion auf Grad-Cam angewendet 
 
 import video
 import grad_cam

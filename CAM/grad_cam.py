@@ -1,3 +1,7 @@
+# Autor: Hadi El-Sabbagh 
+# Datum: 13 February 2024 
+# Beschreibung: Dieses Skript definiert die Grad-CAM-Funktion
+
 import os
 
 os.environ["KERAS_BACKEND"] = "tensorflow"
@@ -11,20 +15,24 @@ from PIL import Image
 import time
 from video import get_frame_size
 
+# Globale Variablen zur Speicherung von Zwischenergebnissen
 prediction = None
 superimposed_img = None
 test_superim = None
 heatmap_name2 = None
 
+# Ordnerpfade zur Speicherung der Ergebnisse
 OUTPUT_FOLDER = 'CAM\Images\gradcam_output'
 OUTPUT_FOLDER_SH = r'CAM\Images\gradcam_output\Small_Heatmap'
 OUTPUT_FOLDER_MH = r'CAM\Images\gradcam_output\Mid_Heatmap'
 OUTPUT_FOLDER_LH = r'CAM\Images\gradcam_output\Large_Heatmap'
 
+# Das ist die Funktion mit der Grad-CAM angwendet wird. 3 Outputs: Resultat + 2 Zwischenheatmaps. 
 def make_gradcam(model, img_path, img_size, preprocess, decode_predictions, last_conv_layer_name, frameNr = ''):
     global prediction, heatmap_name2
     start_time = time.time()  
 
+    # Erzeugt eindeutige Namen für die Ausgabedateien basierend auf der Frame-Nummer
     heatmap_name = f'cam1_1{frameNr}.jpg'
     heatmap_name2 = f'cam1_2{frameNr}.jpg'
     result_name = f'cam1_3{frameNr}.jpg'
@@ -47,13 +55,14 @@ def make_gradcam(model, img_path, img_size, preprocess, decode_predictions, last
     print(f"Total execution time: {total_time} seconds")
 
 
-
+# Lädt ein Bild und konvertiert es in ein NumPy-Array
 def get_img_array(img_path, size):
     img = keras.utils.load_img(img_path, target_size=size)
     array = keras.utils.img_to_array(img)
     array = np.expand_dims(array, axis=0)
     return array
 
+# Erzeugt eine Heatmap für die Grad-CAM-Visualisierung.
 def make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=None):
     grad_model = keras.models.Model(
         model.inputs, [model.get_layer(last_conv_layer_name).output, model.output]
@@ -103,11 +112,6 @@ def save_and_display_gradcam(img_path, preds, heatmap, cam_path, alpha=0.4):
     superimposed_img = keras.utils.array_to_img(superimposed_img)
 
     superimposed_img.save(cam_path)
-
-    # display(Image(cam_path)) --> Original
-    # plt.imshow(superimposed_img)
-    # plt.colorbar()
-    # plt.title(decode_predictions(preds, top=1)[0])
 
 def get_pred():
     return prediction

@@ -1,4 +1,5 @@
 # Autor: Hadi El-Sabbagh 
+# Date: 13 February 2024 
 
 import numpy as np
 import tensorflow as tf
@@ -173,6 +174,7 @@ def show_imgwithheat(img_path, heatmap, alpha=0.4, return_array=False):
 
 model = vgg16_mura_model()
 
+# Das ist die Funktion mit der Grad-CAM++ benutzt wird. 3 Outputs: Resultat + 2 Zwischenheatmaps. 
 def make_gradcam_plusplus(model, img_path, last_conv_layer_name, target_size, frameNr = ''):
     global heatmap_name2, result_name
     start_time = time.time()
