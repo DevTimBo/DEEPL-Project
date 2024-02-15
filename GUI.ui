@@ -329,11 +329,6 @@
         <string>GradCam</string>
        </property>
       </item>
-      <item>
-       <property name="text">
-        <string>GradCam++</string>
-       </property>
-      </item>
      </widget>
     </item>
    </layout>
@@ -343,7 +338,7 @@
     <rect>
      <x>920</x>
      <y>620</y>
-     <width>332</width>
+     <width>407</width>
      <height>80</height>
     </rect>
    </property>
@@ -817,8 +812,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>181</width>
-           <height>196</height>
+           <width>164</width>
+           <height>231</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
