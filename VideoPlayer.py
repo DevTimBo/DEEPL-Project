@@ -1,9 +1,6 @@
 # Autor: Jason Pranata
-# Co-Autor: N/A
 # Date: 13 February 2024 
-
-# Funktionsweise:
-# Dieses Modul ist für die Wiedergabe von Videos verantwortlich. Es verwendet die QMediaPlayer-Klasse, um Videos abzuspielen.
+# Description: This file contains the VideoPlayer class that will be used in the main file to play the video in the framework
 
 from PyQt5.QtCore import QUrl
 from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QFileDialog
@@ -16,6 +13,7 @@ class VideoPlayer(QWidget):
 
         self.initUI()
 
+    # Initialize the UI
     def initUI(self):
         self.videoWidget = QVideoWidget()
         self.player = QMediaPlayer()
@@ -32,12 +30,14 @@ class VideoPlayer(QWidget):
 
         self.setLayout(layout)
 
+    # function to load video
     def load_video(self, video_path):
         media_url = QUrl.fromLocalFile(video_path)
         content = QMediaContent(media_url)
         self.player.setMedia(content)
         self.player.play()
 
+    # function to play/pause video for the button
     def on_playPauseButton_clicked(self):
         if self.player.state() == QMediaPlayer.PlayingState:
             self.player.pause()

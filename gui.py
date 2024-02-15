@@ -229,15 +229,18 @@ class Ui(QtWidgets.QDialog):
         elif self.analyze_mode.currentText() == "Video":
             if self.video_path != "":
                 self.video_analyzer()
-
-
-
+                
+    # Function to analyze the input video with GradCam or GradCam++
     def video_analyzer(self):
+        # Get the path of the input video
         video_path = self.video_path
+        
+        # Analyze the video based on the selected method
         if self.videoComboBox.currentText() == "GradCam":
             analyzed_video_path = self.grad_cam_video_analyze(video_path)
         elif self.videoComboBox.currentText() == "GradCam++":
             analyzed_video_path = self.gcam_plus_video_analyze(video_path)
+            
         # Create a QDialog for the video player pop-up
         videoPlayerDialog = QtWidgets.QDialog(self)
         videoPlayerDialog.setWindowTitle('Video Player')
@@ -246,6 +249,7 @@ class Ui(QtWidgets.QDialog):
 
         # Create an instance of the VideoPlayer widget
         videoPlayer = VideoPlayer()
+        
         # Initialize the video player
         video_layout = QVBoxLayout()
         video_layout.addWidget(videoPlayer)
