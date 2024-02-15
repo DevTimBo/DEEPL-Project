@@ -2,6 +2,9 @@
 # Co-Autor: Tim Harmling, Jason Pranata
 # Date: 13 February 2024 
 
+# Beschreibung: Die make_gradcam_video Funktion ist das Bindeglied zwischen der video.py und grad_cam.py
+# Hier wird die Videofunktion auf Grad-Cam angewendet 
+
 # Funktionsweise:
 # GradCam Video Funktion Integration fürs Framework
 
