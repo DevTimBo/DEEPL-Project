@@ -1,3 +1,5 @@
+# Autor: Hadi El-Sabbagh 
+
 import video
 import grad_cam_plusplus
 from grad_cam_plusplus import make_gradcam_plusplus
