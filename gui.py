@@ -544,7 +544,6 @@ class Ui(QtWidgets.QDialog):
 
     # Author: Tim Harmling
     def grad_cam_analyze(self, image_path):
-
         print("GRAD_CAM")
         import subprocess
         tensorflow_script_path = "framework_grad_cam.py"
@@ -573,7 +572,6 @@ class Ui(QtWidgets.QDialog):
     # Author: Jason Pranata
     def grad_cam_plus_analyze(self, image_path):
         import time
-        # TODO Pickle Model Übergeben, Last Conv Layer
         print("GRAD_CAM++")
         import subprocess
         # Specify the path to the TensorFlow script
@@ -605,7 +603,6 @@ class Ui(QtWidgets.QDialog):
 
     # Author: Jason Pranata
     def grad_cam_video_analyze(self, video_path):
-        # TODO Pickle Model Übergeben, Last Conv Layer
         print("GRAD_CAM_Video")
         import subprocess
         # Specify the path to the TensorFlow script
@@ -624,7 +621,6 @@ class Ui(QtWidgets.QDialog):
 
     # Author: Jason Pranata
     def gcam_plus_video_analyze(self, video_path):
-        # TODO Pickle Model Übergeben, Last Conv Layer
         print("GRAD_CAM++_Video")
         import subprocess
         # Specify the path to the TensorFlow script
