@@ -5,7 +5,7 @@
 pip install -r requirements.txt
 ```
 
-## To run the GUI run in with your Python: 
+## To run the GUI run the gui.py with Python: 
 ```bash
 <yourPythonRunCommand> gui.py
 ```
