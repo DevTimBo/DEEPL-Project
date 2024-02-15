@@ -1,4 +1,7 @@
 # Autor: Hadi El-Sabbagh 
+# Date: 13 February 2024 
+# Beschreibung: Die make_gradcam_video Funktion ist das Bindeglied zwischen der video.py und grad_cam_plusplus.py.
+# Hier wird die Videofunktion auf Grad-Cam++ angewendet 
 
 import video
 import grad_cam_plusplus
@@ -17,6 +20,7 @@ fps = 24
 
 OUTPUT_FOLDER = r'CAM\Images\gradcamplusplus_output'
 heatmap_name = 'cam1_1.jpg'
+
 
 def make_gradcamplusplus_video(model, video_path_in, target_size, last_conv_layer_name,):
     start_time = time.time()  
