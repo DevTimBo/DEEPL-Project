@@ -19,3 +19,5 @@ For more Videos:
 Normal: https://www.youtube.com/watch?v=2K9GPiie-Hk
 
 Custom Model: https://www.youtube.com/watch?v=9mzIx_NVDJk
+
+Or Click on the ? button (bottom right of the UI) to get a short tutorial
