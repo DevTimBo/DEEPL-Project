@@ -8,7 +8,8 @@ from utils.IMAGE_EDIT import normalize_array_np
 #rule = "lrp.alpha_1_beta_0"
 
 
-
+# Author: Tim Harmling
+# LRP Analyze Function
 def analyze_image_lrp(image, model, preprocess, rule):
     model = innvestigate.model_wo_softmax(model)
     analyzer = innvestigate.create_analyzer(rule, model)

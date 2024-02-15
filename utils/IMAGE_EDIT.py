@@ -1,3 +1,6 @@
+# Author: Tim Harmling
+# Some Image Editing Functions
+
 import numpy as np
 import cv2
 
