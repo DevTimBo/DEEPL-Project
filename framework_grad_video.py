@@ -42,7 +42,7 @@ def make_gradcam_video(model, video_path_in, img_size, preprocess_input, decode_
         preds.append(get_pred())
         print(preds)
         i += 1 
-        if i == 5:
+        if i == 100:
             break
 
     sorted_frames_LH = sorted(os.listdir(LH_frames), key=video.extract_number)
@@ -54,7 +54,7 @@ def make_gradcam_video(model, video_path_in, img_size, preprocess_input, decode_
         img_path = os.path.join(LH_frames, img)
         video.draw_on_image(img_path, 20, str(preds[index]))
         i += 1 
-        if i == 5:
+        if i == 100:
             break
 
     # Fügt jedem Bild aus dem SH Ordner Text hinzu
@@ -63,7 +63,7 @@ def make_gradcam_video(model, video_path_in, img_size, preprocess_input, decode_
         img_path = os.path.join(SH_frames, img)
         video.draw_on_image(img_path, 20, str(preds[index]))
         i += 1 
-        if i == 5:
+        if i == 100:
             break
     
     # teste 

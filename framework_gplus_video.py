@@ -42,7 +42,7 @@ def make_gradcamplusplus_video(model, video_path_in, target_size, last_conv_laye
         #preds.append(grad_cam.get_pred())
         #print(preds)
         i += 1 
-        if i == 5:
+        if i == 100:
             break
  
     sorted_frames_LH = sorted(os.listdir(LH_frames), key=video.extract_number)
