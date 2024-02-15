@@ -1,3 +1,5 @@
+# Autor: Hadi El-Sabbagh 
+
 import video
 import grad_cam
 import cv2
