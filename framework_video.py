@@ -27,7 +27,7 @@ def cut_video(capture):
         else:
             break
         frameNr = frameNr+1
-        if frameNr == 100:
+        if frameNr == 101:
             break
     capture.release()
 
