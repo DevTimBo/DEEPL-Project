@@ -23,7 +23,6 @@ from PyQt5.QtWidgets import (qApp, QFileDialog,
 import os
 
 import keras
-
 # Author Emil Hillebrand
 class AnotherWindowGame(QWidget, QtCore.QThread):
     """
