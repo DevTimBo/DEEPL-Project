@@ -1,3 +1,5 @@
+# Author: Tim Harmling
+# Loading Images to Pixmap to show in the GUI
 
 import colorsys
 from PyQt5.QtGui import QPixmap
