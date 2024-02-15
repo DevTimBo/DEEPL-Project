@@ -16,18 +16,23 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from PIL import Image
 
+# Globale Variablen zur Speicherung von Zwischenergebnissen
 prediction = None
 superimposed_img = None
 test_superim = None
 heatmap_name2 = None
 
+# Ordnerpfade zur Speicherung der Ergebnisse
 OUTPUT_FOLDER = 'data\gradcam_output'
 OUTPUT_FOLDER_SH = r'data\gradcam_output'
 OUTPUT_FOLDER_MH = r'data\gradcam_output'
 OUTPUT_FOLDER_LH = r'data\gradcam_output'
 
+# Das ist die Funktion mit der Grad-CAM angwendet wird. 3 Outputs: Resultat + 2 Zwischenheatmaps. 
 def make_gradcam(model, img_path, img_size, preprocess, decode_predictions, last_conv_layer_name, frameNr = ''):
     global prediction, heatmap_name2
+    
+    # Erzeugt eindeutige Namen für die Ausgabedateien basierend auf der Frame-Nummer
     heatmap_name = f'cam1_1{frameNr}.jpg'
     heatmap_name2 = f'cam1_2{frameNr}.jpg'
     result_name = f'cam1_3{frameNr}.jpg'
@@ -44,14 +49,14 @@ def make_gradcam(model, img_path, img_size, preprocess, decode_predictions, last
     result_path = os.path.join(OUTPUT_FOLDER_LH, result_name)
     save_and_display_gradcam(img_path, preds, heatmap, result_path, alpha=0.4)
 
-
-
+# Lädt ein Bild und konvertiert es in ein NumPy-Array
 def get_img_array(img_path, size):
     img = keras.utils.load_img(img_path, target_size=size)
     array = keras.utils.img_to_array(img)
     array = np.expand_dims(array, axis=0)
     return array
 
+# Erzeugt eine Heatmap für die Grad-CAM-Visualisierung
 def make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=None):
     grad_model = keras.models.Model(
         model.inputs, [model.get_layer(last_conv_layer_name).output, model.output]

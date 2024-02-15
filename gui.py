@@ -42,6 +42,7 @@ class AnotherWindowGame(QWidget, QtCore.QThread):
         menu(0)
 
 # Authors: Tim Harmling, Jason Pranata and Emil Hillebrand
+# GUI Class
 class Ui(QtWidgets.QDialog):
     def __init__(self):
         super(Ui, self).__init__()
@@ -94,6 +95,7 @@ class Ui(QtWidgets.QDialog):
         self.show()
 
     # Author: Tim Harmling
+    # File Dialog for Custom Model
     def file_open_dialog_model(self, file_type):
         dialog = QFileDialog(self)
         dialog.setFileMode(QFileDialog.FileMode.ExistingFiles)
@@ -133,6 +135,7 @@ class Ui(QtWidgets.QDialog):
         self.many_images_label.setPixmap(pixmap)
 
     # Author: Tim Harmling
+    # Open File Dialog for Single Image
     def file_dialog_single(self):
         dialog = QFileDialog(self)
         dialog.setFileMode(QFileDialog.FileMode.ExistingFiles)
@@ -143,6 +146,7 @@ class Ui(QtWidgets.QDialog):
             self.load_picture(filename[0])
 
     # Author: Tim Harmling
+    # Open File Dialog for Many Images
     def add_images_to_list(self, filenames):
         for filename in filenames:
             item = QListWidgetItem(filename)
@@ -150,6 +154,7 @@ class Ui(QtWidgets.QDialog):
             self.many_images_paths.append(filename)
 
     # Author: Tim Harmling
+    # Open File Dialog for Many Images
     def file_dialog_many(self):
         dialog = QFileDialog(self)
         dialog.setFileMode(QFileDialog.FileMode.ExistingFiles)
@@ -160,12 +165,14 @@ class Ui(QtWidgets.QDialog):
             self.add_images_to_list(filenames)
 
     # Author: Tim Harmling
+    # Load Video Path
     def load_video(self, filepath):
         self.video_path = filepath
         self.video_text.setText(filepath)
         self.video_player.load_video(filepath)
 
     # Author: Tim Harmling
+    # Open File Dialog for Video
     def file_dialog_video(self):
         dialog = QFileDialog(self)
         dialog.setFileMode(QFileDialog.FileMode.ExistingFiles)
@@ -188,6 +195,7 @@ class Ui(QtWidgets.QDialog):
             my_thread.start()
 
     # Authors: Tim Harmling, Jason Pranata and Emil Hillebrand
+    # Analyze the input image(s) using the selected method(s)
     def analyze(self):
 
         if (self.Game.isChecked()):
@@ -286,6 +294,7 @@ class Ui(QtWidgets.QDialog):
 
     # Authors: Tim Harmling
     # Co Authors: Jason Pranata and Emil Hillebrand
+    # Image Analyzer Function to analyze the input image with the selected method(s)
     def image_analyzer(self, image, image_path):
         image_list = []
         title_list = []
@@ -465,6 +474,7 @@ class Ui(QtWidgets.QDialog):
         return image_list, cmap_list, title_list
 
     # Author: Tim Harmling
+    # Save Image if selected
     def save_images(self, length, image_list, title_list):
         row_num = 0
         for i, title in enumerate(title_list):
@@ -472,6 +482,7 @@ class Ui(QtWidgets.QDialog):
                 row_num += 1
             cv.imwrite(f"TEMP_DATA/{row_num}_" + title + ".png", image_list[i])
     # Author: Tim Harmling
+    # Using the Image Analyze Function to analyze the single image
     def single_image_analyzer(self):
         image = cv.imread(self.single_image_path, cv.IMREAD_COLOR)
         image_list, cmap_list, title_list = self.image_analyzer(image, self.single_image_path)
@@ -485,6 +496,7 @@ class Ui(QtWidgets.QDialog):
                                figsize=(length * 5, rows * 5))
 
     # Author: Jason Pranata
+    # Using the Image Analyze Function to analyze the many images in the list
     def many_images_analyzer(self):
         image_list = []
         title_list = []
@@ -510,6 +522,7 @@ class Ui(QtWidgets.QDialog):
                                figsize=(length * 5, rows * 5))
 
     # Author: Tim Harmling
+    # Function that calls the LRP function to analyze the image
     def lrp_analyze(self, image, rule):
         import time
         start_time = time.time()
@@ -524,6 +537,7 @@ class Ui(QtWidgets.QDialog):
         return lrp_image
 
     # Author: Tim Harmling
+    # Function to find the length of the row for the plot
     def find_len_per_row(self):
         len_per_row = 1
         if not self.noise_walk_checkbox.isChecked():
@@ -542,6 +556,7 @@ class Ui(QtWidgets.QDialog):
         return len_per_row
 
     # Author: Tim Harmling
+    # Subprocess start for GradCam
     def grad_cam_analyze(self, image_path):
         print("GRAD_CAM")
         import subprocess
@@ -569,6 +584,7 @@ class Ui(QtWidgets.QDialog):
         return grad_cam_image, grad_cam_heatmap
 
     # Author: Jason Pranata
+    # Subprocess start for GradCam++
     def grad_cam_plus_analyze(self, image_path):
         import time
         print("GRAD_CAM++")
@@ -601,6 +617,7 @@ class Ui(QtWidgets.QDialog):
         return grad_cam_image, grad_cam_heatmap
 
     # Author: Jason Pranata
+    # Subprocess start for GradCam Video
     def grad_cam_video_analyze(self, video_path):
         print("GRAD_CAM_Video")
         import subprocess
@@ -619,6 +636,7 @@ class Ui(QtWidgets.QDialog):
         return grad_cam_video
 
     # Author: Jason Pranata
+    # Subprocess start for GradCam++ Video
     def gcam_plus_video_analyze(self, video_path):
         print("GRAD_CAM++_Video")
         import subprocess
@@ -637,6 +655,7 @@ class Ui(QtWidgets.QDialog):
         return grad_cam_video
 
     # Author: Jason Pranata
+    # LIME Analyzer Function to analyze the input image with LIME
     def lime_analyzer(self, image, samples, features, positive_only, hide_rest, mask_only, min_weight):
         print("LIME_ANALYZER")
         import time
@@ -648,6 +667,7 @@ class Ui(QtWidgets.QDialog):
         return lime_image
 
     # Author: Jason Pranata
+    # LIME Heatmap Analyzer Function to analyze the input image with LIME
     def lime_heatmap(self, image, samples):
         print("LIME_HEATMAP")
         heatmap = LIME.get_lime_heat_map(image, self.keras_model, samples, self.keras_preprocess)
@@ -657,6 +677,7 @@ class Ui(QtWidgets.QDialog):
         return heatmap
 
     # Author: Emil Hillebrand
+    # McDropout Analyzer Function to analyze the input image with Monte Carlo Dropout
     def mcDropout(self, image, mcd_samples, mcd_dropoutrate, mcd_apply_skip, mcd_layers):
         print("MCD_PREDICTION")
         import time
@@ -679,6 +700,7 @@ class Ui(QtWidgets.QDialog):
         help_dialog.exec_()
 
     # Author: Emil Hillebrand
+    # Function to create a list of layers to be used in the Monte Carlo Dropout
     def mcd_create_layer_list(self):
         mcd_layers = []
         if (self.mcd_activation_radio.isChecked):
@@ -702,6 +724,7 @@ class Ui(QtWidgets.QDialog):
         return mcd_layers
 
     # Author: Tim Harmling
+    # Overlap Images with old method but this currently used
     def overlap_images(self, image_list, title_list):
         print("OVERLAP")
         overlap_images = []
@@ -714,6 +737,7 @@ class Ui(QtWidgets.QDialog):
         return overlap_image
 
     # Author: Tim Harmling
+    # Overlap Images with new method but didnt work
     def overlap_images_try(self, image_list, title_list):
         print("OVERLAP New")
         red_image = cv.cvtColor(np.zeros_like(image_list[0]), cv.COLOR_BGR2GRAY)
@@ -753,6 +777,7 @@ def pred_get_string(model, decode, image):
     return decoded_pred
 
 # Author: Emil Hillebrand
+# create MCD Image
 def create_mcd_image(text1, text2, pred1, float_pred1, pred2, float_pred2, pred3, float_pred3, pred4, float_pred4,
                      pred5, float_pred5):
     from PIL import Image, ImageDraw, ImageFont

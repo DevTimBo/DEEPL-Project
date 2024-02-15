@@ -2,6 +2,9 @@
 # Co-Autor: Tim Harmling, Jason Pranata
 # Date: 13 February 2024 
 
+# Beschreibung: Die make_gradcam_video Funktion ist das Bindeglied zwischen der video.py und grad_cam_plusplus.py.
+# Hier wird die Videofunktion auf Grad-Cam++ angewendet 
+
 # Funktionsweise:
 # GradCam++ Video Funktion Integration fürs Framework
 
@@ -39,7 +42,7 @@ def make_gradcamplusplus_video(model, video_path_in, target_size, last_conv_laye
         #preds.append(grad_cam.get_pred())
         #print(preds)
         i += 1 
-        if i == 5:
+        if i == 100:
             break
  
     sorted_frames_LH = sorted(os.listdir(LH_frames), key=video.extract_number)
