@@ -62,7 +62,7 @@ def get_img_array(img_path, size):
     array = np.expand_dims(array, axis=0)
     return array
 
-# Erzeugt eine Heatmap für die Grad-CAM-Visualisierung.
+# Erzeugt eine Heatmap für die Grad-CAM-Visualisierung
 def make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=None):
     grad_model = keras.models.Model(
         model.inputs, [model.get_layer(last_conv_layer_name).output, model.output]

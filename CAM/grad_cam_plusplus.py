@@ -1,5 +1,6 @@
 # Autor: Hadi El-Sabbagh 
 # Date: 13 February 2024 
+# Beschreibung: Dieses Skript definiert die Grad-CAM++ Funktion
 
 import numpy as np
 import tensorflow as tf
