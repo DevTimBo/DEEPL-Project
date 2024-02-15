@@ -2,6 +2,8 @@
 # Co-Autor: Tim Harmling, Jason Pranata
 # Date: 13 February 2024 
 
+# Beschreibung: Dieses Skript definiert die Grad-CAM++ Funktion
+
 # Funktionsweise:
 # GradCam++ Funktion Integration fürs Framework
 
@@ -148,6 +150,7 @@ def show_imgwithheat(img_path, heatmap, alpha=0.4, return_array=False):
     if return_array:
         return superimposed_img
 
+# Das ist die Funktion mit der Grad-CAM++ benutzt wird. 3 Outputs: Resultat + 2 Zwischenheatmaps. 
 def make_gradcam_plusplus(model, img_path, last_conv_layer_name, target_size, frameNr = ''):
     global heatmap_name2, result_name
     heatmap_name = f'cam2_1{frameNr}.jpg'
