@@ -113,7 +113,6 @@ def vgg16_mura_model():
 
     return model
 
-#TODO target_size, image_size ? Konstant halten 
 def preprocess_image(img_path, target_size=(224, 224)):
     """Preprocess the image by reshape and normalization.
 
