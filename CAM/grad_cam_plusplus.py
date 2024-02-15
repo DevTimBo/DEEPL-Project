@@ -21,7 +21,6 @@ from video import get_frame_size
 heatmap_name2 = None
 result_name = None
 
-#img_path = 'DEEPL-Project\CAM\Images\welpe.jpg'
 OUTPUT_FOLDER = 'DEEPL-Project\CAM\Images\gradcamplusplus_output'
 OUTPUT_FOLDER_SH = r'CAM\Images\gradcamplusplus_output\Small_Heatmap'
 OUTPUT_FOLDER_MH = r'CAM\Images\gradcamplusplus_output\Mid_Heatmap'
@@ -30,7 +29,6 @@ OUTPUT_FOLDER_LH = r'CAM\Images\gradcamplusplus_output\Large_Heatmap'
 #heatmap_name2 = 'cam2_2.jpg'
 #result_name = 'cam2_3.jpg'
 WEIGHTS_PATH_VGG16_MURA = "https://github.com/samson6460/tf_keras_gradcamplusplus/releases/download/Weights/tf_keras_vgg16_mura_model.h5"
-#TODO Hier auch Name konstant halten 
 #last_conv_layer_name = "block5_conv3"
 #target_size = (224, 224)
 
